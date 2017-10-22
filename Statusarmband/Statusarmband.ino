@@ -1,14 +1,14 @@
  //Example for pinNo. later from PinNo-class
-int buttonUp = 78;
-int buttonDown = 77;
-int buttonRight = 76;
-int buttonLeft = 75;
-int buttonBack = 74;
-int buttonCertify = 73;
+int buttonUp = 22;
+int buttonDown = 23;
+int buttonRight = 24;
+int buttonLeft = 25;
+int buttonBack = 28;
+int buttonCertify = 27;
 
 void setup() 
 {
-  Serial.begin(9600);
+  //Serial.begin(9600);
   
   pinMode(buttonUp,INPUT);
   pinMode(buttonDown,INPUT);
@@ -27,6 +27,7 @@ void loop()
   int Back = digitalRead(buttonBack);
   int Certify = digitalRead(buttonCertify);
 
+/*Ausgabe
   Serial.print("UP ");
   Serial.println(Up);
 
@@ -39,11 +40,12 @@ void loop()
   Serial.print("LEFT ");
   Serial.println(Left);
 
-  Serial.print("DOWN ");
-  Serial.println(Down);
+  Serial.print("BACK ");
+  Serial.println(Back);
 
   Serial.print("CERTIFY ");
   Serial.println(Certify);
 
-  delay(1000);
+  delay(5000);
+  */
  }
