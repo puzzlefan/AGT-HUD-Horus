@@ -15,7 +15,7 @@ const char *LeptonThread::device = "/dev/spidev0.1"; // Change to 0.0 if necessa
 unsigned char LeptonThread::mode = 0, LeptonThread::bits = 8;
 unsigned int LeptonThread::speed = 16000000;
 unsigned short LeptonThread::delay = 0;
-QVector<unsigned char> LeptonThread::tx(LeptonThread::RowPacketBytes, 0);//tells how long the vector is?
+QVector<unsigned char> LeptonThread::tx(LeptonThread::PacketBytes, 0);//tells how long the vector is? %
 
 bool LeptonThread::initLepton() {
     fd = open(device, O_RDWR);
@@ -41,15 +41,15 @@ bool LeptonThread::initLepton() {
 static int counter = 0;
 #endif
 
-int LeptonThread::getPacket(int iRow, unsigned char *packetData) {
+int LeptonThread::getPacket(int iPacket, unsigned char *packetData) {
 #if HAVE_LEPTON
     _tr.rx_buf = (unsigned long) packetData;//weist rx_buf einin pointer zu; lässt werte in restult schreiben 
     return ioctl(fd, SPI_IOC_MESSAGE(1), &_tr);//reads the value of the packet
 #else
     packetData[0] = 0;
-    packetData[1] = iRow;
-    for (int i = 4; i < RowPacketBytes; i += 2)
-        *(short *)(packetData+i) = ((iRow+counter) % 20) + ((i/2-2) % 26);
+    packetData[1] = iPacket;
+    for (int i = 4; i < PacketBytes; i += 2)
+        *(short *)(packetData+i) = ((iPacket+counter) % 20) + ((i/2-2) % 26);
     return 1;
 #endif
 }
@@ -62,7 +62,7 @@ void LeptonThread::run() {
 
 	//SPI-Bus related
     _tr.tx_buf = (unsigned long) &tx[0];//poniter towrads the buffer? 
-    _tr.len = RowPacketBytes;//leght of rx_buf and tx_buf in bytes
+    _tr.len = PacketBytes;//leght of rx_buf and tx_buf in bytes %
     _tr.delay_usecs = delay;
     _tr.speed_hz = speed;//clockspeed for the spi-bus
     _tr.bits_per_word = bits;//size of the word
@@ -70,64 +70,90 @@ void LeptonThread::run() {
 
     int resets = 0; // Number of times we've reset the 0...59 loop for packets
     int errors = 0; // Number of error-packets received
-    while (true) 
+	while (true)
 	{
-        int iRow;
-        for (iRow = 0; iRow < FrameHeight; ) //! zweite Schleife für 4 Segmente
+		int iSegment;
+		for (iSegment = 1, iSegment < 5;)
 		{
-            unsigned char *packet = &result[iRow*RowPacketBytes];
+			SegmentCorrect = true;//%
+			int iPacket;
+			for (iPacket = 0; iPacket < 2 * SegmentHeight; ) 
+			{
+				unsigned char *packet = &result[iPacket*PacketBytes + (iSegment-1)*PacketBytes*SegmentHeight*2];
 
-            if (getPacket(iRow, packet) < 1) 
-			{
-                qDebug() << "Error transferring SPI packet";
-                return;
-            }
-
-            int packetNumber;
-			if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verknüpfung ->packet has to have an value !
-			{
-				packetNumber = -1;
-			}
-			else
-			{
-				packetNumber = packet[1];
-			}
-#if DEBUG_LEPTON
-            if (sequence.empty() || sequence.back().first!=packetNumber)
-                sequence.push_back(std::make_pair(packetNumber, 1));
-            else
-                ++sequence.back().second;
-#endif
-
-            if (packetNumber==-1) 
-			{
-                usleep(1000);
-				if (++errors > 300) 
+				if (getPacket(iPacket, packet) < 1)
 				{
+					qDebug() << "Error transferring SPI packet";
+					return;
+				}
+
+				int packetNumber;
+				if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verknüpfung ->packet has to have an value %
+				{
+					packetNumber = -1;
+				}
+				else
+				{
+					packetNumber = packet[1];
+				}
+#if DEBUG_LEPTON
+				if (sequence.empty() || sequence.back().first != packetNumber)
+					sequence.push_back(std::make_pair(packetNumber, 1));
+				else
+					++sequence.back().second;
+#endif
+				if (ipacket == 19) // %
+				{
+					if ((packet[0] >> 4) == 0)
+					{
+						SegmentCorrect = false;
+					}
+
+					if ((packet[0] >> 4) == iSegment)
+					{
+						SegmentCorrect = true;
+					}
+					else
+					{
+						SegmentCorrect = false;
+					}
+				}
+
+
+				if (packetNumber == -1)
+				{
+					usleep(1000);
+					if (++errors > 300)
+					{
+						break;
+					}
+					continue;
+				}
+
+				if (packetNumber != iPacket) 
+				{
+					usleep(1000);
 					break;
 				}
-                continue;
-            }
 
-            if (packetNumber != iRow) //! packetNumber/2=iRow (?)
+				++iPacket;
+			}
+			
+			if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt 
 			{
-                usleep(1000);
-                break;
-            }
+				if (++resets >= 750) //timeout solange 750 nicht erreicht wird wird diese Schleife wiederholt
+				{
+					qDebug() << "Packet reset counter hit 750";
+					resets = 0;
+					usleep(750000);
+				}
+				continue;
+			}
 
-            ++iRow;
-        }
+			++iSegment;
+		}
 
-        if (iRow < FrameHeight)//wird aktiviert wenn man aus der for-schleife raus springt 
-		{
-            if (++resets >= 750) //timeout solange 750 nicht erreicht wird wird diese Schleife wiederholt
-			{
-                qDebug() << "Packet reset counter hit 750";
-                resets = 0;
-                usleep(750000);
-            }
-            continue;
-        }
+
 
 #if DEBUG_LEPTON
         QString msg;
@@ -153,9 +179,9 @@ void LeptonThread::run() {
         uint16_t maxValue = 0;
         unsigned char *in = &result[0];
         unsigned short *out = &rawData[0];
-        for (int iRow = 0; iRow < FrameHeight; ++iRow) {//!
+        for (int iPacket = 0; iPacket < FrameHeight*2; ++iPacket) {//!
             in += 4;//first color
-            for (int iCol = 0; iCol < FrameWidth; ++iCol) //reads every pixel of the line(one subpacket)
+            for (int iCol = 0; iCol < PacketWidth; ++iCol) //reads every pixel of the line(one subpacket)
 			{
                 unsigned short value = in[0];//value wird farbe zugewiesen
                 value <<= 8;//8 weil Wort =8 bits, verschiebt um 8 Stellen nach vorne

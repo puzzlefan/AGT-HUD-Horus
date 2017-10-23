@@ -48,16 +48,20 @@ class LeptonThread : public QThread {
     std::list< std::pair<int, int> > sequence; // ...of packet #'s received from Lepton, for troubleshooting
 #endif
 
+	bool SegmentCorrect;
     bool initLepton();
     int getPacket(int iRow, unsigned char *packetData);
 
 public:
-    enum {
-        FrameWidth = 160,
-        FrameHeight = 120,
-        RowPacketWords = 60 + 2,
-        RowPacketBytes = 2*RowPacketWords,
-        FrameWords = FrameWidth*FrameHeight
+	enum {
+		FrameWidth = 160,
+		FrameHeight = 120,
+		PacketWidth = 80,
+        PacketWords = PacketWidth + 2,
+		RowPacketWords = 2*PacketWords,
+        PacketBytes = 2*PacketWords,
+        FrameWords = FrameWidth*FrameHeight,
+		SegmentHeight = FrameHeight/4
     };
 
     LeptonThread();
