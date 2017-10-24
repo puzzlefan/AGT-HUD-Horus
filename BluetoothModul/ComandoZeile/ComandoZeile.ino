@@ -1,6 +1,6 @@
-/* YourDuino.com Example: BlueTooth HC-05 Setup
+/* Example: BlueTooth HC-05 Setup
  - WHAT IT DOES: 
-   - Sets "Key" pin on HC-05 HIGH to enable command mode
+   - Sets "EN" pin on HC-05 HIGH to enable command mode
    - THEN applies Vcc from 2 Arduino pins to start command mode
    - SHOULD see the HC-05 LED Blink SLOWLY: 2 seconds ON/OFF 
  
@@ -10,18 +10,18 @@
  - SEE the comments after "//" on each line below
  - CONNECTIONS:
    - GND
-   - Pin 2 to HC-05 TXD
-   - Pin 3 to HC-05 RXD
-   - Pin 4 to HC-05 KEY
-   - Pin 5+6 to HC-05 VCC for power control
+   - Pin z,B, 19 to HC-05 TXD
+   - Pin z.B. 18 to HC-05 RXD
+   - Pin z.B.6 to HC-05 EN
+   - Pin z.B. 5+6 to HC-05 VCC for power control
  - V1.02 05/02/2015
    Questions: terry@yourduino.com */
 
 /*-----( Import needed libraries )-----*/
 #include <SoftwareSerial.h>  
 /*-----( Declare Constants and Pin Numbers )-----*/
-#define HC_05_TXD_ARDUINO_RXD 2
-#define HC_05_RXD_ARDUINO_TXD 3
+#define HC_05_TXD_ARDUINO_RXD 10
+#define HC_05_RXD_ARDUINO_TXD 11
 #define HC_05_SETUPKEY        4
 #define HC_05_PWR1            5  // Connect in parallel to HC-05 VCC
 #define HC_05_PWR2            6  // Connect in parallel to HC-05 VCC
@@ -58,11 +58,17 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
 {
   // READ from HC-05 and WRITE to Arduino Serial Monitor
   if (BTSerial.available())
+  {
     Serial.write(BTSerial.read());
+    //Serial.println("sollte lesen");
+  }
 
   // READ Arduino Serial Monitor and WRITE to HC-05
   if (Serial.available())
+  {
     BTSerial.write(Serial.read());
+    //Serial.println("soltel schreiben");
+  }
 
 }//--(end main loop )---
 
