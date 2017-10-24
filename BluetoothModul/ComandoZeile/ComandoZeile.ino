@@ -10,8 +10,8 @@
  - SEE the comments after "//" on each line below
  - CONNECTIONS:
    - GND
-   - Pin z,B, 19 to HC-05 TXD
-   - Pin z.B. 18 to HC-05 RXD
+   - Pin z,B, 10 to HC-05 TXD
+   - Pin z.B. 11 to HC-05 RXD
    - Pin z.B.6 to HC-05 EN
    - Pin z.B. 5+6 to HC-05 VCC for power control
  - V1.02 05/02/2015
@@ -22,7 +22,7 @@
 /*-----( Declare Constants and Pin Numbers )-----*/
 #define HC_05_TXD_ARDUINO_RXD 10
 #define HC_05_RXD_ARDUINO_TXD 11
-#define HC_05_SETUPKEY        4
+#define HC_05_SETUPKEY        4 //Following 3 lines stay unused
 #define HC_05_PWR1            5  // Connect in parallel to HC-05 VCC
 #define HC_05_PWR2            6  // Connect in parallel to HC-05 VCC
 
