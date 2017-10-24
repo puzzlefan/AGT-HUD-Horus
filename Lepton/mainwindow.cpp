@@ -10,8 +10,6 @@
 
 #include "LeptonThread.h"
 
-int MainWindow::snapshotCount = 0;
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , rawData(LeptonThread::FrameWords)
