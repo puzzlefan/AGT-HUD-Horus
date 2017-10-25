@@ -56,11 +56,12 @@ void loop() {
   ToWrite+=something();
   ToWrite+=";";
   Serial1.println(ToWrite);
+  Serial.println(ToWrite);
   ToWrite="";
   delay(100);
 }
 
 int something()//getting some data to send
 {
-  analogRead(0);
+  return analogRead(0);
 }
