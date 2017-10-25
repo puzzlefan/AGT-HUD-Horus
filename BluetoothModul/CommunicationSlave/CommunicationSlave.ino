@@ -57,5 +57,6 @@ void loop() {
   if(Serial1.available())
   {
     Serial.println(Serial1.read());
+    Serial.write(Serial1.read());
   }
 }

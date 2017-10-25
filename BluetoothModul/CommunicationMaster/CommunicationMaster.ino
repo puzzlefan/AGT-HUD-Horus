@@ -9,7 +9,7 @@ int counter = 0;
 int SerialSpeed = 38400;
 int ModuloWait = 1000000;
 
-String ToWrite = "abc";
+char ToWrite[] = "abc";
 
 void setup() {
   // setting up the Pins to standart connection
