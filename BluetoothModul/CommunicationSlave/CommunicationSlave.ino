@@ -65,6 +65,8 @@ void loop() {
       if(character==';') break;
     }
   }
+  Serial.print("incoming ....");
+  Serial.println(ToRead);
   String integer;
   for(int i = 0;i<ToRead.length();i++)
   {
