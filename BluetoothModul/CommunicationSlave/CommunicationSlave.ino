@@ -93,6 +93,6 @@ void loop() {
 
 void something()//does something with the Data which has been archived
 {
-  Serial.print("out: ")
+  Serial.print("out: "); 
   Serial.println(data[0]);
 }
