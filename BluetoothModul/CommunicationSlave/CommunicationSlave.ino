@@ -56,7 +56,8 @@ void setup() {
 void loop() {
   if(Serial1.available())
   {
-    Serial.write(Serial1.read());
+    char a = Serial1.read();
+    Serial.write(a);
 
   }
 }
