@@ -58,6 +58,7 @@ void setup() {
 }
 
 void loop() {
+  bool bol = true;
   while(true)
   {
     if(Serial1.available())
@@ -66,9 +67,10 @@ void loop() {
       Serial.print(a);//Serial1.readString());
       ToRead[counter]=a;
       counter++;
-      if(a==";"||counter == 1000) break;
+      if(a==";"||counter == 1000) bol=false;
     }
   }
+  bol = true;
   Serial.println();
   Serial.print("Array; ");
   Serial.println(ToRead[0]+ToRead[1]+ToRead[2]);
