@@ -58,21 +58,18 @@ void setup() {
 }
 
 void loop() {
-  bool bol = true;
-  while(bol)
+  bool inLine = true;
+  while(inLine)
   {
     if(Serial1.available())
     {
-      char a = Serial1.read();
-      Serial.print(a);//Serial1.readString());
-      ToRead[counter]=a;
+      char character = Serial1.read();
+      ToRead[counter]=character;
       counter++;
-      if(a==';'||counter == 99) bol=false;
+      if(character==';'||counter == MessageLength) inLine = false;
     }
   }
-  Serial.print("help");
-  bol = true;
-  Serial.println();
+  inLine = true;
   Serial.print("Array; ");
   Serial.println(ToRead);
   counter = 0;
