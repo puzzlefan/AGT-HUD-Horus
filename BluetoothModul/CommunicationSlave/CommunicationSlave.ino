@@ -76,8 +76,7 @@ void loop() {
   counter = 0;
   for(int i = 0;i<MessageLength;i++)
   {
-    if (ToRead[i]==';') break;
-    if(ToRead[i]!=',')
+    if(ToRead[i]!=','||ToRead[i]!=';')
     {
       integer+=ToRead[i];
     }
@@ -86,6 +85,7 @@ void loop() {
       counter++;
       integer.remove(0);
     }
+    if (ToRead[i]==';') break;
   }
 
   // atoi(ToRead);
