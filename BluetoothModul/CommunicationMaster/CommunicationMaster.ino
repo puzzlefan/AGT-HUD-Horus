@@ -6,7 +6,7 @@
 
 //Running variables
 int counter = 0;
-char ToWrite[]="123,321,123;";
+String ToWrite ="";
 
 void setup() {
   // setting up the Pins to standart connection
@@ -53,6 +53,9 @@ void setup() {
 }
 
 void loop() {
-  Serial1.write(ToWrite);
+  ToWrite+=analogRead(0);
+  ToWrite+=";";
+  Serial1.println(ToWrite);
+  ToWrite="";
   delay(100);
 }
