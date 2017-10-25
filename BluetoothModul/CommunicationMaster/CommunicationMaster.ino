@@ -56,6 +56,6 @@ void setup() {
 }
 
 void loop() {
-  Serial1.println('a');
+  Serial1.write("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
   delay(100);
 }
