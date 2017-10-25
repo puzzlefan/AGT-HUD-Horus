@@ -3,11 +3,11 @@
 #define ERROR_PIN 13
 
 //varaibles
-char TestConnection = 't';
+int TestConnection = 0;
 int AnalogTreshhold = 500;
 int counter = 0;
 int SerialSpeed = 38400;
-int ModuloWait = 100000;
+int ModuloWait = 1000000;
 
 void setup() {
   // setting up the Pins to standart connection
@@ -32,7 +32,7 @@ void setup() {
   counter = 0;
   //Start and test the connection
   Serial.println("Test the connection");
-  Serial1.begin(SerialSpeed);
+  Serial1.begin(38400);
   Serial1.write(TestConnection);
   while (!Serial1.available())
   {

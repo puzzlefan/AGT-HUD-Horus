@@ -3,7 +3,7 @@
 #define ERROR_PIN 13
 
 //varaibles
-char TestConnection = 't';
+char TestConnection = t;
 int AnalogTreshhold = 500;
 int counter = 0;
 int SerialSpeed = 38400;
@@ -35,7 +35,6 @@ void setup() {
   Serial1.begin(SerialSpeed);
   while (!Serial1.available())
   {
-    Serial.write(Serial1.read());
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
       Serial.println("Still waiting for request struggles with connection ");
