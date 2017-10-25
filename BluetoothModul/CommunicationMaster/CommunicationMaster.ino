@@ -57,7 +57,7 @@ void loop() {
   ToWrite+=";";
   Serial1.println(ToWrite);
   Serial.println(ToWrite);
-  ToWrite="";
+  ToWrite.remove(0);
   delay(100);
 }
 

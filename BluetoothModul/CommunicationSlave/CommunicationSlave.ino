@@ -82,6 +82,8 @@ void loop() {
     }
     if (ToRead[i]==';') break;
   }
+  Serial.print("integer 2: ");
+  Serial.println(integer);
   counter = 0;
   something();
 }
