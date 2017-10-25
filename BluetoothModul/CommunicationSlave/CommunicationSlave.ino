@@ -9,6 +9,8 @@ int counter = 0;
 int SerialSpeed = 38400;
 int ModuloWait = 100000;
 
+char ToRead[];//could go very wrong
+
 void setup() {
   // setting up the Pins to standart connection
   pinMode(EN_PIN,OUTPUT);
