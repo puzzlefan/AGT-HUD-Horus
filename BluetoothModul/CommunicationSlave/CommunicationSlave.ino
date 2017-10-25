@@ -33,12 +33,12 @@ void setup() {
   //Start and test the connection
   Serial.println("Test the connection");
   Serial1.begin(SerialSpeed);
-  Serial1.write("");
   while (!Serial1.available())
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
       Serial.println("Still waiting for request struggles with connection ");
+      Serial1.write('');
     }
     counter++;
   }
