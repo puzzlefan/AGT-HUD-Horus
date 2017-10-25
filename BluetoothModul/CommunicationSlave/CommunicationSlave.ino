@@ -66,7 +66,7 @@ void loop() {
       Serial.print(a);//Serial1.readString());
       ToRead[counter]=a;
       counter++;
-      if(a==";") break;
+      if(a==";"||counter == 1000) break;
     }
   }
   Serial.println();
