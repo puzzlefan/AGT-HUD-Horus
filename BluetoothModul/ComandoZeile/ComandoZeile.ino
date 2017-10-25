@@ -62,7 +62,7 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
     if(connection&&digitalRead(HC_05_State)==0)
     {
       Serial.println("Disconnected");
-      connection=true;
+      connection=false;
     }
   }
   // READ from HC-05 and WRITE to Arduino Serial Monitor
