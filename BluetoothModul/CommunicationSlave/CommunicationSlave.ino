@@ -1,18 +1,14 @@
-#define STATE_PIN 0
-#define EN_PIN 2
-#define ERROR_PIN 13
+#include "Values.h"
+
+#define STATE_PIN 0   //depends on device
+#define EN_PIN 2      //depends on device
+#define ERROR_PIN 13  //depends on device
 
 //varaibles
-char TestConnection = 1;
-int AnalogTreshhold = 500;
 int counter = 0;
-int SerialSpeed = 38400;
-int ModuloWait = 100000;
-const int MessageLength = 100;//needs to be one bigger than it is to be NUll Terminated
-const int ValueCount = 3;
 
-char ToRead[MessageLength];//could go very wrong
-int data[ValueCount];
+String ToRead = "";//char ToRead[MessageLength+1];//needs to be one bigger than it is to be NUll Terminated
+int data[ValueCount];//is going to be replaced later by I²C array
 
 void setup() {
   // setting up the Pins to standart connection
@@ -66,15 +62,13 @@ void loop() {
     if(Serial1.available())
     {
       char character = Serial1.read();
-      ToRead[counter]=character;
-      counter++;
-      if(character==';'||counter-1 == MessageLength) inLine = false;
+      ToRead+=character;
+      if(character==';') inLine = false;
     }
   }
   inLine = true;
   String integer;
-  counter = 0;
-  for(int i = 0;i<MessageLength;i++)
+  for(int i = 0;i<ToRead.length();i++)
   {
     if(ToRead[i]==','||ToRead[i]==';')
     {

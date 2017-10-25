@@ -1,15 +1,12 @@
+#include "Values.h"
+
 #define STATE_PIN 0
 #define EN_PIN 2
 #define ERROR_PIN 13
 
-//varaibles
-char TestConnection = 1;
-int AnalogTreshhold = 500;
+//Running variables
 int counter = 0;
-int SerialSpeed = 38400;
-int ModuloWait = 1000000;
-
-char ToWrite[] = "1,22,33;";
+char ToWrite[]="123,321,123;";
 
 void setup() {
   // setting up the Pins to standart connection
