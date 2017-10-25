@@ -32,7 +32,7 @@ void setup() {
   counter = 0;
   //Start and test the connection
   Serial.println("Test the connection");
-  Serial1.begin(38400);
+  Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
   Serial1.write(TestConnection);
   while (!Serial1.available())
   {

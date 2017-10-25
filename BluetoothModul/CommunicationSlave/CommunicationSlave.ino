@@ -32,13 +32,12 @@ void setup() {
   counter = 0;
   //Start and test the connection
   Serial.println("Test the connection");
-  Serial1.begin(38400);
+  Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
   while (!Serial1.available())
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
       Serial.println("Still waiting for request struggles with connection ");
-      Serial1.write("");
     }
     counter++;
   }
