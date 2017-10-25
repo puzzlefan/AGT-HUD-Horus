@@ -76,14 +76,15 @@ void loop() {
   counter = 0;
   for(int i = 0;i<MessageLength;i++)
   {
-    if(ToRead[i]!=','||ToRead[i]!=';')
+    if(ToRead[i]==','||ToRead[i]==';')
     {
-      integer+=ToRead[i];
-    }
-    else{
       data[counter]=integer.toInt();
       counter++;
       integer.remove(0);
+    }
+    else
+    {
+      integer+=ToRead[i];
     }
     if (ToRead[i]==';') break;
   }
