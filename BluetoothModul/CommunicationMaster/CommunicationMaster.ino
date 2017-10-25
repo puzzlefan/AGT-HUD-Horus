@@ -57,4 +57,5 @@ void setup() {
 
 void loop() {
   Serial1.println('a');
+  delay(100);
 }
