@@ -56,17 +56,15 @@ void setup() {
 }
 
 void loop() {
-  bool inLine = true;
-  while(inLine)
+  while(true)
   {
     if(Serial1.available())
     {
       char character = Serial1.read();
       ToRead+=character;
-      if(character==';') inLine = false;
+      if(character==';') break;
     }
   }
-  inLine = true;
   String integer;
   for(int i = 0;i<ToRead.length();i++)
   {
