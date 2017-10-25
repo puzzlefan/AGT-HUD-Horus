@@ -74,6 +74,6 @@ void loop() {
   bol = true;
   Serial.println();
   Serial.print("Array; ");
-  Serial.println(ToRead[0]+ToRead[1]+ToRead[2]);
+  Serial.println(ToRead);
   counter = 0;
 }
