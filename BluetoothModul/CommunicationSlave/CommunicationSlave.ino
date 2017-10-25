@@ -59,7 +59,7 @@ void setup() {
 
 void loop() {
   bool bol = true;
-  while(true)
+  while(bol)
   {
     if(Serial1.available())
     {
