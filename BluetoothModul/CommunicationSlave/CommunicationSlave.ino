@@ -58,13 +58,18 @@ void setup() {
 }
 
 void loop() {
-  while(Serial1.available())
+  while(true)
   {
-    char a = Serial1.read();
-    Serial.println(a);//Serial1.readString());
-    ToRead[counter]=a;
-    counter++;
+    if(Serial1.available())
+    {
+      char a = Serial1.read();
+      Serial.print(a);//Serial1.readString());
+      ToRead[counter]=a;
+      counter++;
+      if(a==";") break;
+    }
   }
+  Serial.println();
   Serial.print("Array; ");
   Serial.println(ToRead[0]+ToRead[1]+ToRead[2]);
   counter = 0;
