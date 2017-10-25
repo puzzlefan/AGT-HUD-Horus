@@ -86,6 +86,7 @@ void loop() {
   }
   Serial.print("integer 2: ");
   Serial.println(integer);
+  ToRead.remove(0);
   counter = 0;
   something();
 }
