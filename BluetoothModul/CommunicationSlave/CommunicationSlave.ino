@@ -72,6 +72,7 @@ void loop() {
     {
       data[counter]=integer.toInt();
       counter++;
+      Serial.print("integer: ")
       Serial.println(integer);
       integer.remove(0);
     }
