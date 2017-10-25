@@ -58,7 +58,7 @@ void loop() {
   Serial1.println(ToWrite);
   Serial.println(ToWrite);
   ToWrite.remove(0);
-  delay(100);
+  delay(endDelay);
 }
 
 int something()//getting some data to send
