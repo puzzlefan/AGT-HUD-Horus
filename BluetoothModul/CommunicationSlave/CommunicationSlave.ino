@@ -9,7 +9,7 @@ int counter = 0;
 int SerialSpeed = 38400;
 int ModuloWait = 100000;
 
-char ToRead[];//could go very wrong
+char ToRead[1];//could go very wrong
 
 void setup() {
   // setting up the Pins to standart connection
@@ -53,13 +53,17 @@ void setup() {
     Serial1.write(TestConnection);
   }
   Serial.println("Starting loop");
+  counter = 0;
 }
 
 void loop() {
-  if(Serial1.available())
+  while(Serial1.available())
   {
     char a = Serial1.read();
     Serial.println(a);//Serial1.readString());
-
+    ToRead[counter]=a;
+    counter++;
   }
+  Serial.println(ToRead);
+  counter = 0;
 }
