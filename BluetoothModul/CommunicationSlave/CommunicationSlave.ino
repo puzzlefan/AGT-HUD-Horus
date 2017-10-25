@@ -8,9 +8,11 @@ int AnalogTreshhold = 500;
 int counter = 0;
 int SerialSpeed = 38400;
 int ModuloWait = 100000;
-const int MessageLength = 100;
+const int MessageLength = 100;//needs to be one bigger than it is to be NUll Terminated
+const int ValueCount = 3;
 
 char ToRead[MessageLength];//could go very wrong
+int data[ValueCount];
 
 void setup() {
   // setting up the Pins to standart connection
@@ -66,11 +68,32 @@ void loop() {
       char character = Serial1.read();
       ToRead[counter]=character;
       counter++;
-      if(character==';'||counter == MessageLength) inLine = false;
+      if(character==';'||counter-1 == MessageLength) inLine = false;
     }
   }
   inLine = true;
-  Serial.print("Array; ");
+  String integer;
+  counter = 0;
+  for(int i = 0;i<MessageLength;i++)
+  {
+    if (ToRead[i]==';') break;
+    if(ToRead[i]!=',')
+    {
+      integer+=ToRead[i];
+    }
+    else{
+      data[counter]=integer.toInt();
+      counter++;
+      integer.remove(0);
+    }
+  }
+
+  atoi(ToRead);
+  Serial.print(data[0]);
+  Serial.print(" ");
+  Serial.print(data[1]);
+  Serial.print(" ");
+  Serial.print(data[2]);
   Serial.println(ToRead);
   counter = 0;
 }
