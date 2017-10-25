@@ -1,13 +1,14 @@
-#define STATE_PIN 0
-#define EN_PIN 2
-#define ERROR_PIN 13
+#include "Values.h"
+
+#define STATE_PIN 0   //depends on device
+#define EN_PIN 2      //depends on device
+#define ERROR_PIN 13  //depends on device
 
 //varaibles
-char TestConnection = 't';
-int AnalogTreshhold = 500;
 int counter = 0;
-int SerialSpeed = 38400;
-int ModuloWait = 100000;
+
+String ToRead = "";//char ToRead[MessageLength+1];//needs to be one bigger than it is to be NUll Terminated
+int data[ValueCount];//is going to be replaced later by I²C array
 
 void setup() {
   // setting up the Pins to standart connection
@@ -32,7 +33,7 @@ void setup() {
   counter = 0;
   //Start and test the connection
   Serial.println("Test the connection");
-  Serial1.begin(SerialSpeed);
+  Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
   while (!Serial1.available())
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
@@ -51,9 +52,41 @@ void setup() {
     Serial1.write(TestConnection);
   }
   Serial.println("Starting loop");
+  counter = 0;
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  while(true)
+  {
+    if(Serial1.available())
+    {
+      char character = Serial1.read();
+      ToRead+=character;
+      if(character==';') break;
+    }
+  }
+  String integer;
+  for(int i = 0;i<ToRead.length();i++)
+  {
+    if(ToRead[i]==','||ToRead[i]==';')
+    {
+      data[counter]=integer.toInt();
+      counter++;
+      integer.remove(0);
+    }
+    else
+    {
+      integer+=ToRead[i];
+    }
+    if (ToRead[i]==';') break;
+  }
+  ToRead.remove(0);
+  counter = 0;
+  something();
+}
 
+void something()//does something with the Data which has been archived
+{
+  Serial.print("out: ");
+  Serial.println(data[0]);
 }
