@@ -88,12 +88,12 @@ void loop() {
     }
   }
 
-  atoi(ToRead);
+  // atoi(ToRead);
   Serial.print(data[0]);
   Serial.print(" ");
   Serial.print(data[1]);
   Serial.print(" ");
   Serial.print(data[2]);
-  Serial.println(ToRead);
+  Serial.println();
   counter = 0;
 }
