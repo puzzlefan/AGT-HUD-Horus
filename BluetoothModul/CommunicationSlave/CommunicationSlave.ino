@@ -38,7 +38,7 @@ void setup() {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
       Serial.println("Still waiting for request struggles with connection ");
-      Serial1.write('');
+      Serial1.write("");
     }
     counter++;
   }
