@@ -36,7 +36,7 @@ void setup()   /****** SETUP: RUNS ONCE ******/
   pinMode(HC_05_EN, OUTPUT); 
   pinMode(HC_05_State, INPUT);
   
-  digitalWrite(HC_05_EN, HIGH);  // Set command mode when powering up
+  digitalWrite(HC_05_EN, HIGH);  // Set command mode when powering up, if you want to use this as a serial playgound BETWEEN the two devices it needs to b3e low
   
   Serial.begin(9600);   // For the Arduino IDE Serial Monitor
   Serial.println("Set Serial Monitor to 'Both NL & CR' and '9600 Baud' at bottom right");
