@@ -67,7 +67,7 @@ void loop() {
       Serial.print(a);//Serial1.readString());
       ToRead[counter]=a;
       counter++;
-      if(a==";"||counter == 99) bol=false;
+      if(a==';'||counter == 99) bol=false;
     }
   }
   Serial.print("help");
