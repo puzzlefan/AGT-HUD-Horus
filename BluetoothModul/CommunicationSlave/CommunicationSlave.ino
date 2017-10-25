@@ -3,7 +3,7 @@
 #define ERROR_PIN 13
 
 //varaibles
-int TestConnection = 1;
+char TestConnection = 1;
 int AnalogTreshhold = 500;
 int counter = 0;
 int SerialSpeed = 38400;

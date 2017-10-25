@@ -3,7 +3,7 @@
 #define ERROR_PIN 13
 
 //varaibles
-int TestConnection = 0;
+char TestConnection = 1;
 int AnalogTreshhold = 500;
 int counter = 0;
 int SerialSpeed = 38400;
@@ -44,6 +44,7 @@ void setup() {
     }
     counter++;
   }
+  //Serial.println(Serial1.read());
   if(Serial1.read()!=TestConnection)
   {
     digitalWrite(ERROR_PIN,HIGH);
