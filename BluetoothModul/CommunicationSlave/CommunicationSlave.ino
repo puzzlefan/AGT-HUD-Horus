@@ -70,6 +70,7 @@ void loop() {
       if(a==";"||counter == 1000) bol=false;
     }
   }
+  Serial.print("help");
   bol = true;
   Serial.println();
   Serial.print("Array; ");
