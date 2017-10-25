@@ -8,8 +8,9 @@ int AnalogTreshhold = 500;
 int counter = 0;
 int SerialSpeed = 38400;
 int ModuloWait = 100000;
+const int MessageLength = 100;
 
-char ToRead[1];//could go very wrong
+char ToRead[MessageLength];//could go very wrong
 
 void setup() {
   // setting up the Pins to standart connection
