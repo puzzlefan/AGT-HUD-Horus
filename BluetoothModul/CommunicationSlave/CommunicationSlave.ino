@@ -65,8 +65,6 @@ void loop() {
       if(character==';') break;
     }
   }
-  Serial.print("incoming ....");
-  Serial.println(ToRead);
   String integer;
   for(int i = 0;i<ToRead.length();i++)
   {
@@ -74,8 +72,6 @@ void loop() {
     {
       data[counter]=integer.toInt();
       counter++;
-      Serial.print("integer: ");
-      Serial.println(integer);
       integer.remove(0);
     }
     else
@@ -84,8 +80,6 @@ void loop() {
     }
     if (ToRead[i]==';') break;
   }
-  Serial.print("integer 2: ");
-  Serial.println(integer);
   ToRead.remove(0);
   counter = 0;
   something();
@@ -93,6 +87,6 @@ void loop() {
 
 void something()//does something with the Data which has been archived
 {
-  Serial.print("out: "); 
+  Serial.print("out: ");
   Serial.println(data[0]);
 }
