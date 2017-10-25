@@ -1,9 +1,12 @@
 #include "headgui.h"
-#include <QGridLayout>
-#include <QLabel>
-#include <QResizeEvent>
+
 //#include "LeptonThread.h"
 #include <iostream>
+
+#include <QMainWindow>
+#include <QLabel>
+#include <QGridLayout>
+#include <QResizeEvent>
 
 HeadGUI::HeadGUI(QWidget *parent)
     : QMainWindow(parent)
@@ -13,18 +16,23 @@ HeadGUI::HeadGUI(QWidget *parent)
     layout = new QGridLayout;
 
     mainWidget->setLayout(layout);
-    resize(1400,500);//%
+    resize(1400,500);
+
+    createConnections();
 
     createIRPicture();
     createBiometric();
+
     setWindowTitle("PersonalGUI Helmet");
+
+    emit certifyPersonaeSignal();
 }
 
 void HeadGUI::createBiometric()
 {
     Personae = new QLabel();
     layout->addWidget(Personae,0,2,1,2);
-    Personae->setText("Hello World");
+
 
     TempHead = new QLabel();
     layout->addWidget(TempHead,1,2,1,1);
@@ -35,7 +43,7 @@ void HeadGUI::createBiometric()
     COHead = new QLabel();
     layout->addWidget(COHead,2,2,1,1);
 
-    COFoot = new QLabel();
+    COFoot = new Label();
     layout->addWidget(COFoot,2,3,1,1);
     std::cout <<" created Biometric"<<std::endl;
 }
@@ -83,7 +91,58 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue)
     IRPicture->setPixmap(pixmap);
 }*/
 
+void HeadGUI::createConnections()
+{
+    connect(this,SIGNAL(certifyPersonaeSignal()),this,SLOT(certifyPersonae()));
+    connect(this,SIGNAL(upSignal()),this,SLOT(up()));
+    connect(this,SIGNAL(downSignal()),this,SLOT(down()));
+    connect(this,SIGNAL(rightSignal()),this,SLOT(right()));
+    connect(this,SIGNAL(leftSignal()),this,SLOT(left()));
+    connect(this,SIGNAL(backSignal()),this,SLOT(back()));
+    connect(this,SIGNAL(certifySignal()),this,SLOT(certify()));
+}
+
+void HeadGUI::certifyPersonae()
+{
+    Personae->setText("Hello World");
+}
+
+void HeadGUI::up()
+{
+    //vertical -- if <1
+}
+
+void HeadGUI::down()
+{
+    //vertical ++
+}
+
+void HeadGUI::right()
+{
+    //horizontal ++
+}
+
+void HeadGUI::left()
+{
+    //horizontal --
+}
+
+void HeadGUI::back()
+{
+    //if first time horizontal and vertical =1, second time Mesagebox: Emergency, sending Emergency
+}
+
+void HeadGUI::certify()
+{
+    //sending whatever
+}
+
 HeadGUI::~HeadGUI()
 {
 
+}
+
+Label::Label():QLabel(parent)
+{
+    setText("Hello World");
 }

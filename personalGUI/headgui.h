@@ -1,12 +1,17 @@
 #ifndef HEADGUI_H
 #define HEADGUI_H
 
-#include <QtGui>
 #include <QMainWindow>
 #include <QLabel>
 #include <QGridLayout>
+#include <QResizeEvent>
+
 //#include <LeptonThread.h>
 
+
+class QLabel;
+class QPixmap;
+class QGridLayout;
 
 class HeadGUI : public QMainWindow
 {
@@ -21,24 +26,28 @@ public:
   //  void updateImage(unsigned short *, int, int);
 
 signals:
+    void certifyPersonaeSignal();
     void upSignal();
     void downSignal();
     void rightSignal();
     void leftSignal();
     void backSignal();
     void certifySignal();
-/*
+
 private slots:
+    void certifyPersonae();
     void up();
     void down();
     void right();
     void left();
     void back();
     void certify();
-*/
+
 private:
+    //other
     QGridLayout *layout;
     QWidget *mainWidget;
+    void createConnections();
 
     //navigation/communication
     void createCommunication();
