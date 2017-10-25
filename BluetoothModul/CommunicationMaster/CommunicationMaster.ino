@@ -56,5 +56,5 @@ void setup() {
 }
 
 void loop() {
-  Serial1.write("a");
+  Serial1.println('a');
 }
