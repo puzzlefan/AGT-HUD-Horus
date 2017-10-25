@@ -66,6 +66,6 @@ void loop() {
     counter++;
   }
   Serial.print("Array; ");
-  Serial.println(ToRead);
+  Serial.println(ToRead[0]+ToRead[1]+ToRead[2]);
   counter = 0;
 }
