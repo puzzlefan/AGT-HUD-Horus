@@ -1,12 +1,12 @@
 /* Example: BlueTooth HC-05 Setup
- - WHAT IT DOES: 
+ - WHAT IT DOES:
    - Sets "EN" pin on HC-05 HIGH to enable command mode
    - THEN applies Vcc from 2 Arduino pins to start command mode
-   - SHOULD see the HC-05 LED Blink SLOWLY: 2 seconds ON/OFF 
- 
+   - SHOULD see the HC-05 LED Blink SLOWLY: 2 seconds ON/OFF
+
  Sends, Receives AT commands
    For Setup of HC-05 type BlueTooth Module
-   NOTE: Set Serial Monitor to 'Both NL & CR' and '9600 Baud' at bottom right   
+   NOTE: Set Serial Monitor to 'Both NL & CR' and '9600 Baud' at bottom right
  - SEE the comments after "//" on each line below
  - CONNECTIONS:
    - GND
@@ -27,9 +27,9 @@
 
 void setup()   /****** SETUP: RUNS ONCE ******/
 {
-  pinMode(HC_05_EN, OUTPUT);   
+  pinMode(HC_05_EN, OUTPUT);
   digitalWrite(HC_05_EN, HIGH);  // Set command mode when powering up, if you want to use this as a serial playgound BETWEEN the two devices it needs to b3e low
-  
+
   Serial.begin(9600);   // For the Arduino IDE Serial Monitor
   Serial.println("Set Serial Monitor to 'Both NL & CR' and '9600 Baud' at bottom right");
   Serial.println("LED should blink SLOWLY: 2 Seconds ON/OFF");
@@ -62,5 +62,3 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
 //NONE
 
 //*********( THE END )***********
-
-
