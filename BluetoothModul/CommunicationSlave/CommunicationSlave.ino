@@ -54,6 +54,8 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  if(Serial1.available())
+  {
+    Serial.println(Serial1.read());
+  }
 }

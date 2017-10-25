@@ -9,6 +9,8 @@ int counter = 0;
 int SerialSpeed = 38400;
 int ModuloWait = 1000000;
 
+String ToWrite = "abc";
+
 void setup() {
   // setting up the Pins to standart connection
   pinMode(EN_PIN,OUTPUT);
@@ -54,6 +56,5 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  Serial1.write(ToWrite);
 }
