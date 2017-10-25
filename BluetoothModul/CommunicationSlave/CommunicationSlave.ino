@@ -80,13 +80,11 @@ void loop() {
     }
     if (ToRead[i]==';') break;
   }
-
-  // atoi(ToRead);
-  Serial.print(data[0]);
-  Serial.print(" ");
-  Serial.print(data[1]);
-  Serial.print(" ");
-  Serial.print(data[2]);
-  Serial.println();
   counter = 0;
+  something();
+}
+
+void something()//does something with the Data which has been archived
+{
+  Serial.print(data[0]);
 }

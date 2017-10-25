@@ -53,9 +53,14 @@ void setup() {
 }
 
 void loop() {
-  ToWrite+=analogRead(0);
+  ToWrite+=something();
   ToWrite+=";";
   Serial1.println(ToWrite);
   ToWrite="";
   delay(100);
+}
+
+int something()//getting some data to send
+{
+  analogRead(0);
 }
