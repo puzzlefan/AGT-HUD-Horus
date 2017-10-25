@@ -15,8 +15,6 @@
   1.Enter "AT" command
     - if module responds OK everything is ok
     - if module does not respond you better trench your grave
-  2.It is possible to Enter "AT+UART=9600,0,0" for better access later
-    -you could check if that has worked as promised with "AT+UART?"
 4.If the device should become a slave
   1.Use "AT+ORGL" to reset to factory default (default is slave mode)
   2.Use "AT+RMAAD" to clear all stored devices, don't know why but the instructions have told me to do so

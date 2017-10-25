@@ -23,10 +23,8 @@
 /*-----( Declare Constants and Pin Numbers )-----*/
 #define HC_05_TXD_ARDUINO_RXD 10
 #define HC_05_RXD_ARDUINO_TXD 11
-#define HC_05_EN        4
-#define HC_05_State     5
-
-bool connection = false;
+#define HC_05_EN        2
+#define HC_05_State     0 //has to be analog because voltage to small
 
 /*-----( Declare objects )-----*/
 SoftwareSerial BTSerial(HC_05_TXD_ARDUINO_RXD, HC_05_RXD_ARDUINO_TXD); // RX | TX
@@ -38,11 +36,11 @@ void setup()   /****** SETUP: RUNS ONCE ******/
   pinMode(HC_05_EN, OUTPUT); 
   pinMode(HC_05_State, INPUT);
   
-  digitalWrite(HC_05_EN, LOW);  // Set command mode when powering up
+  digitalWrite(HC_05_EN, HIGH);  // Set command mode when powering up
   
   Serial.begin(9600);   // For the Arduino IDE Serial Monitor
   Serial.println("Set Serial Monitor to 'Both NL & CR' and '9600 Baud' at bottom right");
-  Serial.println("Applying VCC Power. LED should blink SLOWLY: 2 Seconds ON/OFF");
+  Serial.println("LED should blink SLOWLY: 2 Seconds ON/OFF");
   delay(2000);
   Serial.println("Enter AT commands in top window.");
   BTSerial.begin(38400);  // HC-05 default speed in AT command mode
@@ -52,19 +50,6 @@ void setup()   /****** SETUP: RUNS ONCE ******/
 
 void loop()   /****** LOOP: RUNS CONSTANTLY ******/
 {
-  if(!connection&&digitalRead(HC_05_State)==1)
-  {
-    Serial.println("Connected");
-    connection=true;
-  }
-  else
-  {
-    if(connection&&digitalRead(HC_05_State)==0)
-    {
-      Serial.println("Disconnected");
-      connection=false;
-    }
-  }
   // READ from HC-05 and WRITE to Arduino Serial Monitor
   if (BTSerial.available())
   {
