@@ -1,0 +1,42 @@
+-If you get any errors you can look them up in the CommadAndError.txt
+-Source: https://arduino-info.wikispaces.com/BlueTooth-HC05-HC06-Modules-How-To
+-AT Command Description: http://cdn-reichelt.de/documents/datenblatt/A300/TECHNISCHEDOKUMENTATIONBLUETOOTHMODULE.pdf
+
+1.Connect device to Arduino as follows
+  1.State ->  Can be connected but is not required
+  2.RXD   ->  Pin 10
+  3.TXD   ->  Pin 11
+  4.GND   ->  GND
+  5.VCC   ->  +5V
+  6.EN    ->  +5V
+
+2.Start command program on Arduino
+3.Open serial terminal with 9600 BAUD and "sowohl NL als auch CR"
+  1.Enter "AT" command
+    - if module responds OK everything is ok
+    - if module does not respond you better trench your grave
+4.If the device should become a slave
+  1.Use "AT+ORGL" to reset to factory default (default is slave mode)
+  2.Use "AT+RMAAD" to clear all stored devices, don't know why but the instructions have told me to do so
+  3.Use "AT+ADDR" to Display the address of the slave
+  4.Resume with point 6
+5.If the device should become the Master (at this point the slave should already be online)
+  1.Use "AT+RMAAD" to clear any paired devices
+  2.Use "AT+ROLE=1" to tell the module to be the Master
+  3.Use "AT+RESET" to let the changes count
+  4.Use "AT+CMODE=1" to let the device to anybody who is stupid enough to let us
+  5.Use "AT+INQM=0,1,48" to test the module by searching for one devise in around 48s
+  6.Use "AT+PSWD=<password>" to set a numeric password, standard would be 1234
+    -can be checked with AT+PSWD?
+  7.Use "AT+INIT" Start Serial Port Profile to communicate later over the serial connection with the other module
+    -error 17 indicates that system already has initialized the serial communication
+  8. Use "AT+INQM" to start Searching for other devices
+    -Resume when you find the Slave address otherwise repeat step 8
+    -When you are not sure about the address you can quarry the name with "AT+RNAME? <address>" replace : with ,
+  9.Use "AT+PAIR=<address>,<timeout>" to pair with the slave, replace the : of the address with , and the timeout is the time a slave gets for entering the pin
+  10.Use "AT+BIND=<address>" so you don't have to enter the address all the time and again replace : with ,
+  11.Use "AT+CMODE=0" to allow connections only to specified slave
+  12 Use "AT+LINK=<address>" to complete the Process
+
+6.Disconnect module
+7.Connect Module to final Pins
