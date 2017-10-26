@@ -15,7 +15,7 @@ LeptonThread::~LeptonThread() { }
 #if HAVE_LEPTON
 const char *LeptonThread::device = "/dev/spidev0.1"; // Change to 0.0 if necessary!
 unsigned char LeptonThread::mode = 0, LeptonThread::bits = 8;
-unsigned int LeptonThread::speed = 12367872;//2770944;//12717500;//16000000;
+unsigned int LeptonThread::speed = 18000000;//borrowed from python//12367872;//2770944;//12717500;//16000000;
 unsigned short LeptonThread::delay = 0;
 QVector<unsigned char> LeptonThread::tx(LeptonThread::PacketBytes, 0);//tells how long the vector is? %
 
@@ -72,14 +72,14 @@ void LeptonThread::run() {
 
     int resets = 0; // Number of times we've reset the 0...59 loop for packets
     int errors = 0; // Number of error-packets received
-	while (true)
+	for(int krack = 0:krack<8;krack++;)//while (true)
 	{
 //		int iSegment;
 //		for (iSegment = 1; iSegment < 5;)
 ///		{
 //			SegmentCorrect = true;//%
 			int iPacket;
-      int iSegment;
+      int iSegment=0;
 			for (iPacket = 0; iPacket < 2 * SegmentHeight; )
 			{
 				unsigned char *packet = &segmentRAW[iPacket*PacketBytes];// + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
@@ -98,6 +98,7 @@ void LeptonThread::run() {
 				else
 				{
 					packetNumber = packet[1];
+          std::cout << packetNumber << '\n';
 				}
 #if DEBUG_LEPTON
 				if (sequence.empty() || sequence.back().first != packetNumber)
@@ -105,7 +106,7 @@ void LeptonThread::run() {
 				else
 					++sequence.back().second;
 #endif
-				if (iPacket == 19) // %
+				if (packetNumber == 20) // %
 				{
           iSegment=packet[0]>>4;
           std::cout << "Segment Nr: " << iSegment << std::endl;
