@@ -72,7 +72,7 @@ void LeptonThread::run() {
 
     int resets = 0; // Number of times we've reset the 0...59 loop for packets
     int errors = 0; // Number of error-packets received
-	for(int krack = 0:krack<8;krack++;)//while (true)
+	for(int krack = 0;krack<8;krack++;)//while (true)
 	{
 //		int iSegment;
 //		for (iSegment = 1; iSegment < 5;)
