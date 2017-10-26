@@ -106,7 +106,7 @@ void LeptonThread::run() {
 				else
 					++sequence.back().second;
 #endif
-				if (packetNumber == 20) // %
+				if (packetNumber == 19) // %
 				{
           iSegment=packet[0]>>4;
           std::cout << "Segment Nr: " << iSegment << std::endl;
