@@ -28,6 +28,7 @@ HeadGUI::HeadGUI(QWidget *parent)
     mainWidget->setLayout(layout);
     mainWidget->show();
 
+    //Testsignal real orgin from somewhere else
     emit certifyPersonaeSignal();//from where -> headquaters
     emit backSignal();
     emit rightSignal();
