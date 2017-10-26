@@ -13,6 +13,8 @@ class MainWindow : public QMainWindow {
 
     enum { ImageWidth = 320, ImageHeight = 240 };
 
+    static int snapshotCount;
+
     QLabel *imageLabel;
     LeptonThread *thread;
     QGridLayout *layout;
@@ -25,6 +27,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
 
 public slots:
+    void saveSnapshot();
     void updateImage(unsigned short *, int, int);
 };
 

@@ -26,10 +26,10 @@
 #include <QDebug>
 #include <QVector>
 
-
 class LeptonThread : public QThread {
     Q_OBJECT
 
+    QVector<unsigned char> segmentRAW;
     QVector<unsigned char> result;
     QVector<unsigned short> rawData;
 
@@ -57,11 +57,12 @@ public:
 		FrameWidth = 160,
 		FrameHeight = 120,
 		PacketWidth = 80,
-        PacketWords = PacketWidth + 2,
+    PacketWords = PacketWidth + 2,
 		RowPacketWords = 2*PacketWords,
-        PacketBytes = 2*PacketWords,
-        FrameWords = FrameWidth*FrameHeight,
-		SegmentHeight = FrameHeight/4
+    PacketBytes = 2*PacketWords,
+    FrameWords = FrameWidth*FrameHeight,
+		SegmentHeight = FrameHeight/4,
+    SegmentPackets = 60,
     };
 
     LeptonThread();
