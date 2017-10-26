@@ -1,0 +1,2 @@
+SDK von Groupget Seite musste mit compeliert werden
+erweiterung des Lepton_qt programms von der Groupget Seite
