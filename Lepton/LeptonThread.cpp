@@ -87,7 +87,7 @@ void LeptonThread::run() {
 			}
 
 			int packetNumber;
-
+			if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verknüpfung ->packet has to have an value %
 			{
 				packetNumber = -1;
 			}
