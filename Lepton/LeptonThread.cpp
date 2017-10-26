@@ -98,7 +98,7 @@ void LeptonThread::run() {
 				else
 				{
 					packetNumber = packet[1];
-          std::cout << packetNumber << '\n';
+          //std::cout << packetNumber << '\n';
 				}
 #if DEBUG_LEPTON
 				if (sequence.empty() || sequence.back().first != packetNumber)
@@ -108,8 +108,10 @@ void LeptonThread::run() {
 #endif
 				if (packetNumber == 19) // %
 				{
-          iSegment=4>>packet[0];
-          std::cout << "Segment Nr: " << iSegment << std::endl;
+          iSegment=packet[0];
+          std::cout << "Segment Nr unverschoben: " << iSegment << std::endl;
+          iSegment >>=4;
+          std::cout << "Segment Nr verschoben: " << iSegment << std::endl;
           /*
           if ((packet[0] >> 4) == 0)
 					{
