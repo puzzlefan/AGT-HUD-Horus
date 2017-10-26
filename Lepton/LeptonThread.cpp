@@ -74,110 +74,110 @@ void LeptonThread::run() {
     int errors = 0; // Number of error-packets received
 	while (true)
 	{
-			int iPacket;
-      int iSegment=0;
-			for (iPacket = 0; iPacket < 2 * SegmentHeight; )
+		int iPacket;
+		int iSegment = 0;
+		for (iPacket = 0; iPacket < 2 * SegmentHeight; )
+		{
+			unsigned char *packet = &segmentRAW[iPacket*PacketBytes];// + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
+
+			if (getPacket(iPacket, packet) < 1)
 			{
-				unsigned char *packet = &segmentRAW[iPacket*PacketBytes];// + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
-
-				if (getPacket(iPacket, packet) < 1)
-				{
-					qDebug() << "Error transferring SPI packet";
-					return;
-				}
-
-				int packetNumber;
-
-				{
-					packetNumber = -1;
-				}
-				else
-				{
-					packetNumber = packet[1];
-				}
-#if DEBUG_LEPTON
-				if (sequence.empty() || sequence.back().first != packetNumber)
-					sequence.push_back(std::make_pair(packetNumber, 1));
-				else
-					++sequence.back().second;
-#endif
-				if (packetNumber == 20) // readout of the segment number, because of historical reasons this has to happen in two lines
-				{
-          iSegment=packet[0];
-          iSegment >>=4;
-				}
-
-
-				if (packetNumber == -1)
-				{
-					usleep(1000);
-					if (++errors > 300)
-					{
-						break;
-					}
-					continue;
-				}
-
-				if (packetNumber != iPacket)
-				{
-					usleep(1000);
-					break;
-				}
-
-				++iPacket;
+				qDebug() << "Error transferring SPI packet";
+				return;
 			}
 
-			if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt
+			int packetNumber;
+
 			{
-				if (++resets >= 750) //timeout solange 750 nicht erreicht wird wird diese Schleife wiederholt
+				packetNumber = -1;
+			}
+			else
+			{
+				packetNumber = packet[1];
+			}
+#if DEBUG_LEPTON
+			if (sequence.empty() || sequence.back().first != packetNumber)
+				sequence.push_back(std::make_pair(packetNumber, 1));
+			else
+				++sequence.back().second;
+#endif
+			if (packetNumber == 20) // readout of the segment number, because of historical reasons this has to happen in two lines
+			{//who is able to read has advanteges! 20 menas 20 and not 19!
+				iSegment = packet[0];
+				iSegment >>= 4;
+			}
+
+
+			if (packetNumber == -1)
+			{
+				usleep(1000);
+				if (++errors > 300)
 				{
-					qDebug() << "Packet reset counter hit 750";
-					resets = 0;
-					usleep(750000);
+					break;
 				}
 				continue;
 			}
 
-  if(iSegment!=0)//bringing the segment to the place it belongs to
-  {
-    for (int i = 0; i < PacketBytes * SegmentPackets; i++)
-    {
-      result[(iSegment-1)*PacketBytes*SegmentHeight*2+i]=segmentRAW[i];
-    }
-  }
+			if (packetNumber != iPacket)
+			{
+				usleep(1000);
+				break;
+			}
+
+			++iPacket;
+		}
+
+		if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt
+		{
+			if (++resets >= 750) //timeout solange 750 nicht erreicht wird wird diese Schleife wiederholt
+			{
+				qDebug() << "Packet reset counter hit 750";
+				resets = 0;
+				usleep(750000);
+			}
+			continue;
+		}
+
+		if (iSegment != 0)//bringing the segment to the place it belongs to
+		{
+			for (int i = 0; i < PacketBytes * SegmentPackets; i++)
+			{
+				result[(iSegment - 1)*PacketBytes*SegmentHeight * 2 + i] = segmentRAW[i];
+			}
+		}
 
 #if DEBUG_LEPTON
-        QString msg;
-        QTextStream os(&msg);
-        bool chain = false, first = true; int chain0, chain1;
-        for (std::list< std::pair<int, int> >::iterator iSeq = sequence.begin(); iSeq != sequence.end(); ++iSeq) {
-            if (chain && iSeq->first==chain1+1) { ++chain1; continue; }
-            if (chain && chain1!=chain0) os << "-" << chain1;
-            if (iSeq->first >= 0 && !chain) { chain = true; chain0 = chain1 = iSeq->first; }
-            if (first) first = false; else os << " ";
-            if (iSeq->first==-1) os << "*"; else os << iSeq->first;
-            if (iSeq->second!=1) { os << "^" << iSeq->second; chain = false; }
-        }
-        if (chain && chain1!=chain0) os << "-" << chain1;
-        qDebug() << msg;
-        sequence.clear();
-        // qDebug() << resets << "resets," << errors << "errors";
+		QString msg;
+		QTextStream os(&msg);
+		bool chain = false, first = true; int chain0, chain1;
+		for (std::list< std::pair<int, int> >::iterator iSeq = sequence.begin(); iSeq != sequence.end(); ++iSeq) {
+			if (chain && iSeq->first == chain1 + 1) { ++chain1; continue; }
+			if (chain && chain1 != chain0) os << "-" << chain1;
+			if (iSeq->first >= 0 && !chain) { chain = true; chain0 = chain1 = iSeq->first; }
+			if (first) first = false; else os << " ";
+			if (iSeq->first == -1) os << "*"; else os << iSeq->first;
+			if (iSeq->second != 1) { os << "^" << iSeq->second; chain = false; }
+		}
+		if (chain && chain1 != chain0) os << "-" << chain1;
+		qDebug() << msg;
+		sequence.clear();
+		// qDebug() << resets << "resets," << errors << "errors";
 #endif
 
-        resets = 0; errors = 0;
+		resets = 0; errors = 0;
 
-        uint16_t minValue = 65535;
-        uint16_t maxValue = 0;
-        unsigned char *in = &result[0];
-        unsigned short *out = &rawData[0];
-        for (int iPacket = 0; iPacket < FrameHeight*2; ++iPacket) {//!
-            in += 4;//first color
-            for (int iCol = 0; iCol < PacketWidth; ++iCol) //reads every pixel of the line(one subpacket)
+		uint16_t minValue = 65535;
+		uint16_t maxValue = 0;
+		unsigned char *in = &result[0];
+		unsigned short *out = &rawData[0];
+		for (int iPacket = 0; iPacket < FrameHeight * 2; ++iPacket) {//!
+			in += 4;//first color
+			for (int iCol = 0; iCol < PacketWidth; ++iCol) //reads every pixel of the line(one subpacket)
 			{
-                unsigned short value = in[0];//value wird farbe zugewiesen
-                value <<= 8;//8 weil Wort =8 bits, verschiebt um 8 Stellen nach vorne
-                value |= in[1];//macht darauf eine 16-bit Farbe
-                in += 2;//beginn von n�chster n�chtse Farbe
+				unsigned short value = in[0];//value wird farbe zugewiesen
+				value <<= 8;//8 weil Wort =8 bits, verschiebt um 8 Stellen nach vorne
+				value |= in[1];//macht darauf eine 16-bit Farbe
+				in += 2;//beginn von n�chster n�chtse Farbe
 
 				if (value > maxValue)
 				{
@@ -189,14 +189,14 @@ void LeptonThread::run() {
 					minValue = value;
 				}
 
-                *(out++) = value;//weist rawdata die Werte zu
-            }
-        }
-        emit updateImage(&rawData[0], minValue, maxValue);//signal for the updateImage slot of mainwindow.cpp
-        //std::cout << "hier auch nicht" << '\n';
+				*(out++) = value;//weist rawdata die Werte zu
+			}
+		}
+		emit updateImage(&rawData[0], minValue, maxValue);//signal for the updateImage slot of mainwindow.cpp
+		//std::cout << "hier auch nicht" << '\n';
 #if !HAVE_LEPTON
-        usleep(50000);  // Need to slow things down if no ioctl call!
-        counter = (counter + 1)%520;
+		usleep(50000);  // Need to slow things down if no ioctl call!
+		counter = (counter + 1) % 520;
 #endif
-    }
+	}
 }
