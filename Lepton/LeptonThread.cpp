@@ -171,7 +171,7 @@ void LeptonThread::run() {
   {
     for (int i = 0; i < PacketBytes * SegmentPackets; i++)
     {
-      result[(iSegment-1)*PacketBytes*SegmentHeight*2]=segmentRAW[i];
+      result[(iSegment-1)*PacketBytes*SegmentHeight*2+i]=segmentRAW[i];
     }
   }
 
