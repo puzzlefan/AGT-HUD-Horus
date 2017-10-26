@@ -74,7 +74,6 @@ void LeptonThread::run() {
     int errors = 0; // Number of error-packets received
 	while (true)
 	{
-		Frame.start();
 		int iPacket;
 		int iSegment = 0;
 		for (iPacket = 0; iPacket < 2 * SegmentHeight; )
@@ -138,7 +137,7 @@ void LeptonThread::run() {
 			}
 			continue;
 		}
-		copy.start();
+
 		if (iSegment != 0)//bringing the segment to the place it belongs to
 		{
 			for (int i = 0; i < PacketBytes * SegmentPackets; i++)
@@ -146,7 +145,6 @@ void LeptonThread::run() {
 				result[(iSegment - 1)*PacketBytes*SegmentHeight * 2 + i] = segmentRAW[i];
 			}
 		}
-		std::cout << "Copy Time: " << copy.time_since_start() << std::endl;
 
 #if DEBUG_LEPTON
 		QString msg;
@@ -195,7 +193,7 @@ void LeptonThread::run() {
 			}
 		}
 		emit updateImage(&rawData[0], minValue, maxValue);//signal for the updateImage slot of mainwindow.cpp
-		std::cout << "Frame Time: " << Frame.time_since_start() << std::endl;
+		//std::cout << "hier auch nicht" << '\n';
 #if !HAVE_LEPTON
 		usleep(50000);  // Need to slow things down if no ioctl call!
 		counter = (counter + 1) % 520;

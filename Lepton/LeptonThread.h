@@ -67,10 +67,6 @@ public:
     SegmentPackets = 60,
     };
 
-	Easy_timing Frame = new Easy_timing();
-	Easy_timing copy = new Easy_timing();
-
-
     LeptonThread();
     ~LeptonThread();
 
