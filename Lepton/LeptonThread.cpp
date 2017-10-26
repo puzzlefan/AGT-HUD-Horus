@@ -110,7 +110,7 @@ void LeptonThread::run() {
 				{
           iSegment=packet[0];
           iSegment >>=4;
-          std::cout << "Segment Nr verschoben: " << iSegment << std::endl;
+          //std::cout << "Segment Nr verschoben: " << iSegment << std::endl;
           /*
           if ((packet[0] >> 4) == 0)
 					{
@@ -169,7 +169,7 @@ void LeptonThread::run() {
 /*
 *here the coping should take place
 */
-  std::cout << "Fehler?" << '\n';
+  //std::cout << "Fehler?" << '\n';
   if(iSegment!=0)
   {
     for (int i = 0; i < PacketBytes * SegmentPackets; i++)
@@ -177,7 +177,7 @@ void LeptonThread::run() {
       result[(iSegment-1)*PacketBytes*SegmentHeight*2+i]=segmentRAW[i];
     }
   }
-  std::cout << "nein" << '\n';
+  //std::cout << "nein" << '\n';
 
 #if DEBUG_LEPTON
         QString msg;
