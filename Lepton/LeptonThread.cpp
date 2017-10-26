@@ -167,7 +167,7 @@ void LeptonThread::run() {
 /*
 *here the coping should take place
 */
-  if(iSegment!=0)
+  if(iSegment>0&&iSegment<5)
   {
     for (int i = 0; i < PacketBytes * SegmentPackets; i++)
     {
