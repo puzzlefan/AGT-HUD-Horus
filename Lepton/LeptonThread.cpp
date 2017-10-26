@@ -83,13 +83,13 @@ void LeptonThread::run() {
 			for (iPacket = 0; iPacket < 2 * SegmentHeight; )
 			{
 				unsigned char *packet = &segmentRAW[iPacket*PacketBytes];// + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
-
+        std::cout << "und hier nicht mehr oder?" << '\n';
 				if (getPacket(iPacket, packet) < 1)
 				{
 					qDebug() << "Error transferring SPI packet";
 					return;
 				}
-
+        std::cout << "spätestens hier" << '\n';
 				int packetNumber;
 				if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verkn�pfung ->packet has to have an value %
 				{
