@@ -6,7 +6,7 @@
 
 LeptonThread::LeptonThread()
     : QThread()
-    , segment(PacketBytes*SegmentPackets)
+    , segmentRAW(PacketBytes*SegmentPackets)
     , result(2 * PacketBytes*FrameHeight)//size of vector
     , rawData(FrameWords) { }//size of Vector
 //ugly inhertance
@@ -15,7 +15,7 @@ LeptonThread::~LeptonThread() { }
 #if HAVE_LEPTON
 const char *LeptonThread::device = "/dev/spidev0.1"; // Change to 0.0 if necessary!
 unsigned char LeptonThread::mode = 0, LeptonThread::bits = 8;
-unsigned int LeptonThread::speed = 8501760;//12367872;//2770944;//12717500;//16000000;
+unsigned int LeptonThread::speed = 12367872;//2770944;//12717500;//16000000;
 unsigned short LeptonThread::delay = 0;
 QVector<unsigned char> LeptonThread::tx(LeptonThread::PacketBytes, 0);//tells how long the vector is? %
 
@@ -74,14 +74,15 @@ void LeptonThread::run() {
     int errors = 0; // Number of error-packets received
 	while (true)
 	{
-		int iSegment;
-		for (iSegment = 1; iSegment < 5;)
-		{
-			SegmentCorrect = true;//%
+//		int iSegment;
+//		for (iSegment = 1; iSegment < 5;)
+///		{
+//			SegmentCorrect = true;//%
 			int iPacket;
+      int iSegment;
 			for (iPacket = 0; iPacket < 2 * SegmentHeight; )
 			{
-				unsigned char *packet = &result[iPacket*PacketBytes + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
+				unsigned char *packet = &segmentRAW[iPacket*PacketBytes];// + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
 
 				if (getPacket(iPacket, packet) < 1)
 				{
@@ -106,7 +107,10 @@ void LeptonThread::run() {
 #endif
 				if (iPacket == 19) // %
 				{
-					if ((packet[0] >> 4) == 0)
+          iSegment=packet[0]>>4;
+          std::cout << "Segment Nr: " << iSegment << std::endl;
+          /*
+          if ((packet[0] >> 4) == 0)
 					{
 						SegmentCorrect = false;
 						std::cout<<"Segment Falsch 000"<<std::endl;
@@ -122,6 +126,7 @@ void LeptonThread::run() {
 						SegmentCorrect = false;
 						std::cout<<"Segment Falsch"<<std::endl;
 					}
+          */
 				}
 
 
@@ -155,10 +160,19 @@ void LeptonThread::run() {
 				continue;
 			}
 
-			++iSegment;
-		}
+			//++iSegment;
+		//}
 
-
+/*
+*here the coping should take place
+*/
+  if(iSegment!=0)
+  {
+    for (int i = 0; i < PacketBytes * SegmentPackets; i++)
+    {
+      result[(iSegment-1)*PacketBytes*SegmentHeight*2]=segmentRAW[i];
+    }
+  }
 
 #if DEBUG_LEPTON
         QString msg;
