@@ -1,11 +1,12 @@
 #include "LeptonThread.h"
 
+#include <iostream>
 #include <QString>
 #include <QTextStream>
 
 LeptonThread::LeptonThread()
     : QThread()
-    , result(RowPacketBytes*FrameHeight)//size of vector 
+    , result(2 * PacketBytes*FrameHeight)//size of vector 
     , rawData(FrameWords) { }//size of Vector
 //ugly inhertance
 LeptonThread::~LeptonThread() { }
@@ -13,7 +14,7 @@ LeptonThread::~LeptonThread() { }
 #if HAVE_LEPTON
 const char *LeptonThread::device = "/dev/spidev0.1"; // Change to 0.0 if necessary!
 unsigned char LeptonThread::mode = 0, LeptonThread::bits = 8;
-unsigned int LeptonThread::speed = 16000000;
+unsigned int LeptonThread::speed = 17432123;//12367872;//2770944;//12717500;//16000000;
 unsigned short LeptonThread::delay = 0;
 QVector<unsigned char> LeptonThread::tx(LeptonThread::PacketBytes, 0);//tells how long the vector is? %
 
@@ -73,13 +74,13 @@ void LeptonThread::run() {
 	while (true)
 	{
 		int iSegment;
-		for (iSegment = 1, iSegment < 5;)
+		for (iSegment = 1; iSegment < 5;)
 		{
 			SegmentCorrect = true;//%
 			int iPacket;
 			for (iPacket = 0; iPacket < 2 * SegmentHeight; ) 
 			{
-				unsigned char *packet = &result[iPacket*PacketBytes + (iSegment-1)*PacketBytes*SegmentHeight*2];
+				unsigned char *packet = &result[iPacket*PacketBytes + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
 
 				if (getPacket(iPacket, packet) < 1)
 				{
@@ -102,20 +103,23 @@ void LeptonThread::run() {
 				else
 					++sequence.back().second;
 #endif
-				if (ipacket == 19) // %
+				if (iPacket == 19) // %
 				{
 					if ((packet[0] >> 4) == 0)
 					{
 						SegmentCorrect = false;
+						std::cout<<"Segment Falsch 000"<<std::endl;
 					}
 
 					if ((packet[0] >> 4) == iSegment)
 					{
 						SegmentCorrect = true;
+						std::cout<<"Segment: " <<iSegment<<std::endl;
 					}
 					else
 					{
 						SegmentCorrect = false;
+						std::cout<<"Segment Falsch"<<std::endl;
 					}
 				}
 
@@ -201,7 +205,6 @@ void LeptonThread::run() {
                 *(out++) = value;//weist rawdata die Werte zu
             }
         }
-
         emit updateImage(&rawData[0], minValue, maxValue);//signal for the updateImage slot of mainwindow.cpp
 
 #if !HAVE_LEPTON
