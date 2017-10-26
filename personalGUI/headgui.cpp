@@ -3,55 +3,66 @@
 //#include "LeptonThread.h"
 #include <iostream>
 
+#include <QWidget>
 #include <QMainWindow>
 #include <QLabel>
 #include <QGridLayout>
 #include <QResizeEvent>
 
+
 HeadGUI::HeadGUI(QWidget *parent)
     : QMainWindow(parent)
-
 {
-    mainWidget = new QWidget();
+    mainWidget = new QWidget;
     layout = new QGridLayout;
 
-    mainWidget->setLayout(layout);
-    resize(1400,500);
+    mainWidget->resize(2*ImageWidth,2*ImageHeight);
 
+    defauftValues();
     createConnections();
-
     createIRPicture();
     createBiometric();
+    createCommunication();
 
-    setWindowTitle("PersonalGUI Helmet");
+    mainWidget->setWindowTitle("PersonalGUI Helmet");
+    mainWidget->setLayout(layout);
+    mainWidget->show();
 
     emit certifyPersonaeSignal();
+    emit backSignal();
+    emit rightSignal();
+    //emit certifySignal();
 }
 
 void HeadGUI::createBiometric()
 {
-    Personae = new QLabel();
-    layout->addWidget(Personae,0,2,1,2);
+    Personae = new QLabel;
+    layout->addWidget(Personae,0,2,1,2, Qt::AlignCenter);
 
+    TempHead = new QLabel;
+    layout->addWidget(TempHead,1,2,1,1, Qt::AlignCenter);
+    TempHead->setText(unitTemp);
 
-    TempHead = new QLabel();
-    layout->addWidget(TempHead,1,2,1,1);
+    TempFoot = new QLabel;
+    layout->addWidget(TempFoot,1,3,1,1, Qt::AlignCenter);
+    TempFoot->setText(unitTemp);
 
-    TempFoot = new QLabel();
-    layout->addWidget(TempFoot,1,3,1,1);
+    COHead = new QLabel;
+    layout->addWidget(COHead,2,2,1,1, Qt::AlignCenter);
+    COHead->setText(unitCO);
 
-    COHead = new QLabel();
-    layout->addWidget(COHead,2,2,1,1);
+    COFoot = new QLabel;
+    layout->addWidget(COFoot,2,3,1,1, Qt::AlignCenter);
+    COFoot->setText(unitCO);
 
-    COFoot = new Label();
-    layout->addWidget(COFoot,2,3,1,1);
+    layout->setColumnMinimumWidth(0,400);
     std::cout <<" created Biometric"<<std::endl;
 }
 
 void HeadGUI::createIRPicture()//: rawData(LeptonThread::FrameWords),
     //rgbImage(LeptonThread::FrameWidth, LeptonThread::FrameHeight, QImage::Format_RGB888)
 {
-    IRPicture = new QLabel();
+    IRPicture = new QLabel;
     layout->addWidget(IRPicture, 0, 0, 3, 2, Qt::AlignCenter);
 
     QPixmap filler(ImageWidth, ImageHeight);
@@ -100,49 +111,262 @@ void HeadGUI::createConnections()
     connect(this,SIGNAL(leftSignal()),this,SLOT(left()));
     connect(this,SIGNAL(backSignal()),this,SLOT(back()));
     connect(this,SIGNAL(certifySignal()),this,SLOT(certify()));
+    connect(this,SIGNAL(coosingStatusSignal()),this,SLOT(coosingStatus()));
+    //adresses?!
+    connect(this,SIGNAL(updateBraceletSignal(int,int,int,int,int,int)),this,SLOT(updateBracelet(int,int,int,int,int,int)));
+    connect(this,SIGNAL(updateTempHeadSignal(int)),this,SLOT(updateTempHead(int)));
+    connect(this,SIGNAL(updateTempFootSignal(int)),this,SLOT(updateTempFoot(int)));
+    connect(this,SIGNAL(updateCOHeadSignal(int)),this,SLOT(updateCOHead(int)));
+    connect(this,SIGNAL(updateCOFootSignal(int)),this,SLOT(updateCOFoot(int)));
+}
+
+void HeadGUI::createCommunication()
+{
+    Status = new QLabel;
+    layout->addWidget(Status,2,0,3,3, Qt::AlignCenter);
+    Status->setText("Okay");
+
+    Messages = new QLabel;
+    layout->addWidget(Messages,2,2,3,3, Qt::AlignCenter);
+    Messages->setText("No new Messages");
+}
+
+void HeadGUI::defauftValues()
+{
+    horizontal = 0;
+    vertical = 1;
+    emergency = false;
+    SendEmergency = false;
 }
 
 void HeadGUI::certifyPersonae()
 {
-    Personae->setText("Hello World");
+    ID =0;
+    //"choosing" ID
+    Personae->setText(Name[ID]);
+
+    emit confirmedID(ID);
 }
 
 void HeadGUI::up()
 {
-    //vertical -- if <1
+    if(vertical>0)
+    {
+        vertical--;
+    }
+
+    emergency = false;
+    SendEmergency = false;
+
+    emit coosingStatusSignal();
 }
 
 void HeadGUI::down()
 {
-    //vertical ++
+    if (vertical<NumberDiffValues[horizontal])
+    {
+        vertical++;
+    }
+
+    emergency = false;
+    SendEmergency = false;
+
+    emit coosingStatusSignal();
 }
 
 void HeadGUI::right()
 {
-    //horizontal ++
+    if (horizontal<NumberDiffMenues)
+    {
+        horizontal++;
+    }
+
+    if (vertical>NumberDiffValues[horizontal])
+    {
+        vertical=NumberDiffValues[horizontal];
+    }
+
+    emergency = false;
+    SendEmergency = false;
+
+    emit coosingStatusSignal();
 }
 
 void HeadGUI::left()
 {
-    //horizontal --
+    if (horizontal>0)
+    {
+        horizontal--;
+    }
+
+    if (vertical>NumberDiffValues[horizontal])
+    {
+        vertical=NumberDiffValues[horizontal];
+    }
+
+    emergency = false;
+    SendEmergency = false;
+
+    emit coosingStatusSignal();
 }
 
 void HeadGUI::back()
 {
-    //if first time horizontal and vertical =1, second time Mesagebox: Emergency, sending Emergency
+    if (emergency == false)
+    {
+        SendEmergency = false;
+        emergency = true;
+        horizontal = 0;
+        vertical = 0;
+    }
+    else
+    {
+        SendEmergency = true;
+    }
+
+    emit coosingStatusSignal();
 }
 
 void HeadGUI::certify()
 {
-    //sending whatever
+    if (SendEmergency==false)
+    {
+        switch (horizontal)
+        {
+        case 0:
+
+            Status->setText(Stati[vertical]);
+            Status->setStyleSheet("QLabel{background-color : lightgray;}");
+            recentStatus = vertical;
+
+            emit newStatusSignal(ID);
+
+            break;
+
+        case 1:
+
+            Messages->setText("recent Message + confirmed?");
+            Messages->setStyleSheet("QLabel{background-color : lightgrey;}");
+            recentMessage = vertical;
+
+            emit answeredMessage(ID);
+
+            break;
+        }
+    }
+    else
+    {
+        Status->setText("MAYDAY");
+        Status->setStyleSheet("QLabel{background-color : red;}");
+        // recent Status?!
+        emit emergencySignal(ID);
+    }
+}
+
+void HeadGUI::coosingStatus()
+{
+    if (SendEmergency == false)
+    {
+        switch(horizontal)
+        {
+        case 0:
+
+            Status->setText(Stati[vertical]);
+            Status->setStyleSheet("QLabel{background-color : white;}");
+
+            Messages->setText("old Message");
+            Messages->setStyleSheet("QLabel{background-color : lightgrey;}");
+
+            break;
+
+        case 1:
+
+            Messages->setText("Answer?");
+            Messages->setStyleSheet("QLabel{background-color : white;}");
+
+            Status->setText(Stati[recentStatus]);
+            Status->setStyleSheet("QLabel{background-color : lightgrey;}");
+
+            break;
+        }
+    }
+    else
+    {
+        Status->setText("Mayday melden?");
+        Status->setStyleSheet("QLabel{background-color : orange;}");
+    }
+}
+
+void HeadGUI::updateBracelet(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify)
+{
+    otherSignals = false;
+
+    if (valueCertify == 1)
+    {
+        emit certifySignal();
+        otherSignals = true;
+    }
+
+    if (valueBack == 1 && otherSignals == false)
+    {
+        emit backSignal();
+        otherSignals = true;
+    }
+
+    if ( valueRight == 1 && otherSignals == false)
+    {
+        emit rightSignal();
+        otherSignals = true;
+    }
+
+    if ( valueLeft == 1 && otherSignals == false)
+    {
+        emit leftSignal();
+        otherSignals = true;
+    }
+
+    if (valueUp == 1 && otherSignals == false)
+    {
+        emit upSignal();
+        otherSignals = true;
+    }
+
+    if (valueDown == 1 && otherSignals == false)
+    {
+        emit downSignal();
+        otherSignals = true;
+    }
+}
+
+void HeadGUI::updateTempHead(int recentTemp)
+{
+    QString txtrecentTemp = QString::number(recentTemp);
+    QString txtTempHead = txtrecentTemp+unitTemp;
+    TempHead->setText(txtTempHead);
+}
+
+void HeadGUI::updateTempFoot(int recentTemp)
+{
+    QString txtrecentTemp = QString::number(recentTemp);
+    QString txtTempFoot = txtrecentTemp+unitTemp;
+    TempFoot->setText(txtTempFoot);
+}
+
+void HeadGUI::updateCOHead(int recentCO)
+{
+    QString txtrecentCO = QString::number(recentCO);
+    QString txtCOHead = txtrecentCO+unitCO;
+    COHead->setText(txtCOHead);
+}
+
+void HeadGUI::updateCOFoot(int recentCO)
+{
+    QString txtrecentCO = QString::number(recentCO);
+    QString txtCOFoot = txtrecentCO+unitCO;
+    COHead->setText(txtCOFoot);
 }
 
 HeadGUI::~HeadGUI()
 {
 
-}
-
-Label::Label():QLabel(parent)
-{
-    setText("Hello World");
 }

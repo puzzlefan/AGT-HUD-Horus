@@ -33,6 +33,18 @@ signals:
     void leftSignal();
     void backSignal();
     void certifySignal();
+    void coosingStatusSignal();
+    //where does the signal go?
+    void emergencySignal(int ID);
+    void newStatusSignal(int ID);
+    void answeredMessage(int ID);
+    void confirmedID(int ID);
+    //from where does the signal come?
+    void updateBraceletSignal(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify);
+    void updateTempHeadSignal(int recentTemp);
+    void updateTempFootSignal(int recentTemp);
+    void updateCOHeadSignal(int recentCO);
+    void updateCOFootSignal(int recentCO);
 
 private slots:
     void certifyPersonae();
@@ -42,30 +54,47 @@ private slots:
     void left();
     void back();
     void certify();
+    void updateBracelet(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify);
+    void updateTempHead(int recentTemp);
+    void updateTempFoot(int recentTemp);
+    void updateCOHead(int recentCOHead);
+    void updateCOFoot(int recentCOFoot);
+    void coosingStatus();
+
 
 private:
     //other
     QGridLayout *layout;
     QWidget *mainWidget;
     void createConnections();
+    void defauftValues();
 
     //navigation/communication
     void createCommunication();
     QLabel *Status;
-    QMenu *ChoosingStatus;//% right class
     QLabel *Messages;
     QMenu * CoosingMessage;
     int vertical;
     int horizontal;
-    int emergency;
+    bool emergency;
+    bool SendEmergency;
+    bool otherSignals;
+    int NumberDiffMenues = 2;
+    int NumberDiffValues[2] = {4,2};
+    QString Stati[4]={"Status1","Status2","Status3","Status4"};
+    int recentStatus;
+    int recentMessage;
 
     //biometric data
     void createBiometric();
     QLabel *Personae;
     QLabel *TempHead;
     QLabel *TempFoot;
+    QString unitTemp ="°C";
     QLabel *COHead;
     QLabel *COFoot;
+    QString unitCO = "ppm";
+    int ID;
     QString Name [4]= {"Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
 
     //for Camera
