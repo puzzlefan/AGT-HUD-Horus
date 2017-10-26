@@ -6,7 +6,7 @@
 
 LeptonThread::LeptonThread()
     : QThread()
-    , segmentRAW(PacketBytes*SegmentPackets)
+    , segmentRAW(PacketBytes*SegmentPackets)//holds packets until it is nown to which segment they belong
     , result(2 * PacketBytes*FrameHeight)//size of vector
     , rawData(FrameWords) { }//size of Vector
 //ugly inhertance
@@ -72,33 +72,28 @@ void LeptonThread::run() {
 
     int resets = 0; // Number of times we've reset the 0...59 loop for packets
     int errors = 0; // Number of error-packets received
-	/*for(int krack = 0;krack<8;krack++)//*/while (true)
+	while (true)
 	{
-//		int iSegment;
-//		for (iSegment = 1; iSegment < 5;)
-///		{
-//			SegmentCorrect = true;//%
 			int iPacket;
       int iSegment=0;
 			for (iPacket = 0; iPacket < 2 * SegmentHeight; )
 			{
 				unsigned char *packet = &segmentRAW[iPacket*PacketBytes];// + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
-        //std::cout << "und hier nicht mehr oder?" << '\n';
+
 				if (getPacket(iPacket, packet) < 1)
 				{
 					qDebug() << "Error transferring SPI packet";
 					return;
 				}
-        //std::cout << "spätestens hier" << '\n';
+
 				int packetNumber;
-				if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verkn�pfung ->packet has to have an value %
+
 				{
 					packetNumber = -1;
 				}
 				else
 				{
 					packetNumber = packet[1];
-          //std::cout << packetNumber << '\n';
 				}
 #if DEBUG_LEPTON
 				if (sequence.empty() || sequence.back().first != packetNumber)
@@ -106,29 +101,10 @@ void LeptonThread::run() {
 				else
 					++sequence.back().second;
 #endif
-				if (packetNumber == 20) // %
+				if (packetNumber == 20) // readout of the segment number, because of historical reasons this has to happen in two lines
 				{
           iSegment=packet[0];
           iSegment >>=4;
-          //std::cout << "Segment Nr verschoben: " << iSegment << std::endl;
-          /*
-          if ((packet[0] >> 4) == 0)
-					{
-						SegmentCorrect = false;
-						std::cout<<"Segment Falsch 000"<<std::endl;
-					}
-
-					if ((packet[0] >> 4) == iSegment)
-					{
-						SegmentCorrect = true;
-						std::cout<<"Segment: " <<iSegment<<std::endl;
-					}
-					else
-					{
-						SegmentCorrect = false;
-						std::cout<<"Segment Falsch"<<std::endl;
-					}
-          */
 				}
 
 
@@ -149,7 +125,6 @@ void LeptonThread::run() {
 				}
 
 				++iPacket;
-        //std::cout << "es ging: " <<iPacket<<" mal gut"<< '\n';
 			}
 
 			if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt
@@ -163,21 +138,13 @@ void LeptonThread::run() {
 				continue;
 			}
 
-			//++iSegment;
-		//}
-
-/*
-*here the coping should take place
-*/
-  //std::cout << "Fehler?" << '\n';
-  if(iSegment!=0)
+  if(iSegment!=0)//bringing the segment to the place it belongs to
   {
     for (int i = 0; i < PacketBytes * SegmentPackets; i++)
     {
       result[(iSegment-1)*PacketBytes*SegmentHeight*2+i]=segmentRAW[i];
     }
   }
-  //std::cout << "nein" << '\n';
 
 #if DEBUG_LEPTON
         QString msg;
