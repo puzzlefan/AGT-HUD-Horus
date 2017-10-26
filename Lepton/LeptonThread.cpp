@@ -6,7 +6,8 @@
 
 LeptonThread::LeptonThread()
     : QThread()
-    , result(2 * PacketBytes*FrameHeight)//size of vector 
+    , segment(PacketBytes*SegmentPackets)
+    , result(2 * PacketBytes*FrameHeight)//size of vector
     , rawData(FrameWords) { }//size of Vector
 //ugly inhertance
 LeptonThread::~LeptonThread() { }
@@ -44,7 +45,7 @@ static int counter = 0;
 
 int LeptonThread::getPacket(int iPacket, unsigned char *packetData) {
 #if HAVE_LEPTON
-    _tr.rx_buf = (unsigned long) packetData;//weist rx_buf einin pointer zu; lässt werte in restult schreiben 
+    _tr.rx_buf = (unsigned long) packetData;//weist rx_buf einin pointer zu; lï¿½sst werte in restult schreiben
     return ioctl(fd, SPI_IOC_MESSAGE(1), &_tr);//reads the value of the packet
 #else
     packetData[0] = 0;
@@ -55,14 +56,14 @@ int LeptonThread::getPacket(int iPacket, unsigned char *packetData) {
 #endif
 }
 
-void LeptonThread::run() {    
+void LeptonThread::run() {
 #if HAVE_LEPTON
     if (!initLepton()) return;
 
     usleep(250000);
 
 	//SPI-Bus related
-    _tr.tx_buf = (unsigned long) &tx[0];//poniter towrads the buffer? 
+    _tr.tx_buf = (unsigned long) &tx[0];//poniter towrads the buffer?
     _tr.len = PacketBytes;//leght of rx_buf and tx_buf in bytes %
     _tr.delay_usecs = delay;
     _tr.speed_hz = speed;//clockspeed for the spi-bus
@@ -78,7 +79,7 @@ void LeptonThread::run() {
 		{
 			SegmentCorrect = true;//%
 			int iPacket;
-			for (iPacket = 0; iPacket < 2 * SegmentHeight; ) 
+			for (iPacket = 0; iPacket < 2 * SegmentHeight; )
 			{
 				unsigned char *packet = &result[iPacket*PacketBytes + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
 
@@ -89,7 +90,7 @@ void LeptonThread::run() {
 				}
 
 				int packetNumber;
-				if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verknüpfung ->packet has to have an value %
+				if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verknï¿½pfung ->packet has to have an value %
 				{
 					packetNumber = -1;
 				}
@@ -134,7 +135,7 @@ void LeptonThread::run() {
 					continue;
 				}
 
-				if (packetNumber != iPacket) 
+				if (packetNumber != iPacket)
 				{
 					usleep(1000);
 					break;
@@ -142,8 +143,8 @@ void LeptonThread::run() {
 
 				++iPacket;
 			}
-			
-			if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt 
+
+			if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt
 			{
 				if (++resets >= 750) //timeout solange 750 nicht erreicht wird wird diese Schleife wiederholt
 				{
@@ -190,11 +191,11 @@ void LeptonThread::run() {
                 unsigned short value = in[0];//value wird farbe zugewiesen
                 value <<= 8;//8 weil Wort =8 bits, verschiebt um 8 Stellen nach vorne
                 value |= in[1];//macht darauf eine 16-bit Farbe
-                in += 2;//beginn von nächster nächtse Farbe 
+                in += 2;//beginn von nï¿½chster nï¿½chtse Farbe
 
-				if (value > maxValue) 
+				if (value > maxValue)
 				{
-					maxValue = value; 
+					maxValue = value;
 				}
 
 				if (value < minValue)
