@@ -149,6 +149,7 @@ void LeptonThread::run() {
 				}
 
 				++iPacket;
+        std::cout << "es ging: " <<iPacket<<" mal gut"<< '\n';
 			}
 
 			if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt
