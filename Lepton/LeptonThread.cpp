@@ -226,7 +226,7 @@ void LeptonThread::run() {
             }
         }
         emit updateImage(&rawData[0], minValue, maxValue);//signal for the updateImage slot of mainwindow.cpp
-        std::cout << "hier auch nicht" << '\n';
+        //std::cout << "hier auch nicht" << '\n';
 #if !HAVE_LEPTON
         usleep(50000);  // Need to slow things down if no ioctl call!
         counter = (counter + 1)%520;
