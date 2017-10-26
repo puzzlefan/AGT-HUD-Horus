@@ -26,8 +26,6 @@
 #include <QDebug>
 #include <QVector>
 
-#include "eays-timing.h"
-
 class LeptonThread : public QThread {
     Q_OBJECT
 
