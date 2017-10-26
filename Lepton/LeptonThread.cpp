@@ -106,7 +106,7 @@ void LeptonThread::run() {
 				else
 					++sequence.back().second;
 #endif
-				if (packetNumber == 19) // %
+				if (packetNumber == 20) // %
 				{
           iSegment=packet[0];
           std::cout << "Segment Nr unverschoben: " << iSegment << std::endl;
