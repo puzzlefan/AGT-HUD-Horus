@@ -36,8 +36,8 @@ signals:
     void coosingStatusSignal();
     //where does the signal go?
     void emergencySignal(int ID);
-    void newStatusSignal(int ID);
-    void answeredMessage(int ID);
+    void newStatusSignal(int ID,int vertical);
+    void answeredMessage(int ID,int vertical);
     void confirmedID(int ID);
     //from where does the signal come?
     void updateBraceletSignal(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify);
@@ -45,6 +45,7 @@ signals:
     void updateTempFootSignal(int recentTemp);
     void updateCOHeadSignal(int recentCO);
     void updateCOFootSignal(int recentCO);
+    void messageRecivedSignal(QString sendMessage);
 
 private slots:
     void certifyPersonae();
@@ -60,7 +61,7 @@ private slots:
     void updateCOHead(int recentCOHead);
     void updateCOFoot(int recentCOFoot);
     void coosingStatus();
-
+    void messageRecived(QString sendMessage);
 
 private:
     //other
@@ -73,17 +74,18 @@ private:
     void createCommunication();
     QLabel *Status;
     QLabel *Messages;
-    QMenu * CoosingMessage;
     int vertical;
     int horizontal;
-    bool emergency;
+    bool emergencyPossible;
     bool SendEmergency;
     bool otherSignals;
     int NumberDiffMenues = 2;
-    int NumberDiffValues[2] = {4,2};
+    bool answerPossible;
+    int NumberDiffValues[3] = {4,2,5};
     QString Stati[4]={"Status1","Status2","Status3","Status4"};
+    QString recivedMessage;
+    QString messageAnswers[2] = {"angenommen","nicht verfügbar"};
     int recentStatus;
-    int recentMessage;
 
     //biometric data
     void createBiometric();
@@ -95,7 +97,7 @@ private:
     QLabel *COFoot;
     QString unitCO = "ppm";
     int ID;
-    QString Name [4]= {"Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
+    QString Name [5]= {" ","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
 
     //for Camera
     void createIRPicture();

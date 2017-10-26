@@ -28,10 +28,11 @@ HeadGUI::HeadGUI(QWidget *parent)
     mainWidget->setLayout(layout);
     mainWidget->show();
 
-    emit certifyPersonaeSignal();
+    emit certifyPersonaeSignal();//from where -> headquaters
     emit backSignal();
     emit rightSignal();
-    //emit certifySignal();
+    emit downSignal();
+    emit certifySignal();
 }
 
 void HeadGUI::createBiometric()
@@ -118,6 +119,7 @@ void HeadGUI::createConnections()
     connect(this,SIGNAL(updateTempFootSignal(int)),this,SLOT(updateTempFoot(int)));
     connect(this,SIGNAL(updateCOHeadSignal(int)),this,SLOT(updateCOHead(int)));
     connect(this,SIGNAL(updateCOFootSignal(int)),this,SLOT(updateCOFoot(int)));
+    connect(this,SIGNAL(messageRecivedSignal(QString)),this,SLOT(messageRecived(QString)));
 }
 
 void HeadGUI::createCommunication()
@@ -135,17 +137,17 @@ void HeadGUI::defauftValues()
 {
     horizontal = 0;
     vertical = 1;
-    emergency = false;
+    emergencyPossible = false;
     SendEmergency = false;
+    recivedMessage= "Noch keine Nachrichten";
+    recentStatus = 0;
+    answerPossible = false;
 }
 
 void HeadGUI::certifyPersonae()
 {
     ID =0;
-    //"choosing" ID
-    Personae->setText(Name[ID]);
-
-    emit confirmedID(ID);
+    horizontal = 2;
 }
 
 void HeadGUI::up()
@@ -155,7 +157,7 @@ void HeadGUI::up()
         vertical--;
     }
 
-    emergency = false;
+    emergencyPossible = false;
     SendEmergency = false;
 
     emit coosingStatusSignal();
@@ -163,12 +165,12 @@ void HeadGUI::up()
 
 void HeadGUI::down()
 {
-    if (vertical<NumberDiffValues[horizontal])
+    if (vertical < NumberDiffValues[horizontal])
     {
         vertical++;
     }
 
-    emergency = false;
+    emergencyPossible = false;
     SendEmergency = false;
 
     emit coosingStatusSignal();
@@ -176,17 +178,17 @@ void HeadGUI::down()
 
 void HeadGUI::right()
 {
-    if (horizontal<NumberDiffMenues)
+    if (horizontal < (NumberDiffMenues-1) && answerPossible == true)
     {
         horizontal++;
     }
 
-    if (vertical>NumberDiffValues[horizontal])
+   if (vertical>NumberDiffValues[horizontal])
     {
         vertical=NumberDiffValues[horizontal];
     }
 
-    emergency = false;
+    emergencyPossible = false;
     SendEmergency = false;
 
     emit coosingStatusSignal();
@@ -194,7 +196,7 @@ void HeadGUI::right()
 
 void HeadGUI::left()
 {
-    if (horizontal>0)
+    if (horizontal > 0 && answerPossible == true)
     {
         horizontal--;
     }
@@ -204,7 +206,7 @@ void HeadGUI::left()
         vertical=NumberDiffValues[horizontal];
     }
 
-    emergency = false;
+    emergencyPossible = false;
     SendEmergency = false;
 
     emit coosingStatusSignal();
@@ -212,16 +214,19 @@ void HeadGUI::left()
 
 void HeadGUI::back()
 {
-    if (emergency == false)
+    if(ID !=0)
     {
-        SendEmergency = false;
-        emergency = true;
-        horizontal = 0;
-        vertical = 0;
-    }
-    else
-    {
-        SendEmergency = true;
+        if (emergencyPossible == false)
+        {
+            SendEmergency = false;
+            emergencyPossible = true;
+            horizontal = 0;
+            vertical = 0;
+        }
+        else
+        {
+            SendEmergency = true;
+        }
     }
 
     emit coosingStatusSignal();
@@ -234,22 +239,32 @@ void HeadGUI::certify()
         switch (horizontal)
         {
         case 0:
-
+          {
             Status->setText(Stati[vertical]);
             Status->setStyleSheet("QLabel{background-color : lightgray;}");
             recentStatus = vertical;
 
-            emit newStatusSignal(ID);
+            emit newStatusSignal(ID,vertical);
 
             break;
-
+          }
         case 1:
-
-            Messages->setText("recent Message + confirmed?");
+          {
+            QString between =" Antwort: ";
+            QString txtMessage = recivedMessage +between+ messageAnswers[vertical];
+            Messages->setText(txtMessage);
             Messages->setStyleSheet("QLabel{background-color : lightgrey;}");
-            recentMessage = vertical;
 
-            emit answeredMessage(ID);
+            emit answeredMessage(ID,vertical);
+
+            break;
+          }
+        case 2:
+
+            Personae->setText(Name[vertical]);
+            ID = vertical;
+
+            emit confirmedID(ID);
 
             break;
         }
@@ -274,18 +289,24 @@ void HeadGUI::coosingStatus()
             Status->setText(Stati[vertical]);
             Status->setStyleSheet("QLabel{background-color : white;}");
 
-            Messages->setText("old Message");
+            Messages->setText(recivedMessage);
             Messages->setStyleSheet("QLabel{background-color : lightgrey;}");
 
             break;
 
         case 1:
 
-            Messages->setText("Answer?");
+            Messages->setText(messageAnswers[vertical]);
             Messages->setStyleSheet("QLabel{background-color : white;}");
 
             Status->setText(Stati[recentStatus]);
             Status->setStyleSheet("QLabel{background-color : lightgrey;}");
+
+            break;
+
+        case 2:
+
+            Personae->setText(Name[vertical]);
 
             break;
         }
@@ -295,6 +316,12 @@ void HeadGUI::coosingStatus()
         Status->setText("Mayday melden?");
         Status->setStyleSheet("QLabel{background-color : orange;}");
     }
+}
+
+void HeadGUI::messageRecived(QString sendMessage)
+{
+    recivedMessage = sendMessage;
+    answerPossible = true;
 }
 
 void HeadGUI::updateBracelet(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify)
