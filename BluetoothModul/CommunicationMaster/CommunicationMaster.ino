@@ -1,13 +1,12 @@
+#include "Values.h"
+
 #define STATE_PIN 0
 #define EN_PIN 2
 #define ERROR_PIN 13
 
-//varaibles
-char TestConnection = 't';
-int AnalogTreshhold = 500;
+//Running variables
 int counter = 0;
-int SerialSpeed = 38400;
-int ModuloWait = 100000;
+String ToWrite ="";
 
 void setup() {
   // setting up the Pins to standart connection
@@ -32,7 +31,7 @@ void setup() {
   counter = 0;
   //Start and test the connection
   Serial.println("Test the connection");
-  Serial1.begin(SerialSpeed);
+  Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
   Serial1.write(TestConnection);
   while (!Serial1.available())
   {
@@ -44,6 +43,7 @@ void setup() {
     }
     counter++;
   }
+  //Serial.println(Serial1.read());
   if(Serial1.read()!=TestConnection)
   {
     digitalWrite(ERROR_PIN,HIGH);
@@ -53,6 +53,15 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  ToWrite+=something();
+  ToWrite+=";";
+  Serial1.println(ToWrite);
+  Serial.println(ToWrite);
+  ToWrite.remove(0);
+  delay(endDelay);
+}
 
+int something()//getting some data to send
+{
+  return analogRead(0);
 }
