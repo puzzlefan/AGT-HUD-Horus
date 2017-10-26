@@ -30,7 +30,7 @@
 class LeptonThread : public QThread {
     Q_OBJECT
 
-    QVector<unsigned char> segment;
+    QVector<unsigned char> segmentRAW;
     QVector<unsigned char> result;
     QVector<unsigned short> rawData;
 
