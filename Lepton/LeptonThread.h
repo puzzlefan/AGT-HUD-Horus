@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QVector>
 
+#include "eays-timing.h"
 
 class LeptonThread : public QThread {
     Q_OBJECT
@@ -65,6 +66,10 @@ public:
 		SegmentHeight = FrameHeight/4,
     SegmentPackets = 60,
     };
+
+	Easy_timing Frame = new Easy_timing();
+	Easy_timing copy = new Easy_timing();
+
 
     LeptonThread();
     ~LeptonThread();
