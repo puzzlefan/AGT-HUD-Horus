@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include <QMainWindow>
-#include <QMenuBar>
 #include <QImage>
 #include <QLabel>
 #include <QTextEdit>

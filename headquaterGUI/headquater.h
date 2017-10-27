@@ -2,7 +2,6 @@
 #define HEADQUATER_H
 
 #include <QMainWindow>
-#include <QMenuBar>
 #include <QImage>
 #include <QLabel>
 #include <QTextEdit>
@@ -10,7 +9,7 @@
 #include <QTableView>//right class?
 
 class QTableView;
-class QMenuBar;
+
 
 class headquater : public QMainWindow
 {
