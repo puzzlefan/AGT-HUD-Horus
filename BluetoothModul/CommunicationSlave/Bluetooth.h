@@ -39,78 +39,13 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int enPin, int statePin, int Val
   readArray = calloc(sizeof(int), ValCount);
   assert(readArray);
 
-  if (Master)
-  {
-    MasterSetup();
-  }
-  else
-  {
-    SlaveSetup();
-  }
   for (int i = 0; i < ValCount; i++) //just for safety
   {
     readArray[i]=0;
     writeArray[i]=0;
   }
-}
-Bluetooth::~Bluetooth(){
-  free(writeArray);
-  writeArray = NULL;
-  free(readArray);
-  readArray = NULL;
-}
 
-void Bluetooth::MasterSetup(){
-  //variables
-  int counter = 0;
-  // setting up the Pins to standart connection
-  pinMode(en_pin,OUTPUT);
-  pinMode(error_pin,OUTPUT);
-
-  digitalWrite(en_pin,LOW);
-  digitalWrite(error_pin,LOW);
-
-  //Start Serialport 0 for Error Messages
-  if(Serial0)
-  {
-    Serial.begin(9600);
-    Serial.println("Waiting for connection");
-  }
-  //wait until a connection has beend established
-  while(analogRead(state_pin)<AnalogTreshhold)
-  {
-    if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
-    {
-      if(Serial0) Serial.println("Still struggles with connection");
-    }
-    counter++;
-  }
-  counter = 0;
-  //Start and test the connection
-  if(Serial0) Serial.println("Test the connection");
-  Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
-  Serial1.write(TestConnection);
-  while (!Serial1.available())
-  {
-    if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
-    {
-      if(Serial0){
-        Serial.println("Still waiting for answer struggles with connection ");
-        Serial.println("Resending teset");
-      }
-      Serial1.write(TestConnection);
-    }
-    counter++;
-  }
-  //Serial.println(Serial1.read());
-  if(Serial1.read()!=TestConnection)
-  {
-    digitalWrite(error_pin,HIGH);
-    if(Serial0) Serial.println("Test failed");
-  }
-  if(Serial0) Serial.println("Starting loop");
-}
-void Bluetooth::SlaveSetup() {
+  //shared init
   //variables
   int counter = 0;
   // setting up the Pins to standart connection
@@ -136,6 +71,53 @@ void Bluetooth::SlaveSetup() {
   //Start and test the connection
   Serial.println("Test the connection");
   Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
+
+  //unshared init
+  if (Master)
+  {
+    MasterSetup();
+  }
+  else
+  {
+    SlaveSetup();
+  }
+}
+Bluetooth::~Bluetooth(){
+  free(writeArray);
+  writeArray = NULL;
+  free(readArray);
+  readArray = NULL;
+}
+
+void Bluetooth::MasterSetup(){
+  //variables
+  int counter = 0;
+
+  Serial1.write(TestConnection);
+  while (!Serial1.available())
+  {
+    if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
+    {
+      if(Serial0){
+        Serial.println("Still waiting for answer struggles with connection ");
+        Serial.println("Resending teset");
+      }
+      Serial1.write(TestConnection);
+    }
+    counter++;
+  }
+  //Serial.println(Serial1.read());
+  if(Serial1.read()!=TestConnection)
+  {
+    digitalWrite(error_pin,HIGH);
+    if(Serial0) Serial.println("Test failed");
+  }
+  if(Serial0) Serial.println("Starting loop");
+}
+void Bluetooth::SlaveSetup() {
+  //variables
+  int counter = 0;
+
   while (!Serial1.available())
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
@@ -179,7 +161,7 @@ void Bluetooth::write(){
       ToWrite += writeArray[i];
       ToWrite +=",";
     }
-    ToWrite.remove(ValCount-1);
+    ToWrite.remove(ToWrite.length()-1);
     ToWrite+=";";
     Serial1.println(ToWrite);
     changed = false;
@@ -211,5 +193,6 @@ void Bluetooth::read() {
       }
       if (ToRead[i]==';') break;
     }
+    Serial.println(ToRead); 
   }
 }
