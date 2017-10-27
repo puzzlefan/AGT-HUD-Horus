@@ -371,6 +371,8 @@ void HeadGUI::updateTempHead(int recentTemp)
     QString txtrecentTemp = QString::number(recentTemp);
     QString txtTempHead = txtrecentTemp+unitTemp;
     TempHead->setText(txtTempHead);
+
+    emit updatedTempHeadSignal(ID, recentTemp);
 }
 
 void HeadGUI::updateTempFoot(int recentTemp)
@@ -378,6 +380,8 @@ void HeadGUI::updateTempFoot(int recentTemp)
     QString txtrecentTemp = QString::number(recentTemp);
     QString txtTempFoot = txtrecentTemp+unitTemp;
     TempFoot->setText(txtTempFoot);
+
+    emit updatedTempFootSignal(ID, recentTemp);
 }
 
 void HeadGUI::updateCOHead(int recentCO)
@@ -385,6 +389,8 @@ void HeadGUI::updateCOHead(int recentCO)
     QString txtrecentCO = QString::number(recentCO);
     QString txtCOHead = txtrecentCO+unitCO;
     COHead->setText(txtCOHead);
+
+    emit updatedCOHeadSignal(ID,recentCO);
 }
 
 void HeadGUI::updateCOFoot(int recentCO)
@@ -392,6 +398,8 @@ void HeadGUI::updateCOFoot(int recentCO)
     QString txtrecentCO = QString::number(recentCO);
     QString txtCOFoot = txtrecentCO+unitCO;
     COHead->setText(txtCOFoot);
+
+    emit updatedCOFootSignal(Id, recentCO);
 }
 
 HeadGUI::~HeadGUI()

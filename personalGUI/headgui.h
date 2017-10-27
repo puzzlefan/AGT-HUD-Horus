@@ -8,7 +8,6 @@
 
 //#include <LeptonThread.h>
 
-
 class QLabel;
 class QPixmap;
 class QGridLayout;
@@ -34,18 +33,22 @@ signals:
     void backSignal();
     void certifySignal();
     void coosingStatusSignal();
-    //where does the signal go?
+    //Singals to headquater
     void emergencySignal(int ID);
     void newStatusSignal(int ID,int vertical);
     void answeredMessage(int ID,int vertical);
     void confirmedID(int ID);
+    void updatedTempHeadSignal(int ID, int recentTemp);
+    void updatedTempFootSignal(int ID, int recentTemp);
+    void updatedCOHeadSignal(int ID, int recentCO);
+    void updatedCOFootSignal(int ID, int recentCO);
     //from where does the signal come?
     void updateBraceletSignal(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify);
     void updateTempHeadSignal(int recentTemp);
     void updateTempFootSignal(int recentTemp);
     void updateCOHeadSignal(int recentCO);
     void updateCOFootSignal(int recentCO);
-    void messageRecivedSignal(QString sendMessage);
+    void messageRecivedSignal(QString sendMessage);// from headquater
 
 private slots:
     void certifyPersonae();
