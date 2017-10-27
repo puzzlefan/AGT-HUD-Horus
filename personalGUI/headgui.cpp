@@ -399,7 +399,7 @@ void HeadGUI::updateCOFoot(int recentCO)
     QString txtCOFoot = txtrecentCO+unitCO;
     COHead->setText(txtCOFoot);
 
-    emit updatedCOFootSignal(Id, recentCO);
+    emit updatedCOFootSignal(ID, recentCO);
 }
 
 HeadGUI::~HeadGUI()
