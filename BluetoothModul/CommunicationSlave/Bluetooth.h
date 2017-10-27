@@ -168,31 +168,33 @@ void Bluetooth::write(){
   }
 }
 void Bluetooth::read() {
-  if(Serial1.available())
-  {
-    int counter = 0;
-    String integer, ToRead = "";
-    while(Serial1.available())
+    if(Serial1.available())
     {
-      char character = Serial1.read();
-      ToRead+=character;
-      if(character==';') break;
-    }
+        int counter = 0;
+        String integer, ToReadSTRING = "";
+        while(true)
+        {
+            if(Serial1.available())
+            {
+                char character = Serial1.read();
+                ToReadSTRING+=character;
+                if(character==';') break;
+            }
+        }
 
-    for(int i = 0;i<ToRead.length();i++)
-    {
-      if(ToRead[i]==','||ToRead[i]==';')
-      {
-        readArray[counter]=integer.toInt();
-        counter++;
-        integer.remove(0);
-      }
-      else
-      {
-        integer+=ToRead[i];
-      }
-      if (ToRead[i]==';') break;
+        for(int i = 0;i<ToReadSTRING.length();i++)
+        {
+        if(ToReadSTRING[i]==','||ToReadSTRING[i]==';')
+        {
+          readArray[counter]=integer.toInt();
+            counter++;
+            integer.remove(0);
+        }
+        else
+        {
+          integer+=ToReadSTRING[i];
+        }
+        if (ToReadSTRING[i]==';') break;
+        }
     }
-    Serial.println(ToRead); 
-  }
 }
