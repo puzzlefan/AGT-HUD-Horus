@@ -8,16 +8,15 @@
 
 int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
 
-Bluetooth Master(true, ERROR_PIN, EN_PIN, STATE_PIN, VALUE_COUNT);
+Bluetooth *Master;
 
 void setup() {
-  //BT_Setup();//setting up Bluetooth
-
+  Master = new Bluetooth(true, ERROR_PIN, EN_PIN, STATE_PIN, VALUE_COUNT);
 }
 
 void loop() {
-  Master.setWrite(0,something());
-  Master.write();
+  Master->setWrite(0,something());
+  Master->write();
   delay(endDelay);
 }
 
