@@ -1,63 +1,23 @@
-#include "Values.h"
+#include "Bluetooth.h"
 
 #define STATE_PIN 0
 #define EN_PIN 2
 #define ERROR_PIN 13
+#define VALUE_COUNT 1
+//variables
 
-//Running variables
-int counter = 0;
-String ToWrite ="";
+int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
+
+Bluetooth Master(true, ERROR_PIN, EN_PIN, STATE_PIN, VALUE_COUNT);
 
 void setup() {
-  // setting up the Pins to standart connection
-  pinMode(EN_PIN,OUTPUT);
-  pinMode(ERROR_PIN,OUTPUT);
+  //BT_Setup();//setting up Bluetooth
 
-  digitalWrite(EN_PIN,LOW);
-  digitalWrite(ERROR_PIN,LOW);
-
-  //Start Serialport 0 for Error Messages
-  Serial.begin(9600);
-  Serial.println("Waiting for connection");
-  //wait until a connection has beend established
-  while(analogRead(STATE_PIN)<AnalogTreshhold)
-  {
-    if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
-    {
-      Serial.println("Still struggles with connection");
-    }
-    counter++;
-  }
-  counter = 0;
-  //Start and test the connection
-  Serial.println("Test the connection");
-  Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
-  Serial1.write(TestConnection);
-  while (!Serial1.available())
-  {
-    if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
-    {
-      Serial.println("Still waiting for answer struggles with connection ");
-      Serial.println("Resending teset");
-      Serial1.write(TestConnection);
-    }
-    counter++;
-  }
-  //Serial.println(Serial1.read());
-  if(Serial1.read()!=TestConnection)
-  {
-    digitalWrite(ERROR_PIN,HIGH);
-    Serial.println("Test failed");
-  }
-  Serial.println("Starting loop");
 }
 
 void loop() {
-  ToWrite+=something();
-  ToWrite+=";";
-  Serial1.println(ToWrite);
-  Serial.println(ToWrite);
-  ToWrite.remove(0);
+  Master.setWrite(0,something());
+  Master.write();
   delay(endDelay);
 }
 
