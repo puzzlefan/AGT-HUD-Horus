@@ -193,6 +193,6 @@ void Bluetooth::read() {
       }
       if (ToRead[i]==';') break;
     }
-    Serial.println(ToRead);
+    Serial.println(ToRead); 
   }
-} 
+}
