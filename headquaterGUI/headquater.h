@@ -10,6 +10,7 @@
 #include <QTableView>//right class?
 
 class QTableView;
+class QMenuBar;
 
 class headquater : public QMainWindow
 {
@@ -35,6 +36,8 @@ private slots:
 private:
     //Status retated
     QTableView *StatusView;
+
+    //different Personaes
 
 };
 
