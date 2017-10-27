@@ -164,6 +164,7 @@ void Bluetooth::write(){
     ToWrite.remove(ValCount-1);
     ToWrite+=";";
     Serial1.println(ToWrite);
+    Serial.println(ToWrite);
     changed = false;
   }
 }
@@ -193,5 +194,6 @@ void Bluetooth::read() {
       }
       if (ToRead[i]==';') break;
     }
+    Serial.println(ToRead);
   }
 }
