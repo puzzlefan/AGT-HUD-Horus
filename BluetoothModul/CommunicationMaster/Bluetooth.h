@@ -161,10 +161,9 @@ void Bluetooth::write(){
       ToWrite += writeArray[i];
       ToWrite +=",";
     }
-    ToWrite.remove(ValCount-1);
+    ToWrite.remove(ToWrite.length()-1);
     ToWrite+=";";
     Serial1.println(ToWrite);
-    Serial.println(ToWrite);
     changed = false;
   }
 }
