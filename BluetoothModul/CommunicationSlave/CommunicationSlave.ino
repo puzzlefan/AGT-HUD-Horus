@@ -1,92 +1,26 @@
-#include "Values.h"
+#include "Bluetooth.h"
 
-#define STATE_PIN 0   //depends on device
-#define EN_PIN 2      //depends on device
-#define ERROR_PIN 13  //depends on device
+#define STATE_PIN 0
+#define EN_PIN 2
+#define ERROR_PIN 13
+#define VALUE_COUNT 1
+//variables
 
-//varaibles
-int counter = 0;
+int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
 
-String ToRead = "";//char ToRead[MessageLength+1];//needs to be one bigger than it is to be NUll Terminated
-int data[ValueCount];//is going to be replaced later by I²C array
+Bluetooth *Slave;
 
 void setup() {
-  // setting up the Pins to standart connection
-  pinMode(EN_PIN,OUTPUT);
-  pinMode(ERROR_PIN,OUTPUT);
-
-  digitalWrite(EN_PIN,LOW);
-  digitalWrite(ERROR_PIN,LOW);
-
-  //Start Serialport 0 for Error Messages
-  Serial.begin(9600);
-  Serial.println("Waiting for connection");
-  //wait until a connection has beend established
-  while(analogRead(STATE_PIN)<AnalogTreshhold)
-  {
-    if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
-    {
-      Serial.println("Still struggles with connection");
-    }
-    counter++;
-  }
-  counter = 0;
-  //Start and test the connection
-  Serial.println("Test the connection");
-  Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
-  while (!Serial1.available())
-  {
-    if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
-    {
-      Serial.println("Still waiting for request struggles with connection ");
-    }
-    counter++;
-  }
-  if(Serial1.read()!=TestConnection)
-  {
-    digitalWrite(ERROR_PIN,HIGH);
-    Serial.println("Test failed");
-  }
-  else
-  {
-    Serial1.write(TestConnection);
-  }
-  Serial.println("Starting loop");
-  counter = 0;
+  Slave = new Bluetooth(false, ERROR_PIN, EN_PIN, STATE_PIN, VALUE_COUNT);
 }
 
 void loop() {
-  while(true)
-  {
-    if(Serial1.available())
-    {
-      char character = Serial1.read();
-      ToRead+=character;
-      if(character==';') break;
-    }
-  }
-  String integer;
-  for(int i = 0;i<ToRead.length();i++)
-  {
-    if(ToRead[i]==','||ToRead[i]==';')
-    {
-      data[counter]=integer.toInt();
-      counter++;
-      integer.remove(0);
-    }
-    else
-    {
-      integer+=ToRead[i];
-    }
-    if (ToRead[i]==';') break;
-  }
-  ToRead.remove(0);
-  counter = 0;
-  something();
+  Slave->read();
+  something(Slave->getRead(0));
 }
 
-void something()//does something with the Data which has been archived
+void something(int val)//does something with the Data which has been archived
 {
   Serial.print("out: ");
-  Serial.println(data[0]);
+  Serial.println(val);
 }
