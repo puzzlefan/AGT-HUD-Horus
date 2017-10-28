@@ -1,0 +1,9 @@
+﻿  Validating architecture
+  Validating sources
+  Copying sources remotely to 'raspberrypi'
+  Starting remote build
+  Compiling sources:
+  main.cpp
+  Linking objects
+  server.vcxproj -> C:\Users\admin\GitHub\Insane-Project-2\server\server\bin\ARM\Debug\server.out
+  Invoking gpio export 17 out
