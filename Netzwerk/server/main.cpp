@@ -15,7 +15,7 @@ int main(void)
 	Server ItsMe;
 	while (true)
 	{
-		
+
 	}
 	return 0;
 }
