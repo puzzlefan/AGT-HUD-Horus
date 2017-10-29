@@ -1,0 +1,4 @@
+#!/bin/bash
+#compile command für server bis make file
+
+g++ main.cpp server.cpp -o main -pthread -std=c++0x
