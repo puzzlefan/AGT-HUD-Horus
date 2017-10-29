@@ -34,12 +34,36 @@ Server::Server()
 	ServerMain = new thread(&Server::ServerMainThread,this);
 }
 
-int Server::ServerMainThread()
+void Server::dataExchange()
 {
-	return 0;
+
+}
+
+void Server::ServerMainThread()
+{
+	int count = 0;
+	while (true) {
+		struct sockaddr_in HeWasNeverSeenAgain;//create socket adress to store in Vector
+		ClientAddresses.push_back(HeWasNeverSeenAgain);//storing
+		SocketLengths.push_back(sizeof(ClientAddresses[count]));//get the size of the stored address
+		ClientFd.push_back(accept(sockfd, (struct sockaddr *) &ClientAddresses[count], &SocketLengths[count]));//taking a connection and extract it, store fd in vector
+	 	if (ClientFd[count] < 0)//wenn error nix neu thread
+	 	{
+		 	std::cout << "ERROR on accept" << '\n';
+	 	}
+		else{
+			clientThreads.push_back(std::thread(&Server::ServerPrivateThread,this));//wenn nix error neu Client thread
+		}
+		count++;
+	}
+}
+
+void Server::ServerPrivateThread()
+{
+	std::cout << "nope" << '\n';
 }
 
 Server::~Server()
 {
-
+	close(sockfd);
 }
