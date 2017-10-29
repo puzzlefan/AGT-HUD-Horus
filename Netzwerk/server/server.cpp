@@ -6,6 +6,7 @@
 #include <thread>
 #include <vector>
 #include <iostream>
+#include "../User/User.h"
 #include "server.h"
 
 using namespace std;
