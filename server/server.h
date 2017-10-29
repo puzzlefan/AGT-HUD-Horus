@@ -10,11 +10,12 @@ private:
 	struct sockaddr_in serv_addr;
 
 	std::thread *ServerMain;
+	std::vector<std::thread> clientThreads;
 public:
 	Server();
 	~Server();
 
-	static int ServerMainThread(){return 1;}
+	int ServerMainThread();//{return 1;}
 };
 
 #endif

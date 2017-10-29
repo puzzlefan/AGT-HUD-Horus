@@ -31,13 +31,13 @@ Server::Server()
 	//
 	//starting the first thread, that one only handles acception of connection because it ohterwise would block the continuation of the programm
 	//
-	ServerMain = new thread(Server::ServerMainThread);
+	ServerMain = new thread(&Server::ServerMainThread,this);
 }
 
-//static void Server::ServerMainThread()
-//{
-
-//}
+int Server::ServerMainThread()
+{
+	return 0;
+}
 
 Server::~Server()
 {

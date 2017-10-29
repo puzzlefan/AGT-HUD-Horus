@@ -14,7 +14,7 @@ int main(void)
 {
 	while (true)
 	{
-
+		//nothing;
 	}
 	return 0;
 }
