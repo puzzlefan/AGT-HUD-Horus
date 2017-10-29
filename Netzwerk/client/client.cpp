@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <thread>
+#include "../User/User.h"
 #include "client.h"
 
 Client::Client()
