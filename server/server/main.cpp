@@ -7,6 +7,7 @@
 #include <netinet/in.h> //structs for sockets
 #include <thread>
 #include <vector>
+#include <iostream>
 #include "server.h"
 
 int main(void)

@@ -4,6 +4,12 @@
   Starting remote build
   Compiling sources:
   main.cpp
+  server.cpp
   Linking objects
-  server.vcxproj -> C:\Users\admin\GitHub\Insane-Project-2\server\server\bin\ARM\Debug\server.out
-  Invoking gpio export 17 out
+  /usr/bin/ld: /home/pi/projects/server/obj/ARM/Debug/server.o: undefined reference to symbol 'pthread_create@@GLIBC_2.4'
+  //lib/arm-linux-gnueabihf/libpthread.so.0: error adding symbols: DSO missing from command line
+  collect2: error: ld returned 1 exit status
+  
+/usr/bin/ld : error : undefined reference to symbol 'pthread_create@@GLIBC_2.4'
+//lib/arm-linux-gnueabihf/libpthread.so.0 : error : DSO missing from command line
+collect2 : error : ld returned 1 exit status
