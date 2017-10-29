@@ -4,6 +4,7 @@
 class Server
 {
 private:
+	int count = 0;//counts the attemps to get a connection
 	//Vars for the main thread
 	int sockfd;
 	uint16_t portno = 42000;

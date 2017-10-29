@@ -41,7 +41,6 @@ void Server::dataExchange()
 
 void Server::ServerMainThread()
 {
-	int count = 0;
 	while (true) {
 		struct sockaddr_in HeWasNeverSeenAgain;//create socket adress to store in Vector
 		ClientAddresses.push_back(HeWasNeverSeenAgain);//storing
