@@ -12,9 +12,10 @@
 
 int main(void)
 {
+	Server ItsMe;
 	while (true)
 	{
-		//nothing;
+		
 	}
 	return 0;
 }
