@@ -3,7 +3,9 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication headquater(argc, argv);
+    QApplication a(argc, argv);
 
-    return headquater.exec();
+    headquater *Leitstelle = new headquater;
+
+    return a.exec();
 }

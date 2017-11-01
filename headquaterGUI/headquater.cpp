@@ -3,23 +3,31 @@
 //#include "LeptonThread.h"
 #include <iostream>
 
-#include <QGridLayout>
 #include <QMainWindow>
+#include <QGridLayout>
+#include <QWidget>
 #include <QImage>
 #include <QLabel>
 #include <QTextEdit>
 #include <QPushButton>
 #include <QTableView>
+#include <QTabWidget>
 
 headquater::headquater(QWidget *parent)
     : QMainWindow(parent)
 {
     mainWidget = new QWidget;
     layout = new QGridLayout;
+    Tabs = new QTabWidget;
+
+    mainWidget->resize(1000,750);
 
     mainWidget->setWindowTitle("HeadquaterGUI Leitstelle");
     mainWidget->setLayout(layout);
     mainWidget->show();
+
+
+    newConfirmedID(1);
 }
 
 void headquater::newConfirmedID(int ID)
@@ -235,4 +243,9 @@ Person::Person(int trueID)
     recentCOFoot =0;
     recentMessage = " ";
     recentAnswer = 0;
+}
+
+void Person::pageSetUp()
+{
+
 }

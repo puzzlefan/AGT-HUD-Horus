@@ -5,17 +5,24 @@
 #include <QGridLayout>
 #include <QImage>
 #include <QLabel>
+#include <QWidget>
 #include <QTextEdit>
 #include <QPushButton>
 #include <QTableView>
+#include <QTabWidget>
 
 class QTableView;
 class QGridLayout;
+class QTabWidget;
 
-class Person
+class Person : public QWidget
 {
+    Q_OBJECT
+
 public:
    Person(int ID);
+
+   //personal values
    int ID;
    int recentStatus;
    int recentTempHead;
@@ -25,6 +32,21 @@ public:
    QString Name;
    QString recentMessage;
    int recentAnswer;
+
+   //for own page
+   void pageSetUp();
+   QWidget *personalTab;
+   QGridLayout *personalLayout;
+   QImage *IRPicture;
+   QLabel *answer;
+   QTextEdit *messageText;
+   QPushButton *enteringMessage;
+   QLabel *additionalData;
+   QLabel *TempHead;
+   QLabel *TempFoot;
+   QLabel *COHead;
+   QLabel *COFoot;
+
 };
 
 class headquater : public QMainWindow
@@ -52,7 +74,7 @@ private slots:
 private:
     //other
     QWidget *mainWidget;
-    QGridLayout *layout;
+    QGridLayout *layout;//really useful
     void createConnections();
 
     //Status related
@@ -65,6 +87,7 @@ private:
     Person *PersonID2;
     Person *PersonID3;
     Person *PersonID4;
+    QTabWidget *Tabs;
 
     //communication
     QString Answers[3] = {" ","angenommen","nicht verfügbar"};
