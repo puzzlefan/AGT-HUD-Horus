@@ -19,7 +19,6 @@ class HeadGUI : public QMainWindow
 public:
     HeadGUI(QWidget *parent = 0);
     ~HeadGUI();
-    void test();
 
 //public slots:
   //  void updateImage(unsigned short *, int, int);
@@ -87,8 +86,9 @@ private:
     int NumberDiffValues[3] = {4,2,5};
     QString Stati[4]={"Status1","Status2","Status3","Status4"};
     QString recivedMessage;
-    QString messageAnswers[2] = {"angenommen","nicht verfügbar"};
+    QString messageAnswers[3] = {" ","angenommen","nicht verfügbar"};
     int recentStatus;
+    int recentAnswer;
 
     //biometric data
     void createBiometric();

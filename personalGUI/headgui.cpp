@@ -255,6 +255,7 @@ void HeadGUI::certify()
             QString txtMessage = recivedMessage +between+ messageAnswers[vertical];
             Messages->setText(txtMessage);
             Messages->setStyleSheet("QLabel{background-color : lightgrey;}");
+            recentAnswer = vertical;
 
             emit answeredMessage(ID,vertical);
 

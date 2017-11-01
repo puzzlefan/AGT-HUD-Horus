@@ -3,9 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    headquater w;
-    w.show();
+    QApplication headquater(argc, argv);
 
-    return a.exec();
+    return headquater.exec();
 }
