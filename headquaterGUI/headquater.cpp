@@ -21,6 +21,7 @@ headquater::headquater(QWidget *parent)
 
     Tabs = new QTabWidget;
     layout->addWidget(Tabs, 0, 0, 4, 6);
+    connect(Tabs,SIGNAL(currentChanged(int)),this,SLOT(newTopTab(int)));
 
     HeaderStatus = new QLabel;
     layout->addWidget(HeaderStatus, 0, 6, 1, 1, Qt::AlignCenter);
@@ -408,6 +409,34 @@ std::cout<< txtMessage.toUtf8().constData()<<std::endl;
     emit newMessage(sendToID,txtMessage);
 }
 
+void headquater::newTopTab(int index)
+{
+    int tabID = tabIndex[index];
+
+    switch (tabID)
+    {
+    case 1:
+        PersonID1->updateTab();
+
+        break;
+
+    case 2:
+        PersonID2->updateTab();
+
+        break;
+
+    case 3:
+        PersonID3->updateTab();
+
+        break;
+
+    case 4:
+        PersonID4->updateTab();
+
+        break;
+    }
+}
+
 headquater::~headquater()
 {
 
@@ -535,4 +564,12 @@ void Person::updateCOFoot()
     QString CO = QString::number(recentCOFoot);
     QString txt = CO + unitCO;
     COFoot->setText(txt);
+}
+
+void Person::updateTab()
+{
+    updateTempHead();
+    updateTempFoot();
+    updateCOHead();
+    updateCOFoot();
 }

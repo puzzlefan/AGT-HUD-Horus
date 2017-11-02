@@ -42,6 +42,7 @@ public:
     void updateTempFoot();
     void updateCOHead();
     void updateCOFoot();
+    void updateTab();
     QWidget *personalTab;
     QGridLayout *personalLayout;
     QLabel *answer;
@@ -92,6 +93,7 @@ private slots:
     void updatedCOFoot(int ID, int recentCO);
     void answerdMessage(int ID, int answer);
     void sendNewMessage();
+    void newTopTab(int index);
 
 private:
     //other
