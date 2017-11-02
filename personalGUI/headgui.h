@@ -95,10 +95,10 @@ private:
     QLabel *Personae;
     QLabel *TempHead;
     QLabel *TempFoot;
-    QString unitTemp ="°C";
+    QString unitTemp =" °C";
     QLabel *COHead;
     QLabel *COFoot;
-    QString unitCO = "ppm";
+    QString unitCO = " ppm";
     int ID;
     QString Name [5]= {" ","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
 

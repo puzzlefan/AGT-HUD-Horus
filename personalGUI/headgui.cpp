@@ -251,7 +251,7 @@ void HeadGUI::certify()
           }
         case 1:
           {
-            QString between =" Antwort: ";
+            QString between ="Antwort: ";
             QString txtMessage = recivedMessage +between+ messageAnswers[vertical];
             Messages->setText(txtMessage);
             Messages->setStyleSheet("QLabel{background-color : lightgrey;}");
