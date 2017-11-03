@@ -8,6 +8,7 @@
 #include <string>
 #include <thread>
 #include <iostream>
+#include "../User/User.h"
 #include "client.h"
 
 int main(int argc, char const *argv[]) {
