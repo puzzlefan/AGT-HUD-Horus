@@ -17,14 +17,19 @@ private:
 	//threads
 	std::thread *ServerMain;
 	std::vector<std::thread> clientThreads;
+
+	user mine;
 public:
 	Server();
 	~Server();
 
 	void ServerMainThread();//{return 1;}
-	void ServerPrivateThread();
+	void ServerPrivateThread(int counti);
 
 	void dataExchange();
+
+	void IntChar(int Inte, char *ptr);
+	int CharInt(char *ptr);
 };
 
 #endif

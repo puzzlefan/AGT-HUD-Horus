@@ -7,6 +7,8 @@
 #include <vector>
 #include <iostream>
 #include "../User/User.h"
+//#include <sys/time.h>//macht zeit
+#include <sys/select.h>
 #include "server.h"
 
 using namespace std;
@@ -52,15 +54,87 @@ void Server::ServerMainThread()
 		 	std::cout << "ERROR on accept" << '\n';
 	 	}
 		else{
-			clientThreads.push_back(std::thread(&Server::ServerPrivateThread,this));//wenn nix error neu Client thread
-		}
+			clientThreads.push_back(std::thread(&Server::ServerPrivateThread,this,count));//wenn nix error neu Client thread
+		}//pass by value?
 		count++;
 	}
 }
 
-void Server::ServerPrivateThread()
+void Server::ServerPrivateThread(int counti)
 {
-	std::cout << "nope" << '\n';
+	int fall = 0;
+	int command = 0;
+	int Position;
+	char Bool, Char;
+	char Integer[4];
+	bool Continue = true;
+	while (true) {
+		switch (fall) {
+			case 0:	read(ClientFd[counti],&command,1);
+							fall = command;
+							break;
+			case 1:	while (Continue)
+							{
+								read(sockfd,&command,1);
+								switch (command) {
+									case 3:	Continue = false;
+													break;
+									case 100:	read(ClientFd[counti],&Integer,4);
+														mine.setID(CharInt(Integer));
+														break;
+									case 101:	do
+														{
+															read(ClientFd[counti], &Position, 1);
+															if(Position == 253)
+															{
+																break;
+															}
+															read(sockfd, &Integer, 4);
+															mine.setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
+														}while (true);
+														break;
+									case 102:do
+														{
+															read(sockfd, &Position, 1);
+															if(Position == 253)
+															{
+																break;
+															}
+															read(sockfd, &Bool, 1);
+															mine.setBools(Bool,Position);
+														} while(true);
+														break;
+									case 103:do
+														{
+															read(sockfd,Integer,4);
+															int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
+															if(Zahl==0xFFFFFFFF) break;
+															read(sockfd, &Char,1);
+															mine.setBITBild(Char,Zahl);
+														} while(true);
+														break;
+									case 104:
+														break;
+									default: std::cout << "wrong ab receving" << '\n';
+								}
+							}
+							break;
+			case 2:break;
+			default: std::cout << "something went wrong" << '\n';
+		}
+	}
+}
+
+void Server::IntChar(int Inte, char *ptr)
+{
+  ptr[0] = Inte >> 24;
+  ptr[1] = (Inte >> 16)&0x00FF;
+  ptr[2] = (Inte >> 8) & 0x0000FF;
+  ptr[3] = Inte & 0x000000FF;
+}
+int Server::CharInt(char *ptr)
+{
+	return (ptr[0] << 24)+(ptr[1] << 16)+(ptr[2] << 8)+ptr[3];
 }
 
 Server::~Server()

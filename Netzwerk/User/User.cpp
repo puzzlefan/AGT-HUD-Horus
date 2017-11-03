@@ -4,6 +4,7 @@
 
 user::user()
 {
+  BITBild = new std::vector<unsigned char>(BITBildSize);
   fill();
 }
 user::~user()
@@ -24,6 +25,6 @@ void user::fill()
   }
   message = "abc";
   for(int i = 0; i<= 19200 * 2;i++){
-    BITBild.push_back(i %256);
+    (*BITBild)[i]=252;
   }
 }
