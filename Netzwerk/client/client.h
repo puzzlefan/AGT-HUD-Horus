@@ -11,9 +11,9 @@ private://the ip adress of the server stands in the cpp fron the client because 
   struct sockaddr_in serv_addr;
   std::thread *ClientThread;
 
-  user mine;
+  user *mine;
 public:
-  Client();
+  Client(user *point);
   ~Client();
 
   void communicator();

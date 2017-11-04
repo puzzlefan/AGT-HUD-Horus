@@ -12,10 +12,13 @@
 #include "client.h"
 
 int main(int argc, char const *argv[]) {
-  Client kop;
+  user a;
+  Client kop(&a);
+  a.message = "hey";
+  a.setBools(true,0);
   while (true)
   {
-    /* code */
+
   }
   return 0;
 }

@@ -14,8 +14,9 @@
 #include <sys/select.h>
 #include "client.h"
 
-Client::Client()
+Client::Client(user *point)
 {
+  mine = point;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
   if (sockfd<0) {
     std::cout << "error opening socket" << '\n';
@@ -73,7 +74,7 @@ void Client::communicator()
                                   break;
                                 }
                                 read(sockfd, &Integer, 4);
-                                mine.setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
+                                mine->setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
                               } while(true);
                               break;
                     case 201: do
@@ -84,14 +85,14 @@ void Client::communicator()
                                   break;
                                 }
                                 read(sockfd, &Bool, 1);
-                                mine.setBools(Bool,Position);
+                                mine->setBools(Bool,Position);
                               } while(true);
                               break;
-                    case 202: mine.message = "";
-                              for (int i = 0; i < mine.getMessageLength(); i++)
+                    case 202: mine->message = "";
+                              for (int i = 0; i < mine->getMessageLength(); i++)
                               {
                                 read(sockfd,&Char,1);
-                                mine.message += Char;
+                                mine->message += Char;
                               }
                               break;
                     default : std::cout << "something went horrible wrong through out reading" << '\n';
@@ -108,7 +109,7 @@ void Client::communicator()
       case 100: command = 100;
                 write(sockfd, &command, CommandLength);//send to sockfd command 100 with length 1
                 char charID[4];
-                IntChar(mine.getID(),charID);
+                IntChar(mine->getID(),charID);
                 write(sockfd, charID, 4);
                 fall = 101;
                 break;
@@ -116,11 +117,11 @@ void Client::communicator()
       case 101: command = 101;
                 write(sockfd, &command, CommandLength);//send to sockfd command 101 with length 1
                 char chaInt[4];
-                for (int i = 0; i < mine.getIntegerCount() ; i++)
+                for (int i = 0; i < mine->getIntegerCount() ; i++)
                 {
-                  if (mine.getIntegersChanged(i)) {
+                  if (mine->getIntegersChanged(i)) {
                     write(sockfd,&i,1);
-                    IntChar(mine.transmitInt(i), chaInt);
+                    IntChar(mine->transmitInt(i), chaInt);
                     write(sockfd, chaInt, 4);
                   }
                 }
@@ -131,11 +132,11 @@ void Client::communicator()
 
       case 102: command = 102;
                 write(sockfd, &command, CommandLength);//send to sockfd command 102 with length 1
-                for (int i = 0; i < mine.getBoolCount(); i++)
+                for (int i = 0; i < mine->getBoolCount(); i++)
                 {
-                  if (mine.getBoolChanged(i)) {
+                  if (mine->getBoolChanged(i)) {
                     write(sockfd,&i,1);
-                    char asdf = mine.transmitBool(i);
+                    char asdf = mine->transmitBool(i);
                     write(sockfd, &asdf, 1);
                   }
                 }
@@ -146,9 +147,9 @@ void Client::communicator()
 
       case 103: command = 103;
                 write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
-                for(int i = 0; i< mine.getMessageLength();i++)
+                for(int i = 0; i< mine->getMessageLength();i++)
                 {
-                  write(sockfd, &mine.message[i], 1);
+                  write(sockfd, &mine->message[i], 1);
                 }
                 fall = 104;
                 break;
@@ -156,13 +157,13 @@ void Client::communicator()
       case 104: command = 104;//needs change
                 char nUMMBER[4];
                 write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
-                for(int i = 0; i< mine.getBITBildSize();i++)
+                for(int i = 0; i< mine->getBITBildSize();i++)
                 {
-                  if(mine.getBITBildChanged(i))
+                  if(mine->getBITBildChanged(i))
                   {
                     IntChar(i,nUMMBER);
                     write(sockfd, &nUMMBER, 4);
-                    char ToWrite = mine.transmitBITBild(i);
+                    char ToWrite = mine->transmitBITBild(i);
                     write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
                   }
                 }

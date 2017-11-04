@@ -20,9 +20,9 @@ private:
 	std::thread *ServerMain;
 	std::vector<std::thread> clientThreads;
 
-	user mine;
+	user *mine;
 public:
-	Server();
+	Server(user *point);
 	~Server();
 
 	void ServerMainThread();//{return 1;}
