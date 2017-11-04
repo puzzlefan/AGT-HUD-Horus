@@ -13,10 +13,15 @@
 
 int main(void)
 {
-	Server ItsMe;
+	user a;
+	Server ItsMe(&a);
 	while (true)
 	{
-
+		if(a.getBool(0))
+		{
+			std::cout << a.message << '\n';
+			a.setBools(false,0);
+		}
 	}
 	return 0;
 }

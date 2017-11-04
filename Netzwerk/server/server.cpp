@@ -12,8 +12,9 @@
 #include "server.h"
 
 using namespace std;
-Server::Server()
+Server::Server(user *point)
 {
+	mine = point;
 	sockfd = socket(AF_INET, SOCK_STREAM,0);//Creates a standart Socket ready for TCP
 	if (sockfd<0)//validiti check
 	{
@@ -80,7 +81,7 @@ void Server::ServerPrivateThread(int counti)
 									case 3:	Continue = false;
 													break;
 									case 100:	read(ClientFd[counti],&Integer,4);
-														mine.setID(CharInt(Integer));
+														mine->setID(CharInt(Integer));
 														break;
 									case 101:	do
 														{
@@ -90,7 +91,7 @@ void Server::ServerPrivateThread(int counti)
 																break;
 															}
 															read(ClientFd[counti], &Integer, 4);
-															mine.setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
+															mine->setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
 														}while (true);
 														break;
 									case 102:do
@@ -101,14 +102,14 @@ void Server::ServerPrivateThread(int counti)
 																break;
 															}
 															read(ClientFd[counti], &Bool, 1);
-															mine.setBools(Bool,Position);
+															mine->setBools(Bool,Position);
 														} while(true);
 														break;
-									case 103: mine.message = "";
-														for (int i = 0; i < mine.getMessageLength(); i++)
+									case 103: mine->message = "";
+														for (int i = 0; i < mine->getMessageLength(); i++)
 														{
 															read(ClientFd[counti],&Char,1);
-															mine.message += Char;
+															mine->message += Char;
 														}
 														break;
 									case 104:do
@@ -117,7 +118,7 @@ void Server::ServerPrivateThread(int counti)
 															int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
 															if(Zahl==0xFFFFFFFF) break;
 															read(ClientFd[counti], &Char,1);
-															mine.setBITBild(Char,Zahl);
+															mine->setBITBild(Char,Zahl);
 														} while(true);
 														break;
 									default: std::cout << "wrong ab receving" << '\n';
@@ -127,11 +128,11 @@ void Server::ServerPrivateThread(int counti)
 			case 2:	command = 200;
 							write(ClientFd[counti],&command,1);
 							char chaInt[4];
-							for (int i = 0; i < mine.getIntegerCount() ; i++)
+							for (int i = 0; i < mine->getIntegerCount() ; i++)
 							{
-								if (mine.getIntegersChanged(i)) {
+								if (mine->getIntegersChanged(i)) {
 									write(ClientFd[counti],&i,1);
-									IntChar(mine.transmitInt(i), chaInt);
+									IntChar(mine->transmitInt(i), chaInt);
 									write(ClientFd[counti], chaInt, 4);
 								}
 							}
@@ -139,11 +140,11 @@ void Server::ServerPrivateThread(int counti)
 							write(ClientFd[counti],&command,1);
 							command = 201;
 				      write(ClientFd[counti], &command, CommandLength);//send to sockfd command 102 with length 1
-				      for (int i = 0; i < mine.getBoolCount(); i++)
+				      for (int i = 0; i < mine->getBoolCount(); i++)
 				      {
-				      	if (mine.getBoolChanged(i)) {
+				      	if (mine->getBoolChanged(i)) {
 				         write(ClientFd[counti],&i,1);
-				         char asdf = mine.transmitBool(i);
+				         char asdf = mine->transmitBool(i);
 				         write(ClientFd[counti], &asdf, 1);
 							 	}
 				      }
@@ -151,9 +152,9 @@ void Server::ServerPrivateThread(int counti)
 				      write(ClientFd[counti],&command,1);
 							command = 202;
 				      write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
-				      for(int i = 0; i< mine.getMessageLength();i++)
+				      for(int i = 0; i< mine->getMessageLength();i++)
 				      {
-				         write(ClientFd[counti], &mine.message[i], 1);
+				         write(ClientFd[counti], &mine->message[i], 1);
 				      }
 							break;
 			default: std::cout << "something went wrong" << '\n';
