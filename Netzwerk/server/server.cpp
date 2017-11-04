@@ -75,7 +75,7 @@ void Server::ServerPrivateThread(int counti)
 							break;
 			case 1:	while (Continue)
 							{
-								read(sockfd,&command,1);
+								read(ClientFd[counti],&command,1);
 								switch (command) {
 									case 3:	Continue = false;
 													break;
@@ -89,37 +89,73 @@ void Server::ServerPrivateThread(int counti)
 															{
 																break;
 															}
-															read(sockfd, &Integer, 4);
+															read(ClientFd[counti], &Integer, 4);
 															mine.setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
 														}while (true);
 														break;
 									case 102:do
 														{
-															read(sockfd, &Position, 1);
+															read(ClientFd[counti], &Position, 1);
 															if(Position == 253)
 															{
 																break;
 															}
-															read(sockfd, &Bool, 1);
+															read(ClientFd[counti], &Bool, 1);
 															mine.setBools(Bool,Position);
 														} while(true);
 														break;
-									case 103:do
+									case 103: mine.message = "";
+														for (int i = 0; i < mine.getMessageLength(); i++)
 														{
-															read(sockfd,Integer,4);
+															read(ClientFd[counti],&Char,1);
+															mine.message += Char;
+														}
+														break;
+									case 104:do
+														{
+															read(ClientFd[counti],Integer,4);
 															int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
 															if(Zahl==0xFFFFFFFF) break;
-															read(sockfd, &Char,1);
+															read(ClientFd[counti], &Char,1);
 															mine.setBITBild(Char,Zahl);
 														} while(true);
-														break;
-									case 104:
 														break;
 									default: std::cout << "wrong ab receving" << '\n';
 								}
 							}
 							break;
-			case 2:break;
+			case 2:	command = 200;
+							write(ClientFd[counti],&command,1);
+							char chaInt[4];
+							for (int i = 0; i < mine.getIntegerCount() ; i++)
+							{
+								if (mine.getIntegersChanged(i)) {
+									write(ClientFd[counti],&i,1);
+									IntChar(mine.transmitInt(i), chaInt);
+									write(ClientFd[counti], chaInt, 4);
+								}
+							}
+							command = 253;
+							write(ClientFd[counti],&command,1);
+							command = 201;
+				      write(ClientFd[counti], &command, CommandLength);//send to sockfd command 102 with length 1
+				      for (int i = 0; i < mine.getBoolCount(); i++)
+				      {
+				      	if (mine.getBoolChanged(i)) {
+				         write(ClientFd[counti],&i,1);
+				         char asdf = mine.transmitBool(i);
+				         write(ClientFd[counti], &asdf, 1);
+							 	}
+				      }
+				      command = 253;
+				      write(ClientFd[counti],&command,1);
+							command = 202;
+				      write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
+				      for(int i = 0; i< mine.getMessageLength();i++)
+				      {
+				         write(ClientFd[counti], &mine.message[i], 1);
+				      }
+							break;
 			default: std::cout << "something went wrong" << '\n';
 		}
 	}

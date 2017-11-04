@@ -118,8 +118,11 @@ void Client::communicator()
                 char chaInt[4];
                 for (int i = 0; i < mine.getIntegerCount() ; i++)
                 {
-                  IntChar(mine.getInt(i), chaInt);
-                  write(sockfd, chaInt, 4);
+                  if (mine.getIntegersChanged(i)) {
+                    write(sockfd,&i,1);
+                    IntChar(mine.transmitInt(i), chaInt);
+                    write(sockfd, chaInt, 4);
+                  }
                 }
                 command = 253;
                 write(sockfd,&command,1);
@@ -130,8 +133,11 @@ void Client::communicator()
                 write(sockfd, &command, CommandLength);//send to sockfd command 102 with length 1
                 for (int i = 0; i < mine.getBoolCount(); i++)
                 {
-                  char asdf = mine.getBool(i);
-                  write(sockfd, &asdf, 1);
+                  if (mine.getBoolChanged(i)) {
+                    write(sockfd,&i,1);
+                    char asdf = mine.transmitBool(i);
+                    write(sockfd, &asdf, 1);
+                  }
                 }
                 command = 253;
                 write(sockfd,&command,1);
@@ -148,14 +154,21 @@ void Client::communicator()
                 break;
 
       case 104: command = 104;//needs change
+                char nUMMBER[4];
                 write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
                 for(int i = 0; i< mine.getBITBildSize();i++)
                 {
-                  char ToWrite = mine.getBITBild(i);
-                  write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
+                  if(mine.getBITBildChanged(i))
+                  {
+                    IntChar(i,nUMMBER);
+                    write(sockfd, &nUMMBER, 4);
+                    char ToWrite = mine.transmitBITBild(i);
+                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
+                  }
                 }
-
-                //write(sockfd,)
+                char STOP[4];
+                IntChar(0xFFFFFFFF,STOP);
+                write(sockfd,STOP,4);
                 fall = 003;
                 break;
 
