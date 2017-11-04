@@ -4,6 +4,8 @@
 class Server
 {
 private:
+  int CommandLength = 1;
+
 	int count = 0;//counts the attemps to get a connection
 	//Vars for the main thread
 	int sockfd;
