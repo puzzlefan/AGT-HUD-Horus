@@ -6,7 +6,7 @@
 #include <QGridLayout>
 #include <QResizeEvent>
 
-//#include <LeptonThread.h>
+#include <../Lepton/LeptonThread.h>
 #include <../Netzwerk/client/client.h>
 #include <../Netzwerk/User/User.h>
 
@@ -22,8 +22,8 @@ public:
     HeadGUI(QWidget *parent = 0);
     ~HeadGUI();
 
-//public slots:
-  //  void updateImage(unsigned short *, int, int);
+public slots:
+    void updateImage(unsigned short *, int, int);
 
 signals:
     void certifyPersonaeSignal();
@@ -110,7 +110,7 @@ private:
     QVector<unsigned short> rawData;
     QImage rgbImage;
     enum { ImageWidth = 320, ImageHeight = 240 };
- //   LeptonThread *thread;//%
+    LeptonThread *thread;//%
     unsigned short rawMin, rawMax;
 
 };
