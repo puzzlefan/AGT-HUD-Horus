@@ -306,8 +306,8 @@ void HeadGUI::certify()
     {
         Status->setText("MAYDAY");
         Status->setStyleSheet("QLabel{background-color : red;}");
-        // recent Status?!
-        emit emergencySignal(ID);
+        recentStatus = 5;
+        emit newStatusSignal(ID,5);
     }
 }
 

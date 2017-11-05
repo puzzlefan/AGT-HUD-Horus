@@ -37,7 +37,6 @@ signals:
     void certifySignal();
     void coosingStatusSignal();
     //Singals to headquater
-    void emergencySignal(int ID);
     void newStatusSignal(int ID,int vertical);
     void answeredMessage(int ID,int vertical);
     void confirmedID(int ID);
@@ -90,7 +89,7 @@ private:
     int NumberDiffMenues = 2;
     bool answerPossible;
     int NumberDiffValues[4] = {4,2,1,5};
-    QString Stati[4]={"Status1","Status2","Status3","Status4"};
+    QString Stati[5]={"Status1","Status2","Status3","Status4","emergency"};
     QString recivedMessage;
     QString messageAnswers[3] = {" ","angenommen","nicht verfügbar"};
     int recentStatus;
