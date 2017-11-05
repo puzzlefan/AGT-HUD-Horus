@@ -80,7 +80,7 @@ int SegmentPackets = 60;
     void updateStatus();
     QLabel *Status;
     QString colon = ": ";
-    QString Stati[4]= {"Status1","Status2","Status3","Status4"};
+    QString Stati[5]= {"Status1","Status2","Status3","Status4","emergency"};
 
 };
 
