@@ -1,6 +1,8 @@
 #include "headgui.h"
 
 //#include "LeptonThread.h"
+#include <../Netzwerk/client/client.h>
+#include <../Netzwerk/User/User.h>
 #include <iostream>
 
 #include <QWidget>
@@ -13,6 +15,8 @@
 HeadGUI::HeadGUI(QWidget *parent)
     : QMainWindow(parent)
 {
+    user networkUser = new user;
+
     mainWidget = new QWidget;
     layout = new QGridLayout;
 
