@@ -22,26 +22,34 @@ static const uint qt_meta_data_Person[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       1,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+ // slots: signature, parameters, type, tag, flags
+       7,   44,   47,   47, 0x0a,
+
        0        // eod
 };
 
 static const char qt_meta_stringdata_Person[] = {
-    "Person\0"
+    "Person\0updateImage(unsigned short*,int,int)\0"
+    ",,\0\0"
 };
 
 void Person::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    Q_UNUSED(_o);
-    Q_UNUSED(_id);
-    Q_UNUSED(_c);
-    Q_UNUSED(_a);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        Q_ASSERT(staticMetaObject.cast(_o));
+        Person *_t = static_cast<Person *>(_o);
+        switch (_id) {
+        case 0: _t->updateImage((*reinterpret_cast< unsigned short*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
+        default: ;
+        }
+    }
 }
 
 const QMetaObjectExtraData Person::staticMetaObjectExtraData = {
@@ -75,6 +83,11 @@ int Person::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 1)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 1;
+    }
     return _id;
 }
 static const uint qt_meta_data_headquater[] = {
