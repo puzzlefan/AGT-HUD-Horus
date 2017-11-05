@@ -46,6 +46,7 @@ public:
     void updateCOHead();
     void updateCOFoot();
     void updateTab();
+    void updateMessage();
     QWidget *personalTab;
     QGridLayout *personalLayout;
     QLabel *answer;
@@ -102,6 +103,7 @@ signals:
     void updatedCOFootSignal(int ID, int recentCO);
     void answerdMessageSignal(int ID, int answer);
     void newDataSignal(int vectorNo);
+    void updatedImageSignal(int ID, unsigned short *, int, int);
 
 
 private slots:
@@ -115,6 +117,7 @@ private slots:
     void sendNewMessage();
     void newTopTab(int index);
     void readingNewData(int vectorNo);
+    void updatedImage(int ID,unsigned short *, int, int);
 
 private:
     //other
