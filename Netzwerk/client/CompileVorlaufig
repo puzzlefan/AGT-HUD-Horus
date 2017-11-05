@@ -1,4 +1,4 @@
 #!/bin/bash
 #compile Befehl bis makefile exestiert
 
-g++ main.cpp client.cpp ../User/User.cpp -o main -pthread -std=c++0x
+g++ main.cpp client.cpp ../User/User.cpp -o main -pthread -std=c++0x -g

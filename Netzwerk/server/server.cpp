@@ -13,7 +13,7 @@
 #include "server.h"
 
 using namespace std;
-Server::Server(user *point/*, headquater *poinTI*/)
+Server::Server(std::vector<user> *point)
 {
 	mine = point;
 	//SignalEmpfaenger = poinTI;
@@ -52,6 +52,7 @@ void Server::ServerMainThread()
 		ClientAddresses.push_back(HeWasNeverSeenAgain);//storing
 		SocketLengths.push_back(sizeof(ClientAddresses[count]));//get the size of the stored address
 		ClientFd.push_back(accept(sockfd, (struct sockaddr *) &ClientAddresses[count], &SocketLengths[count]));//taking a connection and extract it, store fd in vector
+		(*mine).push_back(user());
 	 	if (ClientFd[count] < 0)//wenn error nix neu thread
 	 	{
 		 	std::cout << "ERROR on accept" << '\n';
@@ -76,89 +77,99 @@ void Server::ServerPrivateThread(int counti)
 			case 0:	read(ClientFd[counti],&command,1);
 							fall = command;
 							break;
-			case 1:	while (Continue)
+			case 1:
+					while (Continue)
 							{
 								read(ClientFd[counti],&command,1);
 								switch (command) {
-									case 3:	Continue = false;
-													break;
+									case 3:		Continue = false;
+												break;
 									case 100:	read(ClientFd[counti],&Integer,4);
-														mine->setID(CharInt(Integer));
-														break;
+												(*mine)[counti].setID(CharInt(Integer));
+												break;
 									case 101:	do
-														{
-															read(ClientFd[counti], &Position, 1);
-															if(Position == 253)
-															{
-																break;
-															}
-															read(ClientFd[counti], &Integer, 4);
-															mine->setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
-														}while (true);
+												{
+													read(ClientFd[counti], &Position, 1);
+													if(Position == 253)
+													{
 														break;
-									case 102:do
-														{
-															read(ClientFd[counti], &Position, 1);
-															if(Position == 253)
-															{
-																break;
-															}
-															read(ClientFd[counti], &Bool, 1);
-															mine->setBools(Bool,Position);
-														} while(true);
+													}
+													read(ClientFd[counti], &Integer, 4);
+													(*mine)[counti].setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
+												}while (true);
+												break;
+									case 102:	do
+												{
+													read(ClientFd[counti], &Position, 1);
+													if(Position == 253)
+													{
 														break;
-									case 103: mine->message = "";
-														for (int i = 0; i < mine->getMessageLength(); i++)
-														{
-															read(ClientFd[counti],&Char,1);
-															mine->message += Char;
-														}
-														break;
-									case 104:do
-														{
-															read(ClientFd[counti],Integer,4);
-															int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
-															if(Zahl==0xFFFFFFFF) break;
-															read(ClientFd[counti], &Char,1);
-															mine->setBITBild(Char,Zahl);
-														} while(true);
-														break;
+													}
+													read(ClientFd[counti], &Bool, 1);
+													(*mine)[counti].setBools(Bool,Position);
+												} while(true);
+												break;
+									case 103: 	(*mine)[counti].message = "";
+												for (int i = 0; i < (*mine)[counti].getMessageLength(); i++)
+												{
+													read(ClientFd[counti],&Char,1);
+													(*mine)[counti].message += Char;
+												}
+												break;
+									case 104:	do
+												{
+													read(ClientFd[counti],Integer,4);
+													int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
+													if(Zahl==0xFFFFFFFF) break;
+													read(ClientFd[counti], &Char,1);
+													(*mine)[counti].setBITBild(Char,Zahl);
+												} while(true);
+												break;
 									default: std::cout << "wrong ab receving" << '\n';
 								}
 							}
+							Continue=true;
+							fall=0;
 							break;
 			case 2:	command = 200;
-							write(ClientFd[counti],&command,1);
-							char chaInt[4];
-							for (int i = 0; i < mine->getIntegerCount() ; i++)
-							{
-								if (mine->getIntegersChanged(i)) {
-									write(ClientFd[counti],&i,1);
-									IntChar(mine->transmitInt(i), chaInt);
-									write(ClientFd[counti], chaInt, 4);
-								}
-							}
-							command = 253;
-							write(ClientFd[counti],&command,1);
-							command = 201;
-				      write(ClientFd[counti], &command, CommandLength);//send to sockfd command 102 with length 1
-				      for (int i = 0; i < mine->getBoolCount(); i++)
-				      {
-				      	if (mine->getBoolChanged(i)) {
-				         write(ClientFd[counti],&i,1);
-				         char asdf = mine->transmitBool(i);
-				         write(ClientFd[counti], &asdf, 1);
-							 	}
-				      }
-				      command = 253;
-				      write(ClientFd[counti],&command,1);
-							command = 202;
-				      write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
-				      for(int i = 0; i< mine->getMessageLength();i++)
-				      {
-				         write(ClientFd[counti], &mine->message[i], 1);
-				      }
-							break;
+					write(ClientFd[counti],&command,1);
+					char chaInt[4];
+					for (int i = 0; i < (*mine)[counti].getIntegerCount() ; i++)
+					{
+						if ((*mine)[counti].getIntegersChanged(i)) {
+							write(ClientFd[counti],&i,1);
+							IntChar((*mine)[counti].transmitInt(i), chaInt);
+							write(ClientFd[counti], chaInt, 4);
+						}
+					}
+					command = 253;
+					write(ClientFd[counti],&command,1);
+					command = 201;
+				    write(ClientFd[counti], &command, CommandLength);//send to sockfd command 102 with length 1
+				    for (int i = 0; i < (*mine)[counti].getBoolCount(); i++)
+				    {
+				    	if ((*mine)[counti].getBoolChanged(i)) {
+				     		write(ClientFd[counti],&i,1);
+				         	char asdf = (*mine)[counti].transmitBool(i);
+				         	write(ClientFd[counti], &asdf, 1);
+						}
+				    }
+				    command = 253;
+			     	write(ClientFd[counti],&command,1);
+					if((*mine)[counti].getMessageChanged())
+					{
+						command = 202;
+		      			write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
+		      			for(int i = 0; i< (*mine)[counti].getMessageLength();i++)
+		      			{
+		         			write(ClientFd[counti], &(*mine)[counti].message[i], 1);
+		      			}
+						(*mine)[counti].setMessageChanged(false);
+					}
+					command = 003;
+					write(ClientFd[counti], &command, 1);
+			  		fall=0;
+					break;
 			default: std::cout << "something went wrong" << '\n';
 		}
 	}
