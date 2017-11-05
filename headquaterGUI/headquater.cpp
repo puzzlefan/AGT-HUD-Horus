@@ -465,14 +465,14 @@ void headquater::newTopTab(int index)
     }
 }
 
-void headquater::updatedImage(int ID, unsigned short *rawData, int minValue, int maxValue)
+void headquater::updatedImage(int ID, unsigned short *data, int minValue, int maxValue)
 {
     switch(ID)
     {
     case 1:
         if(PersonID1->index == Tabs->currentIndex())
         {
-            PersonID1->updateImage(*rawData, minValue, maxValue);
+            PersonID1->updateImage(PersonID1->rawData, minValue, maxValue);
         }
 
         break;
@@ -480,7 +480,7 @@ void headquater::updatedImage(int ID, unsigned short *rawData, int minValue, int
     case 2:
         if(PersonID1->index == Tabs->currentIndex())
         {
-            PersonID1->updateImage(*rawData, minValue, maxValue);
+            PersonID1->updateImage(PersonID2->rawData, minValue, maxValue);
         }
 
         break;
@@ -488,7 +488,7 @@ void headquater::updatedImage(int ID, unsigned short *rawData, int minValue, int
     case 3:
         if(PersonID3->index == Tabs->currentIndex())
         {
-            PersonID3->updateImage(*rawData, minValue, maxValue);
+            PersonID3->updateImage(PersonID3->rawData, minValue, maxValue);
         }
 
         break;
@@ -496,7 +496,7 @@ void headquater::updatedImage(int ID, unsigned short *rawData, int minValue, int
     case 4:
         if(PersonID4->index == Tabs->currentIndex())
         {
-            PersonID4->updateImage(*rawData, minValue, maxValue);
+            PersonID4->updateImage(PersonID4->rawData, minValue, maxValue);
         }
 
         break;
