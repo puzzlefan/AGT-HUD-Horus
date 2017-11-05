@@ -35,13 +35,6 @@ headquater::headquater(QWidget *parent)
     mainWidget->show();
 
     noPersons = 1;
-
-    //test Signals
-    newConfirmedID(4,0);
-    newConfirmedID(1,1);
-    updatedStatus(1,2);
-    updatedTempFoot(4,50);
-    updatedStatus(4,3);
 }
 
 void headquater::createConnections()
@@ -59,7 +52,9 @@ void headquater::createConnections()
 
 void headquater::readingNewData(int vectorNo)
 {
-   //vectorNumber[vectorNo]=ID
+   int ID = vectorNumber[vectorNo];
+
+
 }
 
 int g_i = 0;
@@ -113,6 +108,8 @@ void headquater::newConfirmedID(int ID,int vectorNo)
         PersonID2->index = noPersons - 1;
         tabIndex[PersonID2->index] = ID;
 
+        vectorNumber[vectorNo] = ID;
+
         noPersons++;
 
         break;
@@ -132,6 +129,8 @@ void headquater::newConfirmedID(int ID,int vectorNo)
         PersonID3->index = noPersons - 1;
         tabIndex[PersonID3->index] = ID;
 
+        vectorNumber[vectorNo] = ID;
+
         noPersons++;
 
         break;
@@ -150,6 +149,8 @@ void headquater::newConfirmedID(int ID,int vectorNo)
 
         PersonID4->index = noPersons - 1;
         tabIndex[PersonID4->index] = ID;
+
+        vectorNumber[vectorNo] = ID;
 
         noPersons++;
 
@@ -277,7 +278,7 @@ void headquater::updatedTempFoot(int ID, int recentTemp)
 
     case 4:
         PersonID4->recentTempFoot = recentTemp;
-std::cout << "PersonID4"<< PersonID1->recentTempFoot<<std::endl;
+
         if(PersonID4->index == Tabs->currentIndex())
         {
             PersonID4->updateTempFoot();
