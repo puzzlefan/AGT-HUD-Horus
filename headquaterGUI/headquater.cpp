@@ -17,7 +17,7 @@
 #include <QPixmap>
 #include <QPainter>
 
-headquater::headquater(QWidget *parent)
+headquater::headquater(std::vector<user>*Informations, QWidget *parent)
     : QMainWindow(parent)
 {
     mainWidget = new QWidget;
@@ -26,6 +26,8 @@ headquater::headquater(QWidget *parent)
     Tabs = new QTabWidget;
     layout->addWidget(Tabs, 0, 0, 4, 6);
     connect(Tabs,SIGNAL(currentChanged(int)),this,SLOT(newTopTab(int)));
+
+    Infos=Informations;
 
     createConnections();
 
@@ -57,9 +59,7 @@ void headquater::createConnections()
 
 void headquater::readingNewData(int vectorNo)
 {
-   int ID = vectorNumber[vectorNo];
-
-
+    int ID = Infos[vectorNo]->getID();
 }
 
 int g_i = 0;
@@ -92,8 +92,6 @@ void headquater::newConfirmedID(int ID,int vectorNo)
         PersonID1->index = noPersons - 1;
         tabIndex[PersonID1->index] = ID;
 
-        vectorNumber[vectorNo] = ID;
-
         noPersons++;
 
         break;
@@ -112,8 +110,6 @@ void headquater::newConfirmedID(int ID,int vectorNo)
 
         PersonID2->index = noPersons - 1;
         tabIndex[PersonID2->index] = ID;
-
-        vectorNumber[vectorNo] = ID;
 
         noPersons++;
 
@@ -134,8 +130,6 @@ void headquater::newConfirmedID(int ID,int vectorNo)
         PersonID3->index = noPersons - 1;
         tabIndex[PersonID3->index] = ID;
 
-        vectorNumber[vectorNo] = ID;
-
         noPersons++;
 
         break;
@@ -154,8 +148,6 @@ void headquater::newConfirmedID(int ID,int vectorNo)
 
         PersonID4->index = noPersons - 1;
         tabIndex[PersonID4->index] = ID;
-
-        vectorNumber[vectorNo] = ID;
 
         noPersons++;
 

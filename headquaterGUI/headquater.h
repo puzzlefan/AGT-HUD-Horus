@@ -11,6 +11,8 @@
 #include <QTabWidget>
 #include <QPainter>
 
+#include <../Netzwerk/server/server.h>
+#include <../Netzwerk/User/User.h>
 #include <mutex>
 
 class QTableView;
@@ -82,10 +84,7 @@ public:
     QLabel *Status;
     QString colon = ": ";
     QString Stati[5]= {"Status1","Status2","Status3","Status4","emergency"};
-
-    //communication
-    QString Answers[3]= {" ","angenommen","nicht verfügbar"};
-
+    QString Answers[3] = {" ","angenommen","nicht verfügbar"};
 };
 
 class headquater : public QMainWindow
@@ -93,7 +92,7 @@ class headquater : public QMainWindow
     Q_OBJECT
 
 public:
-    headquater(QWidget *parent = 0);
+    headquater(std::vector<user>*Informations,QWidget *parent = 0);
     ~headquater();
     void newData(int vectorNo);
 
@@ -128,13 +127,13 @@ private:
     QWidget *mainWidget;
     QGridLayout *layout;//really useful
     void createConnections();
+    std::vector<user> *Infos;
 
     //Status related
     QLabel *HeaderStatus;
     int noPersons;
 
     //different Personaes
-    int vectorNumber[5];
     int tabIndex[4];
     QString Name[5]= {" ","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
     Person *PersonID1;

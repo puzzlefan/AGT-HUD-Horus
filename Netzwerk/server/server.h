@@ -15,6 +15,8 @@
 #include "../../headquaterGUI/headquater.h"
 //#include "../../headquaterGUI/headquater.h"
 
+class headquater;
+
 class Server
 {
 private:
