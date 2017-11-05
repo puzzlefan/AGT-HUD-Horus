@@ -11,6 +11,21 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = personalGUI
 TEMPLATE = app
 
+RPI_LIBS = ../raspberrypi_libs
+LEPTONSDK = leptonSDKEmb32PUB
+
+PRE_TARGETDEPS += sdk
+QMAKE_EXTRA_TARGETS += sdk sdkclean
+sdk.commands = make -C $${RPI_LIBS}/$${LEPTONSDK}
+sdkclean.commands = make -C $${RPI_LIBS}/$${LEPTONSDK} clean
+
+DEPENDPATH += .
+INCLUDEPATH += . $${RPI_LIBS}
+
+DESTDIR=.
+OBJECTS_DIR=gen_objs
+MOC_DIR=gen_mocs
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -25,8 +40,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        headgui.cpp
+        headgui.cpp \
+    ../Lepton/LeptonThread.cpp
 
 HEADERS += \
-        headgui.h
+        headgui.h \
+    ../Lepton/LeptonThread.h
 
+
+unix:LIBS += -L$${RPI_LIBS}/$${LEPTONSDK}/Debug -lLEPTON_SDK
+
+unix:QMAKE_CLEAN += -r $(OBJECTS_DIR) $${MOC_DIR}

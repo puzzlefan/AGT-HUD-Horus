@@ -5,10 +5,11 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QResizeEvent>
+#include <QPainter>
 
 #include <../Lepton/LeptonThread.h>
-#include <../Netzwerk/client/client.h>
-#include <../Netzwerk/User/User.h>
+//#include <../Netzwerk/client/client.h>
+//#include <../Netzwerk/User/User.h>
 
 class QLabel;
 class QPixmap;
