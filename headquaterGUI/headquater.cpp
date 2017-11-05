@@ -37,8 +37,8 @@ headquater::headquater(QWidget *parent)
     noPersons = 1;
 
     //test Signals
-    newConfirmedID(4);
-    newConfirmedID(1);
+    newConfirmedID(4,0);
+    newConfirmedID(1,1);
     updatedStatus(1,2);
     updatedTempFoot(4,50);
     updatedStatus(4,3);
@@ -54,6 +54,7 @@ void headquater::createConnections()
     connect(this,SIGNAL(updatedCOHeadSignal(int,int)),this,SLOT(updatedCOHead(int,int)));
     connect(this,SIGNAL(updatedCOFootSignal(int,int)),this,SLOT(updatedCOFoot(int,int)));
     connect(this,SIGNAL(answerdMessageSignal(int,int)),this,SLOT(answerdMessage(int,int)));
+    connect(this,SIGNAL(updatedImageSignal(int,unsigned short*,int,int)),this,SLOT(updatedImage(int,unsigned short*,int,int)));
 }
 
 void headquater::readingNewData(int vectorNo)
@@ -463,6 +464,44 @@ void headquater::newTopTab(int index)
     }
 }
 
+void headquater::updatedImage(int ID, unsigned short *rawData, int minValue, int maxValue)
+{
+    switch(ID)
+    {
+    case 1:
+        if(PersonID1->index == Tabs->currentIndex())
+        {
+            PersonID1->updateImage(*rawData, minValue, maxValue);
+        }
+
+        break;
+
+    case 2:
+        if(PersonID1->index == Tabs->currentIndex())
+        {
+            PersonID1->updateImage(*rawData, minValue, maxValue);
+        }
+
+        break;
+
+    case 3:
+        if(PersonID3->index == Tabs->currentIndex())
+        {
+            PersonID3->updateImage(*rawData, minValue, maxValue);
+        }
+
+        break;
+
+    case 4:
+        if(PersonID4->index == Tabs->currentIndex())
+        {
+            PersonID4->updateImage(*rawData, minValue, maxValue);
+        }
+
+        break;
+    }
+}
+
 headquater::~headquater()
 {
 
@@ -495,7 +534,7 @@ void Person::pageSetUp()//: rawData(FrameWords),
     IRPicture->setPixmap(filler);
     std::cout <<"created Image"<<std::endl;
 
-   // connect(thread, SIGNAL(updateImage(unsigned short *,int,int)), this, SLOT(updateImage(unsigned short *, int,int)));//%
+    connect(thread, SIGNAL(updateImage(unsigned short *,int,int)), this, SLOT(updateImage(unsigned short *, int,int)));//%
 
     additionalData = new QLabel;
     personalLayout->addWidget(additionalData,0,2,1,2, Qt::AlignCenter);
@@ -589,8 +628,14 @@ void Person::updateCOFoot()
     COFoot->setText(txt);
 }
 
+void Person::updateMessage()
+{
+    answer->setText(recentAnswer);
+}
+
 void Person::updateTab()
 {
+    updateMessage();
     updateTempHead();
     updateTempFoot();
     updateCOHead();

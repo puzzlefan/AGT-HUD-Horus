@@ -37,7 +37,12 @@ HeadGUI::HeadGUI(QWidget *parent)
 void HeadGUI::createBiometric()
 {
     Personae = new QLabel;
-    layout->addWidget(Personae,0,2,1,2, Qt::AlignCenter);
+    layout->addWidget(Personae,0,2,1,1, Qt::AlignCenter);
+
+    Light = new QLabel;
+    layout->addWidget(Light,0,3,1,1, Qt::AlignCenter);
+    Light->setText(lightSwitch[0]);
+    Light->setStyleSheet("QLabel{background-color : lightgrey;}");
 
     TempHead = new QLabel;
     layout->addWidget(TempHead,1,2,1,1, Qt::AlignCenter);
@@ -81,7 +86,7 @@ const int colormap[] = {255, 255, 255, 253, 253, 253, 251, 251, 251, 249, 249, 2
 
 void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue)
 {
-    // Record the raw data and min/max values
+   // Record the raw data and min/max values
     memcpy(&rawData[0], data, 2*LeptonThread::FrameWords);//memcpy(wohin gespeichert,woher daten, Nummer der Bytes die kopiert werden)
     rawMin = minValue; rawMax = maxValue;
 
@@ -112,6 +117,7 @@ void HeadGUI::createConnections()
     connect(this,SIGNAL(backSignal()),this,SLOT(back()));
     connect(this,SIGNAL(certifySignal()),this,SLOT(certify()));
     connect(this,SIGNAL(coosingStatusSignal()),this,SLOT(coosingStatus()));
+    connect(this,SIGNAL(changingLightSignal()),this,SLOT(changingLight()));
     //adresses?!
     connect(this,SIGNAL(updateBraceletSignal(int,int,int,int,int,int)),this,SLOT(updateBracelet(int,int,int,int,int,int)));
     connect(this,SIGNAL(updateTempHeadSignal(int)),this,SLOT(updateTempHead(int)));
@@ -141,12 +147,13 @@ void HeadGUI::defauftValues()
     recivedMessage= "Noch keine Nachrichten";
     recentStatus = 0;
     answerPossible = false;
+    lightOn = false;
 }
 
 void HeadGUI::certifyPersonae()
 {
     ID =0;
-    horizontal = 2;
+    horizontal = 3;
 }
 
 void HeadGUI::up()
@@ -177,9 +184,14 @@ void HeadGUI::down()
 
 void HeadGUI::right()
 {
-    if (horizontal < (NumberDiffMenues-1) && answerPossible == true)
+    if (horizontal < NumberDiffMenues && answerPossible == true)
     {
         horizontal++;
+    }
+
+    if(horizontal < NumberDiffMenues &&answerPossible==false)
+    {
+        horizontal = 2;
     }
 
    if (vertical>NumberDiffValues[horizontal])
@@ -198,6 +210,11 @@ void HeadGUI::left()
     if (horizontal > 0 && answerPossible == true)
     {
         horizontal--;
+    }
+
+    if(horizontal > 0 &&answerPossible == false)
+    {
+        horizontal = 0;
     }
 
     if (vertical>NumberDiffValues[horizontal])
@@ -260,6 +277,22 @@ void HeadGUI::certify()
             break;
           }
         case 2:
+        {
+            if(vertical == 0)
+            {
+                lightOn = false;
+            }
+            else
+            {
+                lightOn = false;
+            }
+
+            emit changingLightSignal();
+
+            break;
+
+        }
+        case 3:
 
             Personae->setText(Name[vertical]);
             ID = vertical;
@@ -305,6 +338,12 @@ void HeadGUI::coosingStatus()
             break;
 
         case 2:
+
+            Light->setText(lightSwitch[vertical]);
+
+            break;
+
+        case 3:
 
             Personae->setText(Name[vertical]);
 
@@ -399,6 +438,21 @@ void HeadGUI::updateCOFoot(int recentCO)
     COHead->setText(txtCOFoot);
 
     emit updatedCOFootSignal(ID, recentCO);
+}
+
+void HeadGUI::changingLight()
+{
+   if(lightOn == true)
+   {
+       Light->setText(lightSwitch[1]);
+       Light->setStyleSheet("QLabel{background-color : yellow;}");
+   }
+   else
+   {
+       Light->setText(lightSwitch[0]);
+       Light->setStyleSheet("QLabel{background-color : lightgrey;}");
+   }
+
 }
 
 HeadGUI::~HeadGUI()
