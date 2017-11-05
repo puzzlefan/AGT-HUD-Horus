@@ -33,10 +33,10 @@ private:
 	std::thread *ServerMain;
 	std::vector<std::thread> clientThreads;
 
-	user *mine;
-//    headquater *SignalEmpfaenger;
+
+	std::vector<user> *mine;
 public:
-	Server(user *point/*, headquater *poinTI*/);
+	Server(std::vector<user> *point);
 	~Server();
 
 	void ServerMainThread();//{return 1;}
