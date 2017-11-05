@@ -9,6 +9,9 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <QTabWidget>
+#include <QPainter>
+
+#include <mutex>
 
 class QTableView;
 class QGridLayout;
@@ -18,8 +21,8 @@ class Person : public QWidget
 {
     Q_OBJECT
 
-//public slots:
-//    void updateImage(unsigned short *, int, int);
+public slots:
+    void updateImage(unsigned short *, int, int);
 
 public:
     Person(int ID);
@@ -61,8 +64,16 @@ public:
     QVector<unsigned short> rawData;
     QImage rgbImage;
     enum { ImageWidth = 320, ImageHeight = 240 };
-//   LeptonThread *thread;//%
    unsigned short rawMin, rawMax;
+  int  FrameWidth = 160;
+   int FrameHeight = 120;
+   int PacketWidth = 80;
+int PacketWords = PacketWidth + 2;
+  int RowPacketWords = 2*PacketWords;
+int PacketBytes = 2*PacketWords;
+int FrameWords = FrameWidth*FrameHeight;
+   int SegmentHeight = FrameHeight/4;
+int SegmentPackets = 60;
 
    //for status
     void updateStatus();
@@ -79,13 +90,22 @@ class headquater : public QMainWindow
 public:
     headquater(QWidget *parent = 0);
     ~headquater();
+    void newData(int vectorNo);
 
 signals:
     void newMessage(int ID, QString Message);
+    void newConfirmedIDSignal(int ID, int vectorNo);
+    void updatedStatusSignal(int ID, int recentStatus);
+    void updatedTempHeadSignal(int ID, int recentTemp);
+    void updatedTempFootSignal(int ID,int recentTemp);
+    void updatedCOHeadSignal(int ID, int recentCO);
+    void updatedCOFootSignal(int ID, int recentCO);
+    void answerdMessageSignal(int ID, int answer);
+    void newDataSignal(int vectorNo);
 
 
 private slots:
-    void newConfirmedID(int ID);
+    void newConfirmedID(int ID, int vectorNo);
     void updatedStatus(int ID, int recentStatus);
     void updatedTempHead(int ID, int recentTemp);
     void updatedTempFoot(int ID,int recentTemp);
@@ -94,6 +114,7 @@ private slots:
     void answerdMessage(int ID, int answer);
     void sendNewMessage();
     void newTopTab(int index);
+    void readingNewData(int vectorNo);
 
 private:
     //other
@@ -106,6 +127,7 @@ private:
     int noPersons;
 
     //different Personaes
+    int vectorNumber[5];
     int tabIndex[4];
     QString Name[5]= {" ","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
     Person *PersonID1;

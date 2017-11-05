@@ -41,11 +41,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         headquater.cpp \
-    ../Lepton/LeptonThread.cpp
+    ../Netzwerk/server/server.cpp \
+    ../Netzwerk/User/User.cpp
 
 HEADERS += \
         headquater.h \
-    ../Lepton/LeptonThread.h
+    ../Netzwerk/server/server.h \
+    ../Netzwerk/User/User.h
+
+QMAKE_CXXFLAGS += -std=c++0x -pthread
+
+LIBS += -pthread
 
 unix:LIBS += -L$${RPI_LIBS}/$${LEPTONSDK}/Debug -lLEPTON_SDK
 
