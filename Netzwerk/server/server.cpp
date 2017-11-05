@@ -10,12 +10,15 @@
 //#include <sys/time.h>//macht zeit
 #include <sys/select.h>
 //#include "../../headquaterGUI/headquater.h"
+#include "../../headquaterGUI/headquater.h"
 #include "server.h"
 
+
 using namespace std;
-Server::Server(std::vector<user> *point)
+Server::Server(std::vector<user> *point, headquater *abc)
 {
 	mine = point;
+	HQ = abc;
 	//SignalEmpfaenger = poinTI;
 	sockfd = socket(AF_INET, SOCK_STREAM,0);//Creates a standart Socket ready for TCP
 	if (sockfd<0)//validiti check
@@ -130,6 +133,7 @@ void Server::ServerPrivateThread(int counti)
 							}
 							Continue=true;
 							fall=0;
+							HQ->newData(counti);
 							break;
 			case 2:	command = 200;
 					write(ClientFd[counti],&command,1);

@@ -83,6 +83,9 @@ public:
     QString colon = ": ";
     QString Stati[5]= {"Status1","Status2","Status3","Status4","emergency"};
 
+    //communication
+    QString Answers[3]= {" ","angenommen","nicht verfügbar"};
+
 };
 
 class headquater : public QMainWindow
@@ -139,11 +142,6 @@ private:
     Person *PersonID3;
     Person *PersonID4;
     QTabWidget *Tabs;
-
-    //communication
-    QString Answers[3]= {" ","angenommen","nicht verfügbar"};
-
-
 };
 
 #endif // HEADQUATER_H

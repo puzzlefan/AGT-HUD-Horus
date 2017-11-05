@@ -3,6 +3,9 @@
 #include <iostream>
 #include <mutex>
 
+#include <../Netzwerk/server/server.h>
+#include <../Netzwerk/User/User.h>
+
 #include <QMainWindow>
 #include <QGridLayout>
 #include <QWidget>
@@ -23,6 +26,8 @@ headquater::headquater(QWidget *parent)
     Tabs = new QTabWidget;
     layout->addWidget(Tabs, 0, 0, 4, 6);
     connect(Tabs,SIGNAL(currentChanged(int)),this,SLOT(newTopTab(int)));
+
+    createConnections();
 
     HeaderStatus = new QLabel;
     layout->addWidget(HeaderStatus, 0, 6, 1, 1, Qt::AlignCenter);
@@ -472,7 +477,7 @@ void headquater::updatedImage(int ID, unsigned short *data, int minValue, int ma
     case 1:
         if(PersonID1->index == Tabs->currentIndex())
         {
-            PersonID1->updateImage(PersonID1->rawData, minValue, maxValue);
+            PersonID1->updateImage(data, minValue, maxValue);
         }
 
         break;
@@ -480,7 +485,7 @@ void headquater::updatedImage(int ID, unsigned short *data, int minValue, int ma
     case 2:
         if(PersonID1->index == Tabs->currentIndex())
         {
-            PersonID1->updateImage(PersonID2->rawData, minValue, maxValue);
+            PersonID1->updateImage(data, minValue, maxValue);
         }
 
         break;
@@ -488,7 +493,7 @@ void headquater::updatedImage(int ID, unsigned short *data, int minValue, int ma
     case 3:
         if(PersonID3->index == Tabs->currentIndex())
         {
-            PersonID3->updateImage(PersonID3->rawData, minValue, maxValue);
+            PersonID3->updateImage(data, minValue, maxValue);
         }
 
         break;
@@ -496,7 +501,7 @@ void headquater::updatedImage(int ID, unsigned short *data, int minValue, int ma
     case 4:
         if(PersonID4->index == Tabs->currentIndex())
         {
-            PersonID4->updateImage(PersonID4->rawData, minValue, maxValue);
+            PersonID4->updateImage(data, minValue, maxValue);
         }
 
         break;
@@ -533,9 +538,8 @@ void Person::pageSetUp()//: rawData(FrameWords),
     QPixmap filler(ImageWidth, ImageHeight);
     filler.fill(Qt::red);
     IRPicture->setPixmap(filler);
-    std::cout <<"created Image"<<std::endl;
 
-    connect(thread, SIGNAL(updateImage(unsigned short *,int,int)), this, SLOT(updateImage(unsigned short *, int,int)));//%
+   // connect(thread, SIGNAL(updateImage(unsigned short *,int,int)), this, SLOT(updateImage(unsigned short *, int,int)));//%
 
     additionalData = new QLabel;
     personalLayout->addWidget(additionalData,0,2,1,2, Qt::AlignCenter);
@@ -631,7 +635,7 @@ void Person::updateCOFoot()
 
 void Person::updateMessage()
 {
-    answer->setText(recentAnswer);
+    answer->setText(Answers[recentAnswer]);
 }
 
 void Person::updateTab()
