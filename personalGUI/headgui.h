@@ -7,6 +7,8 @@
 #include <QResizeEvent>
 
 //#include <LeptonThread.h>
+#include <../Netzwerk/client/client.h>
+#include <../Netzwerk/User/User.h>
 
 class QLabel;
 class QPixmap;
