@@ -64,17 +64,18 @@ public:
     QLabel *IRPicture;
     QVector<unsigned short> rawData;
     QImage rgbImage;
-    enum { ImageWidth = 320, ImageHeight = 240 };
-   unsigned short rawMin, rawMax;
-  int  FrameWidth = 160;
-   int FrameHeight = 120;
-   int PacketWidth = 80;
-int PacketWords = PacketWidth + 2;
-  int RowPacketWords = 2*PacketWords;
-int PacketBytes = 2*PacketWords;
-int FrameWords = FrameWidth*FrameHeight;
-   int SegmentHeight = FrameHeight/4;
-int SegmentPackets = 60;
+    int ImageWidth = 320;
+    int ImageHeight = 240;
+    unsigned short rawMin, rawMax;
+    int FrameWidth = 160;
+    int FrameHeight = 120;
+    int PacketWidth = 80;
+    int PacketWords = PacketWidth + 2;
+    int RowPacketWords = 2*PacketWords;
+    int PacketBytes = 2*PacketWords;
+    int FrameWords = FrameWidth*FrameHeight;
+    int SegmentHeight = FrameHeight/4;
+    int SegmentPackets = 60;
 
    //for status
     void updateStatus();
