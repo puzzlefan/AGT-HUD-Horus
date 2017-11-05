@@ -1,0 +1,37 @@
+#ifndef SERVER_H
+#define SERVER_H
+
+class Server
+{
+private:
+  int CommandLength = 1;
+
+	int count = 0;//counts the attemps to get a connection
+	//Vars for the main thread
+	int sockfd;
+	uint16_t portno = 42000;
+	struct sockaddr_in serv_addr;
+	//Client Vector to handle multiple at the same time
+	std::vector<socklen_t> SocketLengths;
+	std::vector<struct sockaddr_in> ClientAddresses;
+	std::vector<int> ClientFd;
+
+	//threads
+	std::thread *ServerMain;
+	std::vector<std::thread> clientThreads;
+
+	user *mine;
+public:
+	Server(user *point);
+	~Server();
+
+	void ServerMainThread();//{return 1;}
+	void ServerPrivateThread(int counti);
+
+	void dataExchange();
+
+	void IntChar(int Inte, char *ptr);
+	int CharInt(char *ptr);
+};
+
+#endif

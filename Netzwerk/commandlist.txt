@@ -1,0 +1,23 @@
+Here the commands are defined for the communication
+Each command is one byte long and because we can represented by the decimal number
+
+when no command preceded the recived bytes the byte count = 0
+
+000 = Client initial case
+001 = Client is going to send his data
+002 = Client wants the Data from Server
+003 = Client knows that all data has been transfered
+
+100 = Client send in next 4 bytes the id
+101 = Client sends integers array, byte count can be calculated with 4 * integerCount
+102 = Client sends bools array , byte count can be calculated with 4 * boolCount
+103 = Client send message next byte count equals messageLength
+104 = Client sends BITBild next, byte count equals BITBildSize;
+
+200 = Server sends integers array, byte count can be calculated with 4 * integerCount
+201 = Server sends bools array , byte count can be calculated with 4 * boolCount
+202 = Server send message next byte count equals messageLength
+
+253 = end of actual transmission
+254 = error
+255 = response to error to reestablish link
