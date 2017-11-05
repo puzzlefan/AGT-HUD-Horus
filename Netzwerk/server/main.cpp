@@ -13,15 +13,15 @@
 
 int main(void)
 {
-	user a;
-	Server ItsMe(&a);
+	std::vector<user> v;
+	Server ItsMe(&v);
 	while (true)
 	{
-		if(a.getBool(0))
-		{
-			std::cout << a.message << '\n';
-			a.setBools(false,0);
-		}
+		//if(a.getBool(0))
+		//{
+		//	std::cout << a.message << '\n';
+		//	a.setBools(false,0);
+		//}
 	}
 	return 0;
 }
