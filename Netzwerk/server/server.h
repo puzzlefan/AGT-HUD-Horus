@@ -1,6 +1,19 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <unistd.h>     //System interaction, probably
+#include <sys/types.h>  //introduces more data types (probabl derived ones which make things easier)
+#include <sys/socket.h> //socket library accept...
+#include <netinet/in.h> //structs for sockets
+#include <string.h>
+#include <thread>
+#include <vector>
+#include <iostream>
+#include "../User/User.h"
+//#include <sys/time.h>//macht zeit
+#include <sys/select.h>
+//#include "../../headquaterGUI/headquater.h"
+
 class Server
 {
 private:
@@ -19,6 +32,7 @@ private:
 	//threads
 	std::thread *ServerMain;
 	std::vector<std::thread> clientThreads;
+
 
 	std::vector<user> *mine;
 public:

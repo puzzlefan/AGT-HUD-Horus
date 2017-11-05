@@ -428,6 +428,12 @@ distclean: debug-distclean release-distclean  FORCE
 	-$(DEL_FILE) Makefile
 	-$(DEL_FILE) .qmake.stash
 
+sdk:
+	make -C ../raspberrypi_libs/leptonSDKEmb32PUB
+
+sdkclean:
+	make -C ../raspberrypi_libs/leptonSDKEmb32PUB clean
+
 debug-mocclean:
 	$(MAKE) -f $(MAKEFILE).Debug mocclean
 release-mocclean:

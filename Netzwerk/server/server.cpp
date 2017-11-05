@@ -9,12 +9,14 @@
 #include "../User/User.h"
 //#include <sys/time.h>//macht zeit
 #include <sys/select.h>
+//#include "../../headquaterGUI/headquater.h"
 #include "server.h"
 
 using namespace std;
 Server::Server(std::vector<user> *point)
 {
 	mine = point;
+	//SignalEmpfaenger = poinTI;
 	sockfd = socket(AF_INET, SOCK_STREAM,0);//Creates a standart Socket ready for TCP
 	if (sockfd<0)//validiti check
 	{
