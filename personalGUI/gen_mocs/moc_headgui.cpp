@@ -22,7 +22,7 @@ static const uint qt_meta_data_HeadGUI[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      37,   14, // methods
+      38,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -30,57 +30,58 @@ static const uint qt_meta_data_HeadGUI[] = {
       22,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-       8,   32,   32,   32, 0x05,
-      33,   32,   32,   32, 0x05,
-      44,   32,   32,   32, 0x05,
-      57,   32,   32,   32, 0x05,
-      71,   32,   32,   32, 0x05,
-      84,   32,   32,   32, 0x05,
-      97,   32,   32,   32, 0x05,
-     113,   32,   32,   32, 0x05,
-     135,  156,   32,   32, 0x05,
-     159,  184,   32,   32, 0x05,
-     196,  184,   32,   32, 0x05,
-     221,  156,   32,   32, 0x05,
-     238,  269,   32,   32, 0x05,
-     283,  269,   32,   32, 0x05,
-     314,  343,   32,   32, 0x05,
-     355,  343,   32,   32, 0x05,
-     384,  430,   32,   32, 0x05,
-     492,  518,   32,   32, 0x05,
-     529,  518,   32,   32, 0x05,
-     555,  579,   32,   32, 0x05,
-     588,  579,   32,   32, 0x05,
-     612,  642,   32,   32, 0x05,
+       8,   30,   30,   30, 0x05,
+      31,   30,   30,   30, 0x05,
+      55,   30,   30,   30, 0x05,
+      66,   30,   30,   30, 0x05,
+      79,   30,   30,   30, 0x05,
+      93,   30,   30,   30, 0x05,
+     106,   30,   30,   30, 0x05,
+     119,   30,   30,   30, 0x05,
+     135,   30,   30,   30, 0x05,
+     157,  182,   30,   30, 0x05,
+     194,  182,   30,   30, 0x05,
+     219,  236,   30,   30, 0x05,
+     239,  270,   30,   30, 0x05,
+     284,  270,   30,   30, 0x05,
+     315,  344,   30,   30, 0x05,
+     356,  344,   30,   30, 0x05,
+     385,  431,   30,   30, 0x05,
+     493,  519,   30,   30, 0x05,
+     530,  519,   30,   30, 0x05,
+     556,  580,   30,   30, 0x05,
+     589,  580,   30,   30, 0x05,
+     613,  643,   30,   30, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-     654,  691,   32,   32, 0x0a,
-     694,   32,   32,   32, 0x08,
-     712,   32,   32,   32, 0x08,
-     717,   32,   32,   32, 0x08,
-     724,   32,   32,   32, 0x08,
-     732,   32,   32,   32, 0x08,
-     739,   32,   32,   32, 0x08,
-     746,   32,   32,   32, 0x08,
-     756,  430,   32,   32, 0x08,
-     796,  518,   32,   32, 0x08,
-     816,  518,   32,   32, 0x08,
-     836,  854,   32,   32, 0x08,
-     867,  885,   32,   32, 0x08,
-     898,   32,   32,   32, 0x08,
-     914,  642,   32,   32, 0x08,
+     655,  692,   30,   30, 0x0a,
+     695,   30,   30,   30, 0x08,
+     713,   30,   30,   30, 0x08,
+     718,   30,   30,   30, 0x08,
+     725,   30,   30,   30, 0x08,
+     733,   30,   30,   30, 0x08,
+     740,   30,   30,   30, 0x08,
+     747,   30,   30,   30, 0x08,
+     757,  431,   30,   30, 0x08,
+     797,  519,   30,   30, 0x08,
+     817,  519,   30,   30, 0x08,
+     837,  855,   30,   30, 0x08,
+     868,  886,   30,   30, 0x08,
+     899,   30,   30,   30, 0x08,
+     915,  643,   30,   30, 0x08,
+     939,   30,   30,   30, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_HeadGUI[] = {
-    "HeadGUI\0certifyPersonaeSignal()\0\0"
-    "upSignal()\0downSignal()\0rightSignal()\0"
-    "leftSignal()\0backSignal()\0certifySignal()\0"
-    "coosingStatusSignal()\0emergencySignal(int)\0"
-    "ID\0newStatusSignal(int,int)\0ID,vertical\0"
-    "answeredMessage(int,int)\0confirmedID(int)\0"
-    "updatedTempHeadSignal(int,int)\0"
+    "HeadGUI\0changingLightSignal()\0\0"
+    "certifyPersonaeSignal()\0upSignal()\0"
+    "downSignal()\0rightSignal()\0leftSignal()\0"
+    "backSignal()\0certifySignal()\0"
+    "coosingStatusSignal()\0newStatusSignal(int,int)\0"
+    "ID,vertical\0answeredMessage(int,int)\0"
+    "confirmedID(int)\0ID\0updatedTempHeadSignal(int,int)\0"
     "ID,recentTemp\0updatedTempFootSignal(int,int)\0"
     "updatedCOHeadSignal(int,int)\0ID,recentCO\0"
     "updatedCOFootSignal(int,int)\0"
@@ -99,6 +100,7 @@ static const char qt_meta_stringdata_HeadGUI[] = {
     "updateCOHead(int)\0recentCOHead\0"
     "updateCOFoot(int)\0recentCOFoot\0"
     "coosingStatus()\0messageRecived(QString)\0"
+    "changingLight()\0"
 };
 
 void HeadGUI::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -107,15 +109,15 @@ void HeadGUI::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         Q_ASSERT(staticMetaObject.cast(_o));
         HeadGUI *_t = static_cast<HeadGUI *>(_o);
         switch (_id) {
-        case 0: _t->certifyPersonaeSignal(); break;
-        case 1: _t->upSignal(); break;
-        case 2: _t->downSignal(); break;
-        case 3: _t->rightSignal(); break;
-        case 4: _t->leftSignal(); break;
-        case 5: _t->backSignal(); break;
-        case 6: _t->certifySignal(); break;
-        case 7: _t->coosingStatusSignal(); break;
-        case 8: _t->emergencySignal((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 0: _t->changingLightSignal(); break;
+        case 1: _t->certifyPersonaeSignal(); break;
+        case 2: _t->upSignal(); break;
+        case 3: _t->downSignal(); break;
+        case 4: _t->rightSignal(); break;
+        case 5: _t->leftSignal(); break;
+        case 6: _t->backSignal(); break;
+        case 7: _t->certifySignal(); break;
+        case 8: _t->coosingStatusSignal(); break;
         case 9: _t->newStatusSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 10: _t->answeredMessage((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 11: _t->confirmedID((*reinterpret_cast< int(*)>(_a[1]))); break;
@@ -144,6 +146,7 @@ void HeadGUI::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 34: _t->updateCOFoot((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 35: _t->coosingStatus(); break;
         case 36: _t->messageRecived((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 37: _t->changingLight(); break;
         default: ;
         }
     }
@@ -181,66 +184,65 @@ int HeadGUI::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 37)
+        if (_id < 38)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 37;
+        _id -= 38;
     }
     return _id;
 }
 
 // SIGNAL 0
-void HeadGUI::certifyPersonaeSignal()
+void HeadGUI::changingLightSignal()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, 0);
 }
 
 // SIGNAL 1
-void HeadGUI::upSignal()
+void HeadGUI::certifyPersonaeSignal()
 {
     QMetaObject::activate(this, &staticMetaObject, 1, 0);
 }
 
 // SIGNAL 2
-void HeadGUI::downSignal()
+void HeadGUI::upSignal()
 {
     QMetaObject::activate(this, &staticMetaObject, 2, 0);
 }
 
 // SIGNAL 3
-void HeadGUI::rightSignal()
+void HeadGUI::downSignal()
 {
     QMetaObject::activate(this, &staticMetaObject, 3, 0);
 }
 
 // SIGNAL 4
-void HeadGUI::leftSignal()
+void HeadGUI::rightSignal()
 {
     QMetaObject::activate(this, &staticMetaObject, 4, 0);
 }
 
 // SIGNAL 5
-void HeadGUI::backSignal()
+void HeadGUI::leftSignal()
 {
     QMetaObject::activate(this, &staticMetaObject, 5, 0);
 }
 
 // SIGNAL 6
-void HeadGUI::certifySignal()
+void HeadGUI::backSignal()
 {
     QMetaObject::activate(this, &staticMetaObject, 6, 0);
 }
 
 // SIGNAL 7
-void HeadGUI::coosingStatusSignal()
+void HeadGUI::certifySignal()
 {
     QMetaObject::activate(this, &staticMetaObject, 7, 0);
 }
 
 // SIGNAL 8
-void HeadGUI::emergencySignal(int _t1)
+void HeadGUI::coosingStatusSignal()
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
-    QMetaObject::activate(this, &staticMetaObject, 8, _a);
+    QMetaObject::activate(this, &staticMetaObject, 8, 0);
 }
 
 // SIGNAL 9
