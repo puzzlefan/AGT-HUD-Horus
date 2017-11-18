@@ -12,7 +12,10 @@
 #include "../User/User.h"
 //#include <sys/time.h>//macht zeit
 #include <sys/select.h>
-#include "server.h"
+#include "../../headquaterGUI/headquater.h"
+//#include "../../headquaterGUI/headquater.h"
+
+class headquater;
 
 class Server
 {
@@ -33,9 +36,11 @@ private:
 	std::thread *ServerMain;
 	std::vector<std::thread> clientThreads;
 
-	user *mine;
+	std::vector<user> *mine;
+
+    headquater *HQ;
 public:
-	Server(user *point);
+	Server(std::vector<user> *point, headquater *abc);
 	~Server();
 
 	void ServerMainThread();//{return 1;}

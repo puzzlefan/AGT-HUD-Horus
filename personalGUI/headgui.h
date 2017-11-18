@@ -5,10 +5,11 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QResizeEvent>
+#include <QPainter>
 
 #include <../Lepton/LeptonThread.h>
-#include <../Netzwerk/client/client.h>
-#include <../Netzwerk/User/User.h>
+//#include <../Netzwerk/client/client.h>
+//#include <../Netzwerk/User/User.h>
 
 class QLabel;
 class QPixmap;
@@ -26,6 +27,7 @@ public slots:
     void updateImage(unsigned short *, int, int);
 
 signals:
+    void changingLightSignal();
     void certifyPersonaeSignal();
     void upSignal();
     void downSignal();
@@ -35,7 +37,6 @@ signals:
     void certifySignal();
     void coosingStatusSignal();
     //Singals to headquater
-    void emergencySignal(int ID);
     void newStatusSignal(int ID,int vertical);
     void answeredMessage(int ID,int vertical);
     void confirmedID(int ID);
@@ -66,6 +67,7 @@ private slots:
     void updateCOFoot(int recentCOFoot);
     void coosingStatus();
     void messageRecived(QString sendMessage);
+    void changingLight();
 
 private:
     //other
@@ -73,6 +75,7 @@ private:
     QWidget *mainWidget;
     void createConnections();
     void defauftValues();
+    bool lightOn;
 
     //navigation/communication
     void createCommunication();
@@ -85,8 +88,8 @@ private:
     bool otherSignals;
     int NumberDiffMenues = 2;
     bool answerPossible;
-    int NumberDiffValues[3] = {4,2,5};
-    QString Stati[4]={"Status1","Status2","Status3","Status4"};
+    int NumberDiffValues[4] = {4,2,1,5};
+    QString Stati[5]={"Status1","Status2","Status3","Status4","emergency"};
     QString recivedMessage;
     QString messageAnswers[3] = {" ","angenommen","nicht verfügbar"};
     int recentStatus;
@@ -97,10 +100,12 @@ private:
     QLabel *Personae;
     QLabel *TempHead;
     QLabel *TempFoot;
+    QLabel *Light;
     QString unitTemp =" °C";
     QLabel *COHead;
     QLabel *COFoot;
     QString unitCO = " ppm";
+    QString lightSwitch[2] = {"Off","On"};
     int ID;
     QString Name [5]= {" ","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
 

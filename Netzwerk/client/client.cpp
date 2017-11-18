@@ -64,37 +64,38 @@ void Client::communicator()
                 char Integer[4];
                 do
                 {
-                  read(sockfd, &command, CommandLength);
-                  switch (command) {
-                    case 200: do
-                              {
-                                read(sockfd, &Position, 1);
-                                if(Position == 253)
+                    read(sockfd, &command, CommandLength);
+                    switch (command) {
+                    case 3:     break;
+                    case 200:   do
                                 {
-                                  break;
-                                }
-                                read(sockfd, &Integer, 4);
-                                mine->setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
-                              } while(true);
-                              break;
-                    case 201: do
-                              {
-                                read(sockfd, &Position, 1);
-                                if(Position == 253)
+                                    read(sockfd, &Position, 1);
+                                    if(Position == 253)
+                                    {
+                                        break;
+                                    }
+                                    read(sockfd, &Integer, 4);
+                                    mine->setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
+                                } while(true);
+                                break;
+                    case 201:   do
                                 {
-                                  break;
+                                    read(sockfd, &Position, 1);
+                                    if(Position == 253)
+                                    {
+                                        break;
+                                    }
+                                    read(sockfd, &Bool, 1);
+                                    mine->setBools(Bool,Position);
+                                } while(true);
+                                break;
+                    case 202:   mine->message = "";
+                                for (int i = 0; i < mine->getMessageLength(); i++)
+                                {
+                                    read(sockfd,&Char,1);
+                                    mine->message += Char;
                                 }
-                                read(sockfd, &Bool, 1);
-                                mine->setBools(Bool,Position);
-                              } while(true);
-                              break;
-                    case 202: mine->message = "";
-                              for (int i = 0; i < mine->getMessageLength(); i++)
-                              {
-                                read(sockfd,&Char,1);
-                                mine->message += Char;
-                              }
-                              break;
+                                break;
                     default : std::cout << "something went horrible wrong through out reading" << '\n';
                   }
                 } while(command!=003);
@@ -145,11 +146,15 @@ void Client::communicator()
                 fall = 103;
                 break;
 
-      case 103: command = 103;
-                write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
-                for(int i = 0; i< mine->getMessageLength();i++)
+      case 103: if(mine->getMessageChanged())
                 {
-                  write(sockfd, &mine->message[i], 1);
+                    command = 103;
+                    write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
+                    for(int i = 0; i< mine->getMessageLength();i++)
+                    {
+                        write(sockfd, &mine->message[i], 1);
+                    }
+                    mine->setMessageChanged(false);
                 }
                 fall = 104;
                 break;
