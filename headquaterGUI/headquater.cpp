@@ -59,7 +59,7 @@ void headquater::createConnections()
 
 void headquater::readingNewData(int vectorNo)
 {
-    int ID = Infos[vectorNo]->getID();
+    int ID = Infos->at(vectorNo)->getID();
 }
 
 int g_i = 0;
