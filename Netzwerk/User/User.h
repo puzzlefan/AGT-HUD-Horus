@@ -17,6 +17,7 @@ private:
   bool ChangedBools[boolCount];
   std::vector<unsigned char> *BITBild;
   std::vector<bool> *BITBildChanged;
+  bool MessageChanged = false;
 public:
   std::string message;
 
@@ -41,11 +42,13 @@ public:
   int getBoolCount() {return boolCount;}
   int getMessageLength() {return messageLength;}
   int getBITBildSize() {return BITBildSize;}
+  bool getMessageChanged() {return MessageChanged;}
 
   void setInteger(int Integer, int Pos);
   void setBools(bool Bools, int Pos);
   void setBITBild(unsigned char Char, int Pos);
   void setID(int DI){id= DI;}
+  void setMessageChanged(bool no){MessageChanged = no;}
 
   void recieveInt(int Inti, int pos);
   void recieveBool(bool Booli, int pos);
