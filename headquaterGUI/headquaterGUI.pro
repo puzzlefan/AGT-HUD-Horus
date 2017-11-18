@@ -49,7 +49,7 @@ HEADERS += \
     ../Netzwerk/server/server.h \
     ../Netzwerk/User/User.h
 
-QMAKE_CXXFLAGS += -std=c++0x -pthread
+QMAKE_CXXFLAGS += -std=c++0x -pthread -g
 
 LIBS += -pthread
 
