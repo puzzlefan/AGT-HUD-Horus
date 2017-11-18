@@ -107,7 +107,7 @@ private:
     QString unitCO = " ppm";
     QString lightSwitch[2] = {"Off","On"};
     int ID;
-    QString Name [5]= {" ","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
+    QString Name [5]= {"Tobias Finke","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
 
     //for Camera
     void createIRPicture();

@@ -1,14 +1,33 @@
 #ifndef USER_H
 #define USER_H
 
+//Defines für Bool Array
+#define NEW_CONFIRMED_ID            0
+#define UPDATED_STATUS_SIGNAL       1
+#define UPDATED_TEMP_HEAD_SIGNAL    2
+#define UPDATED_TEMP_FOOT_SIGNAL    3
+#define UPDATED_CO_HEAD_SIGNAL      4
+#define UPDATED_CO_FOOT_SIGNAL      5
+#define ANSWERD_MESSAGE_SIGNAL      6
+#define UPDATE_IMAGE_SIGNAL         7
+
+//Defines  für Int Array
+#define RECENT_STATUS           0
+#define RECENT_TEMP_HEAD        1
+#define RECENT_TEMP_FOOT        2
+#define RECENT_CO_HEAD          3
+#define RECENT_CO_FOOT          4
+#define LEAST_SIGNIFICANT_PIXEL 5
+#define MOST_SIGNIFICANT_PIXEL  6
+
 #include <string>
 #include <vector>
 
 class user{
 private:
   int id; //identification number
-  static const int integerCount = 10;//length of integer Array
-  static const int boolCount = 10;//Length of bool Array
+  static const int integerCount = 7;//length of integer Array
+  static const int boolCount = 8;//Length of bool Array
   static const int messageLength = 140;//because why not could get dynamic
   static const int BITBildSize = 39360;//IS HARDCODED; BECAUASE OF TIME SO CHANGE IT IF THE RESOLUTION CHANGES
   int integers[integerCount];
@@ -44,8 +63,8 @@ public:
   int getBITBildSize() {return BITBildSize;}
   bool getMessageChanged() {return MessageChanged;}
 
-  void setInteger(int Integer, int Pos);
-  void setBools(bool Bools, int Pos);
+  void setInteger(int Pos, int Integer);
+  void setBools(int Pos, bool Bools);
   void setBITBild(unsigned char Char, int Pos);
   void setID(int DI){id= DI;}
   void setMessageChanged(bool no){MessageChanged = no;}

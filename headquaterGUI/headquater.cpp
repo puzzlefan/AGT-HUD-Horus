@@ -16,6 +16,7 @@
 #include <QTabWidget>
 #include <QPixmap>
 #include <QPainter>
+#include <QVector>
 
 headquater::headquater(std::vector<user>*Informations, QWidget *parent)
     : QMainWindow(parent)
@@ -25,9 +26,14 @@ headquater::headquater(std::vector<user>*Informations, QWidget *parent)
 
     Tabs = new QTabWidget;
     layout->addWidget(Tabs, 0, 0, 4, 6);
-    connect(Tabs,SIGNAL(currentChanged(int)),this,SLOT(newTopTab(int)));
 
     Infos=Informations;
+
+    Persons.append(PersonID0);
+    Persons.append(PersonID1);
+    Persons.append(PersonID2);
+    Persons.append(PersonID3);
+    Persons.append(PersonID4);
 
     createConnections();
 
@@ -46,39 +52,70 @@ headquater::headquater(std::vector<user>*Informations, QWidget *parent)
 
 void headquater::createConnections()
 {
-    connect(this,SIGNAL(newDataSignal(int)),this,SLOT(readingNewData(int)));
-    connect(this,SIGNAL(newConfirmedIDSignal(int,int)),this,SLOT(newConfirmedID(int,int)));
-    connect(this,SIGNAL(updatedStatusSignal(int,int)),this,SLOT(updatedStatus(int,int)));
-    connect(this,SIGNAL(updatedTempHeadSignal(int,int)),this,SLOT(updatedTempHead(int,int)));
-    connect(this,SIGNAL(updatedTempFootSignal(int,int)),this, SLOT(updatedTempFoot(int,int)));
-    connect(this,SIGNAL(updatedCOHeadSignal(int,int)),this,SLOT(updatedCOHead(int,int)));
-    connect(this,SIGNAL(updatedCOFootSignal(int,int)),this,SLOT(updatedCOFoot(int,int)));
-    connect(this,SIGNAL(answerdMessageSignal(int,int)),this,SLOT(answerdMessage(int,int)));
-    connect(this,SIGNAL(updatedImageSignal(int,unsigned short*,int,int)),this,SLOT(updatedImage(int,unsigned short*,int,int)));
+    connect(Tabs,SIGNAL(currentChanged(int)),this,SLOT(newTopTab(int)));
+    connect(this,SIGNAL(newConfirmedIDSignal(int)),this,SLOT(newConfirmedID(int)),Qt::DirectConnection);
+    connect(this,SIGNAL(updatedStatusSignal(int,int)),this,SLOT(updatedStatus(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(updatedTempHeadSignal(int,int)),this,SLOT(updatedTempHead(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(updatedTempFootSignal(int,int)),this, SLOT(updatedTempFoot(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(updatedCOHeadSignal(int,int)),this,SLOT(updatedCOHead(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(updatedCOFootSignal(int,int)),this,SLOT(updatedCOFoot(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(answerdMessageSignal(int,int)),this,SLOT(answerdMessage(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(updatedImageSignal(int,unsigned short*,int,int)),this,SLOT(updatedImage(int,unsigned short*,int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(newDataSignal(int)),this,SLOT(sortingData(int)),Qt::BlockingQueuedConnection);
 }
-
-void headquater::readingNewData(int vectorNo)
-{
-    int ID = Infos->at(vectorNo)->getID();
-}
-
-int g_i = 0;
-std::mutex g_i_mutex;
 
 void headquater::newData(int vectorNo)
 {
-    std::lock_guard<std::mutex> lock(g_i_mutex);
-       ++g_i;
-
     emit newDataSignal(vectorNo);
 }
 
-void headquater::newConfirmedID(int ID,int vectorNo)
+void headquater::sortingData(int vectorNo)
+{
+    int ID = Infos->at(vectorNo).getID();
+
+    if(Infos->at(vectorNo).getBool(NEW_CONFIRMED_ID) == true)
+    {
+        Infos->at(vectorNo).setBools(NEW_CONFIRMED_ID,false);
+        emit newConfirmedIDSignal(ID);
+    }
+
+    if(Infos->at(vectorNo).getBool(UPDATED_STATUS_SIGNAL) == true)
+    {
+        Infos->at(vectorNo).setBools(UPDATED_STATUS_SIGNAL,false);
+        emit updatedStatus(ID,Infos->at(vectorNo).getInt(RECENT_STATUS));
+    }
+
+    if(Infos->at(vectorNo).getBool(UPDATED_TEMP_HEAD_SIGNAL) == true)
+    {
+        Infos->at(vectorNo).setBools(UPDATED_TEMP_HEAD_SIGNAL,false);
+        emit updatedTempHeadSignal(ID,Infos->at(vectorNo).getInt(RECENT_TEMP_HEAD));
+    }
+
+    if(Infos->at(vectorNo).getBool(UPDATED_TEMP_FOOT_SIGNAL) == true)
+    {
+        Infos->at(vectorNo).setBools(UPDATED_TEMP_FOOT_SIGNAL,false);
+        emit updatedTempFootSignal(ID,Infos->at(vectorNo).getInt(RECENT_TEMP_FOOT));
+    }
+
+    if(Infos->at(vectorNo).getBool(UPDATED_CO_HEAD_SIGNAL) == true)
+    {
+        Infos->at(vectorNo).setBools(UPDATED_CO_HEAD_SIGNAL,false);
+        emit updatedCOHeadSignal(ID,Infos->at(vectorNo).getInt(RECENT_CO_HEAD));
+    }
+
+    if(Infos->at(vectorNo).getBool(UPDATED_CO_FOOT_SIGNAL) == true)
+    {
+        Infos->at(vectorNo).setBools(UPDATED_CO_FOOT_SIGNAL,false);
+        emit updatedCOFootSignal(ID,Infos->at(vectorNo).getInt(RECENT_CO_FOOT));
+    }
+}
+
+void headquater::newConfirmedID(int ID)
 {
     switch (ID)
     {
     case 1:
-        PersonID1 = new Person(ID);
+        Persons[ID] = new Person(ID);
         PersonID1->Name = Name[ID];
         PersonID1->pageSetUp();
         connect(PersonID1->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
@@ -158,40 +195,8 @@ void headquater::newConfirmedID(int ID,int vectorNo)
 
 void headquater::updatedStatus(int ID, int recentStatus)
 {
-    switch(ID)
-    {
-    case 1:
-        PersonID1->recentStatus = recentStatus;
-
-        PersonID1->updateStatus();
-
-        break;
-
-
-    case 2:
-        PersonID2->recentStatus = recentStatus;
-
-        PersonID2->updateStatus();
-
-        break;
-
-
-    case 3:
-        PersonID3->recentStatus = recentStatus;
-
-        PersonID3->updateStatus();
-
-        break;
-
-
-    case 4:
-        PersonID4->recentStatus = recentStatus;
-
-        PersonID4->updateStatus();
-
-        break;
-
-    }
+    Persons[ID]->recentStatus = recentStatus;
+    Persons[ID]->updateStatus();
 }
 
 void headquater::updatedTempHead(int ID, int recentTemp)

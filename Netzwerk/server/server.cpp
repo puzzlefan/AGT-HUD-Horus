@@ -98,7 +98,7 @@ void Server::ServerPrivateThread(int counti)
 														break;
 													}
 													read(ClientFd[counti], &Integer, 4);
-													(*mine)[counti].setInteger((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
+													(*mine)[counti].setInteger(Position,(Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3]);
 												}while (true);
 												break;
 									case 102:	do
@@ -109,7 +109,7 @@ void Server::ServerPrivateThread(int counti)
 														break;
 													}
 													read(ClientFd[counti], &Bool, 1);
-													(*mine)[counti].setBools(Bool,Position);
+													(*mine)[counti].setBools(Position,Bool);
 												} while(true);
 												break;
 									case 103: 	(*mine)[counti].message = "";

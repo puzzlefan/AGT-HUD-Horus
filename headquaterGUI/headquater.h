@@ -10,10 +10,10 @@
 #include <QPushButton>
 #include <QTabWidget>
 #include <QPainter>
+#include <QVector>
 
 #include <../Netzwerk/server/server.h>
 #include <../Netzwerk/User/User.h>
-#include <mutex>
 
 class QTableView;
 class QGridLayout;
@@ -98,19 +98,19 @@ public:
 
 signals:
     void newMessage(int ID, QString Message);
-    void newConfirmedIDSignal(int ID, int vectorNo);
+    void newConfirmedIDSignal(int ID);
     void updatedStatusSignal(int ID, int recentStatus);
     void updatedTempHeadSignal(int ID, int recentTemp);
     void updatedTempFootSignal(int ID,int recentTemp);
     void updatedCOHeadSignal(int ID, int recentCO);
     void updatedCOFootSignal(int ID, int recentCO);
     void answerdMessageSignal(int ID, int answer);
-    void newDataSignal(int vectorNo);
     void updatedImageSignal(int ID, unsigned short *, int, int);
+    void newDataSignal(int vectorNo);
 
 
 private slots:
-    void newConfirmedID(int ID, int vectorNo);
+    void newConfirmedID(int ID);
     void updatedStatus(int ID, int recentStatus);
     void updatedTempHead(int ID, int recentTemp);
     void updatedTempFoot(int ID,int recentTemp);
@@ -119,13 +119,13 @@ private slots:
     void answerdMessage(int ID, int answer);
     void sendNewMessage();
     void newTopTab(int index);
-    void readingNewData(int vectorNo);
     void updatedImage(int ID,unsigned short *, int, int);
+    void sortingData(int vectorNo);
 
 private:
     //other
     QWidget *mainWidget;
-    QGridLayout *layout;//really useful
+    QGridLayout *layout;
     void createConnections();
     std::vector<user> *Infos;
 
@@ -134,12 +134,17 @@ private:
     int noPersons;
 
     //different Personaes
-    int tabIndex[4];
-    QString Name[5]= {" ","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
+    int tabIndex[5];
+    QString Name[5]= {"Tobias Finke","Aron Haselhoff","Timon Gronotte","Vicky Bietenbeck","Beke Pierick"};
+
+    QVector<Person*> Persons;
+
+    Person *PersonID0;
     Person *PersonID1;
     Person *PersonID2;
     Person *PersonID3;
     Person *PersonID4;
+
     QTabWidget *Tabs;
 };
 

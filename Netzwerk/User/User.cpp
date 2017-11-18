@@ -22,14 +22,14 @@ user::~user()
 
 void user::fill()
 {
-  id = 5;
+  setID(2);
   for(int i = 0; i < integerCount;i++)
   {
-    integers[i] = i;
+     setInteger(i, i+3);
   }
   for(int i = 0; i < boolCount;i++)
   {
-    bools[i] = i%2;
+    setBools(i,1);//i%2;
   }
   message = "abc";
   for(int i = 0; i<= 19200 * 2;i++){
@@ -37,12 +37,12 @@ void user::fill()
   }
 }
 
-void user::setInteger(int Integer, int Pos)
+void user::setInteger(int Pos, int Integer)
 {
   integers[Pos]=Integer;
   ChangedInts[Pos]=true;
 }
-void user::setBools(bool Bools, int Pos)
+void user::setBools(int Pos, bool Bools)
 {
   bools[Pos]=Bools;
   ChangedBools[Pos]=true;
@@ -59,7 +59,7 @@ int user::transmitInt(int pos)
   return integers[pos];
 }
 bool user::transmitBool(int pos){
-  ChangedBools[pos];
+  ChangedBools[pos] = false;
   return bools[pos];
 }
 unsigned char user::transmitBITBild(int pos)
