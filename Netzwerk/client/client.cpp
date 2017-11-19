@@ -75,7 +75,7 @@ void Client::communicator()
                                         break;
                                     }
                                     read(sockfd, &Integer, 4);
-                                    mine->recieveInt(Position,(Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3]);
+                                    mine->recieveInt((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
                                 } while(true);
                                 break;
                     case 201:   do
@@ -86,7 +86,7 @@ void Client::communicator()
                                         break;
                                     }
                                     read(sockfd, &Bool, 1);
-                                    mine->recieveBool(Position,Bool);
+                                    mine->recieveBool(Bool,Position);
                                 } while(true);
                                 break;
                     case 202:   mine->message = "";
@@ -118,7 +118,7 @@ void Client::communicator()
       case 101: command = 101;
                 write(sockfd, &command, CommandLength);//send to sockfd command 101 with length 1
                 char chaInt[4];
-                for (int i = 0; i < mine->getIntegerCount() ; i++)
+                for (char i = 0; i < mine->getIntegerCount() ; i++)
                 {
                   if (mine->getIntegersChanged(i)) {
                     write(sockfd,&i,1);
@@ -133,7 +133,7 @@ void Client::communicator()
 
       case 102: command = 102;
                 write(sockfd, &command, CommandLength);//send to sockfd command 102 with length 1
-                for (int i = 0; i < mine->getBoolCount(); i++)
+                for (char i = 0; i < mine->getBoolCount(); i++)
                 {
                   if (mine->getBoolChanged(i)) {
                     write(sockfd,&i,1);
