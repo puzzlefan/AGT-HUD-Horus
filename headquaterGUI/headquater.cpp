@@ -115,19 +115,19 @@ void headquater::newConfirmedID(int ID)
     switch (ID)
     {
     case 1:
-        Persons[ID] = new Person(ID);
-        PersonID1->Name = Name[ID];
-        PersonID1->pageSetUp();
-        connect(PersonID1->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
+        PersonID1 = new Person(ID);
+        Persons[ID]->Name = Name[ID];
+        Persons[ID]->pageSetUp();
+        connect(Persons[ID]->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
 
-        Tabs->addTab(PersonID1->personalTab, PersonID1->Name);
+        Tabs->addTab(Persons[ID]->personalTab, Persons[ID]->Name);
 
-        PersonID1->Status = new QLabel;
-        layout->addWidget(PersonID1->Status,noPersons,6,1,1,Qt::AlignCenter);
-        PersonID1->Status->setText(PersonID1->Name);
+        Persons[ID]->Status = new QLabel;
+        layout->addWidget(Persons[ID]->Status,noPersons,6,1,1,Qt::AlignCenter);
+        Persons[ID]->Status->setText(Persons[ID]->Name);
 
-        PersonID1->index = noPersons - 1;
-        tabIndex[PersonID1->index] = ID;
+        Persons[ID]->index = noPersons - 1;
+        tabIndex[Persons[ID]->index] = ID;
 
         noPersons++;
 
@@ -201,210 +201,46 @@ void headquater::updatedStatus(int ID, int recentStatus)
 
 void headquater::updatedTempHead(int ID, int recentTemp)
 {
-    switch(ID)
+    Persons[ID]->recentTempHead = recentTemp;
+    if(Persons[ID]->index == Tabs->currentIndex())
     {
-    case 1:
-        PersonID1->recentTempHead = recentTemp;
-
-        if(PersonID1->index == Tabs->currentIndex())
-        {
-            PersonID1->updateTempHead();
-        }
-
-        break;
-
-    case 2:
-        PersonID2->recentTempHead = recentTemp;
-
-        if(PersonID2->index == Tabs->currentIndex())
-        {
-            PersonID2->updateTempHead();
-        }
-
-        break;
-
-    case 3:
-        PersonID3->recentTempHead = recentTemp;
-
-        if(PersonID3->index == Tabs->currentIndex())
-        {
-            PersonID3->updateTempHead();
-        }
-
-        break;
-
-    case 4:
-        PersonID4->recentTempHead = recentTemp;
-
-        if(PersonID4->index == Tabs->currentIndex())
-        {
-            PersonID4->updateTempHead();
-        }
-
-        break;
+        Persons[ID]->updateTempHead();
     }
 }
 
 void headquater::updatedTempFoot(int ID, int recentTemp)
-{std::cout << recentTemp <<std::endl;
-    switch(ID)
+{
+    Persons[ID]->recentTempFoot = recentTemp;
+    if(Persons[ID]->index == Tabs->currentIndex())
     {
-    case 1:
-        PersonID1->recentTempFoot = recentTemp;
-
-        if(PersonID1->index == Tabs->currentIndex())
-        {
-            PersonID1->updateTempFoot();
-        }
-        break;
-
-    case 2:
-        PersonID2->recentTempFoot = recentTemp;
-
-        if(PersonID2->index == Tabs->currentIndex())
-        {
-            PersonID2->updateTempFoot();
-        }
-
-        break;
-
-    case 3:
-        PersonID3->recentTempFoot = recentTemp;
-
-        if(PersonID3->index == Tabs->currentIndex())
-        {
-            PersonID3->updateTempFoot();
-        }
-
-        break;
-
-    case 4:
-        PersonID4->recentTempFoot = recentTemp;
-
-        if(PersonID4->index == Tabs->currentIndex())
-        {
-            PersonID4->updateTempFoot();
-        }
-
-        break;
+        Persons[ID]->updateTempFoot();
     }
 }
 
 void headquater::updatedCOHead(int ID, int recentCO)
 {
-    switch(ID)
+    Persons[ID]->recentCOHead = recentCO;
+    if(Persons[ID]->index == Tabs->currentIndex())
     {
-    case 1:
-        PersonID1->recentCOHead = recentCO;
-
-        if(PersonID1->index == Tabs->currentIndex())
-        {
-            PersonID1->updateCOHead();
-        }
-
-        break;
-
-    case 2:
-        PersonID2->recentCOHead = recentCO;
-
-        if(PersonID2->index == Tabs->currentIndex())
-        {
-            PersonID2->updateCOHead();
-        }
-
-        break;
-
-    case 3:
-        PersonID3->recentCOHead = recentCO;
-
-        if(PersonID3->index == Tabs->currentIndex())
-        {
-            PersonID3->updateCOHead();
-        }
-
-        break;
-
-    case 4:
-        PersonID4->recentCOHead = recentCO;
-
-        if(PersonID4->index == Tabs->currentIndex())
-        {
-            PersonID4->updateCOHead();
-        }
-
-        break;
+        Persons[ID]->updateCOHead();
     }
 }
 
 void headquater::updatedCOFoot(int ID, int recentCO)
 {
-    switch(ID)
+    Persons[ID]->recentCOFoot = recentCO;
+    if(Persons[ID]->index == Tabs->currentIndex())
     {
-    case 1:
-        PersonID1->recentCOFoot = recentCO;
-
-        if(PersonID1->index == Tabs->currentIndex())
-        {
-            PersonID1->updateCOFoot();
-        }
-
-        break;
-
-    case 2:
-        PersonID2->recentCOFoot = recentCO;
-
-        if(PersonID2->index == Tabs->currentIndex())
-        {
-            PersonID2->updateCOFoot();
-        }
-
-        break;
-
-    case 3:
-        PersonID3->recentCOFoot = recentCO;
-
-        if(PersonID3->index == Tabs->currentIndex())
-        {
-            PersonID3->updateCOFoot();
-        }
-
-        break;
-
-    case 4:
-        PersonID4->recentCOFoot = recentCO;
-
-        if(PersonID4->index == Tabs->currentIndex())
-        {
-            PersonID4->updateCOFoot();
-        }
-
-        break;
+        Persons[ID]->updateCOFoot();
     }
 }
 
 void headquater::answerdMessage(int ID, int answer)
 {
-    switch(ID)
+    Persons[ID]->recentAnswer = answer;
+    if(Persons[ID]->index == Tabs->currentIndex())
     {
-    case 1:
-        PersonID1->recentAnswer = answer;
-
-        break;
-
-    case 2:
-        PersonID2->recentAnswer = answer;
-
-        break;
-
-    case 3:
-        PersonID3->recentAnswer = answer;
-
-        break;
-
-    case 4:
-        PersonID4->recentAnswer = answer;
-
-        break;
+        Persons[ID]->updateMessage();
     }
 }
 
@@ -413,95 +249,22 @@ void headquater::sendNewMessage()
     int sendToID = tabIndex[Tabs->currentIndex()];
     QString txtMessage;
 
-    switch (sendToID)
-    {
-    case 1:
-        txtMessage = PersonID1->messageText->toPlainText();
+    txtMessage = Persons[sendToID]->messageText->toPlainText();
 
-        break;
-
-    case 2:
-        txtMessage = PersonID2->messageText->toPlainText();
-
-        break;
-
-    case 3:
-        txtMessage = PersonID3->messageText->toPlainText();
-
-        break;
-
-    case 4:
-        txtMessage = PersonID4->messageText->toPlainText();
-
-        break;
-    }
-std::cout<< txtMessage.toUtf8().constData()<<std::endl;
     emit newMessage(sendToID,txtMessage);
 }
 
 void headquater::newTopTab(int index)
 {
     int tabID = tabIndex[index];
-
-    switch (tabID)
-    {
-    case 1:
-        PersonID1->updateTab();
-
-        break;
-
-    case 2:
-        PersonID2->updateTab();
-
-        break;
-
-    case 3:
-        PersonID3->updateTab();
-
-        break;
-
-    case 4:
-        PersonID4->updateTab();
-
-        break;
-    }
+    Persons[tabID]->updateTab();
 }
 
 void headquater::updatedImage(int ID, unsigned short *data, int minValue, int maxValue)
 {
-    switch(ID)
+    if(Persons[ID]->index == Tabs->currentIndex())
     {
-    case 1:
-        if(PersonID1->index == Tabs->currentIndex())
-        {
-            PersonID1->updateImage(data, minValue, maxValue);
-        }
-
-        break;
-
-    case 2:
-        if(PersonID1->index == Tabs->currentIndex())
-        {
-            PersonID1->updateImage(data, minValue, maxValue);
-        }
-
-        break;
-
-    case 3:
-        if(PersonID3->index == Tabs->currentIndex())
-        {
-            PersonID3->updateImage(data, minValue, maxValue);
-        }
-
-        break;
-
-    case 4:
-        if(PersonID4->index == Tabs->currentIndex())
-        {
-            PersonID4->updateImage(data, minValue, maxValue);
-        }
-
-        break;
+        Persons[ID]->updateImage(data, minValue, maxValue);
     }
 }
 

@@ -75,7 +75,7 @@ void Client::communicator()
                                         break;
                                     }
                                     read(sockfd, &Integer, 4);
-                                    mine->setInteger(Position,(Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3]);
+                                    mine->recieveInt(Position,(Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3]);
                                 } while(true);
                                 break;
                     case 201:   do
@@ -86,7 +86,7 @@ void Client::communicator()
                                         break;
                                     }
                                     read(sockfd, &Bool, 1);
-                                    mine->setBools(Position,Bool);
+                                    mine->recieveBool(Position,Bool);
                                 } while(true);
                                 break;
                     case 202:   mine->message = "";
