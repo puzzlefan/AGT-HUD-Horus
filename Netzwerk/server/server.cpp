@@ -9,7 +9,6 @@
 #include "../User/User.h"
 //#include <sys/time.h>//macht zeit
 #include <sys/select.h>
-//#include "../../headquaterGUI/headquater.h"
 #include "../../headquaterGUI/headquater.h"
 #include "server.h"
 
@@ -98,7 +97,7 @@ void Server::ServerPrivateThread(int counti)
 														break;
 													}
 													read(ClientFd[counti], &Integer, 4);
-													(*mine)[counti].recieveInt(Position,(Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3]);
+													(*mine)[counti].recieveInt((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
 												}while (true);
 												break;
 									case 102:	do
@@ -109,7 +108,7 @@ void Server::ServerPrivateThread(int counti)
 														break;
 													}
 													read(ClientFd[counti], &Bool, 1);
-													(*mine)[counti].recieveBool(Position,Bool);
+													(*mine)[counti].recieveBool(Bool,Position);
 												} while(true);
 												break;
 									case 103: 	(*mine)[counti].message = "";
@@ -133,7 +132,7 @@ void Server::ServerPrivateThread(int counti)
 							}
 							Continue=true;
 							fall=0;
-							HQ->newData(counti);
+							//HQ->newData(counti);
 							break;
 			case 2:	command = 200;
 					write(ClientFd[counti],&command,1);
@@ -166,7 +165,8 @@ void Server::ServerPrivateThread(int counti)
 		      			write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
 		      			for(int i = 0; i< (*mine)[counti].getMessageLength();i++)
 		      			{
-		         			write(ClientFd[counti], &(*mine)[counti].message[i], 1);
+									char a = (*mine)[counti].message[i];
+									write(ClientFd[counti], &a, 1);
 		      			}
 						(*mine)[counti].setMessageChanged(false);
 					}

@@ -12,8 +12,8 @@
 #include "../User/User.h"
 //#include <sys/time.h>//macht zeit
 #include <sys/select.h>
-#include "../../headquaterGUI/headquater.h"
 //#include "../../headquaterGUI/headquater.h"
+#include "../../headquaterGUI/headquater.h"
 
 class headquater;
 

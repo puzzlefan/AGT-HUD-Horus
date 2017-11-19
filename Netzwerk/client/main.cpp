@@ -15,6 +15,7 @@
 
 int main(int argc, char const *argv[]) {
   user a;
+  a.fill();
   Client kop(&a);
   a.message = "hey";
   a.setBools(true,0);

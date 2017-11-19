@@ -13,7 +13,7 @@ user::user()
   {
     ChangedInts[i]=0;
   }
-  fill();
+  //fill();
 }
 user::~user()
 {
@@ -58,7 +58,8 @@ int user::transmitInt(int pos)
   ChangedInts[pos]=false;
   return integers[pos];
 }
-bool user::transmitBool(int pos){
+bool user::transmitBool(int pos)
+{
   ChangedBools[pos] = false;
   return bools[pos];
 }
