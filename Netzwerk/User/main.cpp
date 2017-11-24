@@ -3,6 +3,10 @@
 #include <string>
 using namespace std;
 
+//
+//  only exists for test purposes
+//
+
 int main(int argc, char const *argv[]) {
   user* abc = new user();
   abc->setMessage("ghj");

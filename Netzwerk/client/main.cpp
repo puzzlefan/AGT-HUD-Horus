@@ -17,7 +17,7 @@ int main(int argc, char const *argv[]) {
   user a;
   a.fill();
   Client kop(&a);
-  a.message = "hey";
+  a.setMessage("hey");
   a.setBools(true,0);
 
   int ID = 2;
@@ -31,6 +31,9 @@ int main(int argc, char const *argv[]) {
   int CO2=0;
 
   int* xyz[] = { &recentStatus, &Temp1, &Temp2, &CO1, &CO2};
+
+//  sleep(1000);
+  a.setMessage("abcde");
 
   while (true)
   {

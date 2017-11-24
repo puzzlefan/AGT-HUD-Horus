@@ -9,15 +9,19 @@
 #include "../User/User.h"
 //#include <sys/time.h>//macht zeit
 #include <sys/select.h>
+#ifdef SERVER_STANDALONE
 #include "../../headquaterGUI/headquater.h"
+#endif
 #include "server.h"
 
 
 using namespace std;
-Server::Server(std::vector<user> *point, headquater *abc)
+Server::Server(std::vector<user> *point /*, headquater *abc*/)
 {
 	mine = point;
+	#ifdef SERVER_STANDALONE
 	HQ = abc;
+	#endif
 	//SignalEmpfaenger = poinTI;
 	sockfd = socket(AF_INET, SOCK_STREAM,0);//Creates a standart Socket ready for TCP
 	if (sockfd<0)//validiti check
@@ -54,7 +58,8 @@ void Server::ServerMainThread()
 		ClientAddresses.push_back(HeWasNeverSeenAgain);//storing
 		SocketLengths.push_back(sizeof(ClientAddresses[count]));//get the size of the stored address
 		ClientFd.push_back(accept(sockfd, (struct sockaddr *) &ClientAddresses[count], &SocketLengths[count]));//taking a connection and extract it, store fd in vector
-		(*mine).push_back(user());
+		user* tuess = new user();
+		(*mine).push_back(*tuess);
 	 	if (ClientFd[count] < 0)//wenn error nix neu thread
 	 	{
 		 	std::cout << "ERROR on accept" << '\n';
@@ -84,6 +89,8 @@ void Server::ServerPrivateThread(int counti)
 							{
 								read(ClientFd[counti],&command,1);
 								switch (command) {
+									default: std::cout << "wrong ab receving" << '\n';
+													break;
 									case 3:		Continue = false;
 												break;
 									case 100:	read(ClientFd[counti],&Integer,4);
@@ -111,13 +118,6 @@ void Server::ServerPrivateThread(int counti)
 													(*mine)[counti].recieveBool(Bool,Position);
 												} while(true);
 												break;
-									case 103: 	(*mine)[counti].message = "";
-												for (int i = 0; i < (*mine)[counti].getMessageLength(); i++)
-												{
-													read(ClientFd[counti],&Char,1);
-													(*mine)[counti].message += Char;
-												}
-												break;
 									case 104:	do
 												{
 													read(ClientFd[counti],Integer,4);
@@ -127,12 +127,24 @@ void Server::ServerPrivateThread(int counti)
 													(*mine)[counti].recieveBITBild(Char,Zahl);
 												} while(true);
 												break;
-									default: std::cout << "wrong ab receving" << '\n';
+									case 103: 	(*mine)[counti].recieveMessage("");
+					                    char MLength[4];
+					                    read(sockfd,&MLength[0],4);
+					                    int RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
+															RecivingLength++;
+					                    char MessagE [RecivingLength];
+					                    read(sockfd,&MessagE,RecivingLength);
+					                    std::string mESSAGe(MessagE,RecivingLength);
+															(*mine)[counti].recieveMessage(mESSAGe);
+															RecivingLength--;
+					                    break;
 								}
 							}
 							Continue=true;
 							fall=0;
-							//HQ->newData(counti);
+							#ifdef SERVER_STANDALONE
+							HQ->newData(counti);
+							#endif
 							break;
 			case 2:	command = 200;
 					write(ClientFd[counti],&command,1);
@@ -165,11 +177,20 @@ void Server::ServerPrivateThread(int counti)
 		      			write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
 		      			for(int i = 0; i< (*mine)[counti].getMessageLength();i++)
 		      			{
-									char a = (*mine)[counti].message[i];
+									char a = (*mine)[counti].getMessage()[i];
 									write(ClientFd[counti], &a, 1);
 		      			}
-						(*mine)[counti].setMessageChanged(false);
 					}
+					if((*mine)[counti].getMessageChanged())
+		      {
+		      	command = 202;
+		        write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
+		        //sent itnt for length
+		        char charMessageLength[4];
+		        IntChar((*mine)[counti].getMessageLength()+1,charMessageLength);
+		        write(sockfd, charMessageLength, 4);
+		        write(sockfd, (*mine)[counti].transmitMessage().c_str(), (*mine)[counti].getMessageLength()+1);
+		      }
 					command = 003;
 					write(ClientFd[counti], &command, 1);
 			  		fall=0;

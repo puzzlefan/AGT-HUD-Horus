@@ -62,10 +62,13 @@ void Client::communicator()
                 char Bool;
                 char Char;
                 char Integer[4];
+                int RecivingLength;
                 do
                 {
                     read(sockfd, &command, CommandLength);
                     switch (command) {
+                    default : std::cout << "something went horrible wrong through out reading" << '\n';
+                                break;
                     case 3:     break;
                     case 200:   do
                                 {
@@ -89,14 +92,19 @@ void Client::communicator()
                                     mine->recieveBool(Bool,Position);
                                 } while(true);
                                 break;
-                    case 202:   mine->message = "";
-                                for (int i = 0; i < mine->getMessageLength(); i++)
-                                {
-                                    read(sockfd,&Char,1);
-                                    mine->message += Char;
-                                }
+                    case 202:   mine->recieveMessage("");
+                                char MLength[4];
+                                read(sockfd,&MLength,4);
+                                RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
+                                char MessagE [RecivingLength];
+                                //for (int i = 0; i < mine->getMessageLength(); i++)
+                                //{
+                                read(sockfd,&MessagE,RecivingLength);
+                                std::string mESSAGe(MessagE,RecivingLength-1);
+                                mine->recieveMessage(mESSAGe);
+                                //}
                                 break;
-                    default : std::cout << "something went horrible wrong through out reading" << '\n';
+
                   }
                 } while(command!=003);
                 fall = 001;
@@ -150,11 +158,14 @@ void Client::communicator()
                 {
                     command = 103;
                     write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
-                    for(int i = 0; i< mine->getMessageLength();i++)
-                    {
-                        write(sockfd, &mine->message[i], 1);
-                    }
-                    mine->setMessageChanged(false);
+                    //sent itnt for length
+                    char charMessageLength[4];
+                    IntChar(mine->getMessageLength()+1,charMessageLength);
+                    write(sockfd, charMessageLength, 4);
+                    //for(int i = 0; i< mine->getMessageLength();i++)
+                    //{
+                    write(sockfd, mine->transmitMessage().c_str(), mine->getMessageLength()+1);
+                    //}
                 }
                 fall = 104;
                 break;

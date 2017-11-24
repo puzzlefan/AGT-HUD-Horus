@@ -16,6 +16,10 @@ user::user()
   }
   //fill();
 }
+user::user(const user&)
+{
+  user();
+}
 user::~user()
 {
 
@@ -114,7 +118,8 @@ bool user::getMessageChanged()
 }
 int user::getMessageLength()
 {
-  return messageLength;
+  std::lock_guard<std::mutex> lock(mutex_Message);
+  return message.size();
 }
 
 //
@@ -217,5 +222,6 @@ void user::recieveBITBild(unsigned char Chari, int pos)
 void user::recieveMessage(std::string Message)
 {
   std::lock_guard<std::mutex> lock(mutex_Message);
-  message = Message;
+  message.clear();
+  message.append(Message);
 }

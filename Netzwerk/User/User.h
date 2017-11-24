@@ -36,7 +36,7 @@ private:
   static const int integerCount = 7;//length of integer Array
   static const int boolCount = 8;//Length of bool Array
   static const int BITBildSize = 39360;//IS HARDCODED; BECAUASE OF TIME. SO CHANGE IT IF THE RESOLUTION CHANGES
-  static const int messageLength = 140;//because why not could get dynamic
+  //static const int messageLength = 140;//because why not could get dynamic
 
   //
   //  transfer values
@@ -81,6 +81,7 @@ public:
   // con and destruct
   //
 
+  user(const user&);
   user();
   ~user();
 
