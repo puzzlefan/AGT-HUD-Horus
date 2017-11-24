@@ -71,8 +71,10 @@ private:
   //std::mutex mutex_Bools_Ch; //mutex lock for bools changed
 
   std::mutex mutex_BitBild; //mutex lock for BitBild
-  //std::mutex mutex_Message; //mutex lock for BitBild changed
+  //std::mutex mutex_BitBild_Ch; //mutex lock for BitBild changed
 
+  std::mutex mutex_Message; //mutex lock for Message
+  //std::mutex mutex_Message; //mutex lock for Message changed
 public:
 
   //
@@ -106,7 +108,7 @@ public:
   bool getBITBildChanged(int pos);    //returns BitBildChanged state at given position
   int getBITBildSize();               //returns length of vector
 
-  std::string getString();  //returns string with message, changed untouched
+  std::string getMessage();  //returns string with message, changed untouched
   bool getMessageChanged(); //returns if message has been changed
   int getMessageLength();   //returns legth of message
 
@@ -138,6 +140,6 @@ public:
   void recieveInt(int Inti, int pos);                 //grabs integer for given position, leaves changed untouched
   void recieveBool(bool Booli, int pos);              //grabs bool for given position, leaves changed untouched
   void recieveBITBild(unsigned char Chari, int pos);  //grabs char for given position, leaves changed untouched
-  void recieveMessage(std:Message);                   //grabs message, leaves changed untouched
+  void recieveMessage(std::string Message);                   //grabs message, leaves changed untouched
 };
 #endif

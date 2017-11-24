@@ -102,7 +102,7 @@ int user::getBITBildSize()
   return BITBildSize;
 }
 
-std::string user::getString()
+std::string user::getMessage()
 {
   std::lock_guard<std::mutex> lock(mutex_Message);
   return message;
@@ -145,7 +145,7 @@ void user::setBITBild(unsigned char Char, int Pos)
   (*BITBild)[Pos]=Char;
   (*BITBildChanged)[Pos]=true;
 }
-void setMessage(std::string Message)
+void user::setMessage(std::string Message)
 {
   std::lock_guard<std::mutex> lock(mutex_Message);
   message = Message;
@@ -180,24 +180,42 @@ unsigned char user::transmitBITBild(int pos)
   (*BITBildChanged)[pos]=false;
   return (*BITBild)[pos];
 }
-
+std::string user::transmitMessage()
+{
+  std::lock_guard<std::mutex> lock(mutex_Message);
+  MessageChanged=false;
+  return message;
+}
 
 //
 //recieves store data which was obtained from the Network
 //
 
+void user::recieveID(int identification)
+{
+  std::lock_guard<std::mutex> lock(mutex_ID);
+  id = identification;
+}
 void user::recieveInt(int Inti, int pos)
 {
-  ChangedInts[pos]=false;
+  std::lock_guard<std::mutex> lock(mutex_Integer);
+  //ChangedInts[pos]=false;
   integers[pos]=Inti;
 }
 void user::recieveBool(bool Booli, int pos)
 {
-  ChangedBools[pos]=false;
+  std::lock_guard<std::mutex> lock(mutex_ID);
+  //ChangedBools[pos]=false;
   bools[pos]=Booli;
 }
 void user::recieveBITBild(unsigned char Chari, int pos)
 {
-  (*BITBildChanged)[pos]=false;
+  std::lock_guard<std::mutex> lock(mutex_BitBild);
+  //(*BITBildChanged)[pos]=false;
   (*BITBild)[pos]=Chari;
+}
+void user::recieveMessage(std::string Message)
+{
+  std::lock_guard<std::mutex> lock(mutex_Message);
+  message = Message;
 }
