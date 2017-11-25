@@ -1,15 +1,22 @@
  //Example for pinNo. later from PinNo-class
-int buttonUp = 22;
-int buttonDown = 23;
-int buttonRight = 24;
-int buttonLeft = 25;
-int buttonBack = 28;
-int buttonCertify = 27;
+int buttonUp = 49;
+int buttonDown = 53;
+int buttonRight = 50;
+int buttonLeft = 52;
+int buttonBack = 51;
+int buttonCertify = 48;
 
-void setup() 
+#define FACTOR_UP 2
+#define FACTOR_DOWN 3
+#define FACTOR_RIGHT 5
+#define FACTOR_LEFT 7
+#define FACTOR_BACK 11
+#define FACTOR_CERTIFY 13
+
+void setup()
 {
-  //Serial.begin(9600);
-  
+  Serial.begin(9600);
+
   pinMode(buttonUp,INPUT);
   pinMode(buttonDown,INPUT);
   pinMode(buttonRight,INPUT);
@@ -18,34 +25,32 @@ void setup()
   pinMode(buttonCertify,INPUT);
 }
 
-void loop() 
+void loop()
 {
-  int Up = digitalRead(buttonUp);
-  int Down = digitalRead(buttonDown);
-  int Right = digitalRead(buttonRight);
-  int Left = digitalRead(buttonLeft);
-  int Back = digitalRead(buttonBack);
-  int Certify = digitalRead(buttonCertify);
-
-/*Ausgabe
-  Serial.print("UP ");
-  Serial.println(Up);
-
-  Serial.print("DOWN ");
-  Serial.println(Down);
-  
-  Serial.print("RIGHT ");
-  Serial.println(Right);
-
-  Serial.print("LEFT ");
-  Serial.println(Left);
-
-  Serial.print("BACK ");
-  Serial.println(Back);
-
-  Serial.print("CERTIFY ");
-  Serial.println(Certify);
-
-  delay(5000);
-  */
+  int transmit = 1;
+  if(digitalRead(buttonUp))
+  {
+    transmit *= FACTOR_UP;
+  }
+  if(digitalRead(buttonDown))
+  {
+    transmit *= FACTOR_DOWN;
+  }
+  if(digitalRead(buttonRight))
+  {
+      transmit *= FACTOR_RIGHT;
+  }
+  if(digitalRead(buttonLeft))
+  {
+      transmit *= FACTOR_LEFT;
+  }
+  if(digitalRead(buttonBack))
+  {
+      transmit *= FACTOR_BACK;
+  }
+  if(digitalRead(buttonCertify))
+  {
+      transmit *= FACTOR_CERTIFY;
+  }
+  Serial.println(transmit);
  }
