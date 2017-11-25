@@ -15,8 +15,8 @@ void setup() {
 }
 
 void loop() {
-  Master->setWrite(0,something());
-  Master->write();
+  Master->read();
+  Serial.println(Master->getRead(0));
   delay(endDelay);
 }
 

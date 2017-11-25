@@ -1,3 +1,18 @@
+//Bluetooth zeug
+#include "Bluetooth.h"
+
+#define STATE_PIN 0
+#define EN_PIN 2
+#define ERROR_PIN 13
+#define VALUE_COUNT 1
+//variables
+
+int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
+
+Bluetooth *Slave;
+
+
+
  //Example for pinNo. later from PinNo-class
 int buttonUp = 49;
 int buttonDown = 53;
@@ -23,6 +38,8 @@ void setup()
   pinMode(buttonLeft,INPUT);
   pinMode(buttonBack,INPUT);
   pinMode(buttonCertify,INPUT);
+
+  Slave = new Bluetooth(false, ERROR_PIN, EN_PIN, STATE_PIN, VALUE_COUNT);
 }
 
 void loop()
@@ -52,6 +69,7 @@ void loop()
   {
       transmit *= FACTOR_CERTIFY;
   }
-  Serial1.println(transmit);
+  Slave->setWrite(0, transmit);
+  Slave->write();
   delay(25);
  }
