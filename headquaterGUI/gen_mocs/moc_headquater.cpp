@@ -96,45 +96,43 @@ static const uint qt_meta_data_headquater[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      21,   14, // methods
+      20,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-      10,       // signalCount
+       9,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      11,   35,   46,   46, 0x05,
-      47,   73,   46,   46, 0x05,
-      76,  105,   46,   46, 0x05,
-     121,  152,   46,   46, 0x05,
-     166,  152,   46,   46, 0x05,
-     197,  226,   46,   46, 0x05,
-     238,  226,   46,   46, 0x05,
-     267,  297,   46,   46, 0x05,
-     307,  355,   46,   46, 0x05,
-     361,  380,   46,   46, 0x05,
+      11,   37,   40,   40, 0x05,
+      41,   70,   40,   40, 0x05,
+      86,  117,   40,   40, 0x05,
+     131,  117,   40,   40, 0x05,
+     162,  191,   40,   40, 0x05,
+     203,  191,   40,   40, 0x05,
+     232,  262,   40,   40, 0x05,
+     272,  320,   40,   40, 0x05,
+     326,  345,   40,   40, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-     389,   73,   46,   46, 0x08,
-     409,  105,   46,   46, 0x08,
-     432,  152,   46,   46, 0x08,
-     457,  152,   46,   46, 0x08,
-     482,  226,   46,   46, 0x08,
-     505,  226,   46,   46, 0x08,
-     528,  297,   46,   46, 0x08,
-     552,   46,   46,   46, 0x08,
-     569,  584,   46,   46, 0x08,
-     590,  355,   46,   46, 0x08,
-     632,  380,   46,   46, 0x08,
+     354,   37,   40,   40, 0x08,
+     374,   70,   40,   40, 0x08,
+     397,  117,   40,   40, 0x08,
+     422,  117,   40,   40, 0x08,
+     447,  191,   40,   40, 0x08,
+     470,  191,   40,   40, 0x08,
+     493,  262,   40,   40, 0x08,
+     517,   40,   40,   40, 0x08,
+     534,  549,   40,   40, 0x08,
+     555,  320,   40,   40, 0x08,
+     597,  345,   40,   40, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_headquater[] = {
-    "headquater\0newMessage(int,QString)\0"
-    "ID,Message\0\0newConfirmedIDSignal(int)\0"
-    "ID\0updatedStatusSignal(int,int)\0"
+    "headquater\0newConfirmedIDSignal(int)\0"
+    "ID\0\0updatedStatusSignal(int,int)\0"
     "ID,recentStatus\0updatedTempHeadSignal(int,int)\0"
     "ID,recentTemp\0updatedTempFootSignal(int,int)\0"
     "updatedCOHeadSignal(int,int)\0ID,recentCO\0"
@@ -158,27 +156,26 @@ void headquater::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         Q_ASSERT(staticMetaObject.cast(_o));
         headquater *_t = static_cast<headquater *>(_o);
         switch (_id) {
-        case 0: _t->newMessage((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
-        case 1: _t->newConfirmedIDSignal((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 2: _t->updatedStatusSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 3: _t->updatedTempHeadSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 4: _t->updatedTempFootSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 5: _t->updatedCOHeadSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 6: _t->updatedCOFootSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 7: _t->answerdMessageSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 8: _t->updatedImageSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< unsigned short*(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
-        case 9: _t->newDataSignal((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 10: _t->newConfirmedID((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 11: _t->updatedStatus((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 12: _t->updatedTempHead((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 13: _t->updatedTempFoot((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 14: _t->updatedCOHead((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 15: _t->updatedCOFoot((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 16: _t->answerdMessage((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 17: _t->sendNewMessage(); break;
-        case 18: _t->newTopTab((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 19: _t->updatedImage((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< unsigned short*(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
-        case 20: _t->sortingData((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 0: _t->newConfirmedIDSignal((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->updatedStatusSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 2: _t->updatedTempHeadSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 3: _t->updatedTempFootSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 4: _t->updatedCOHeadSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 5: _t->updatedCOFootSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 6: _t->answerdMessageSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 7: _t->updatedImageSignal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< unsigned short*(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
+        case 8: _t->newDataSignal((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 9: _t->newConfirmedID((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 10: _t->updatedStatus((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 11: _t->updatedTempHead((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 12: _t->updatedTempFoot((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 13: _t->updatedCOHead((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 14: _t->updatedCOFoot((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 15: _t->answerdMessage((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 16: _t->sendNewMessage(); break;
+        case 17: _t->newTopTab((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 18: _t->updatedImage((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< unsigned short*(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
+        case 19: _t->sortingData((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -216,80 +213,73 @@ int headquater::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 21)
+        if (_id < 20)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 21;
+        _id -= 20;
     }
     return _id;
 }
 
 // SIGNAL 0
-void headquater::newMessage(int _t1, QString _t2)
+void headquater::newConfirmedIDSignal(int _t1)
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 
 // SIGNAL 1
-void headquater::newConfirmedIDSignal(int _t1)
+void headquater::updatedStatusSignal(int _t1, int _t2)
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 
 // SIGNAL 2
-void headquater::updatedStatusSignal(int _t1, int _t2)
+void headquater::updatedTempHeadSignal(int _t1, int _t2)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
 }
 
 // SIGNAL 3
-void headquater::updatedTempHeadSignal(int _t1, int _t2)
+void headquater::updatedTempFootSignal(int _t1, int _t2)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 
 // SIGNAL 4
-void headquater::updatedTempFootSignal(int _t1, int _t2)
+void headquater::updatedCOHeadSignal(int _t1, int _t2)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 4, _a);
 }
 
 // SIGNAL 5
-void headquater::updatedCOHeadSignal(int _t1, int _t2)
+void headquater::updatedCOFootSignal(int _t1, int _t2)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 5, _a);
 }
 
 // SIGNAL 6
-void headquater::updatedCOFootSignal(int _t1, int _t2)
+void headquater::answerdMessageSignal(int _t1, int _t2)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 6, _a);
 }
 
 // SIGNAL 7
-void headquater::answerdMessageSignal(int _t1, int _t2)
+void headquater::updatedImageSignal(int _t1, unsigned short * _t2, int _t3, int _t4)
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)), const_cast<void*>(reinterpret_cast<const void*>(&_t3)), const_cast<void*>(reinterpret_cast<const void*>(&_t4)) };
     QMetaObject::activate(this, &staticMetaObject, 7, _a);
 }
 
 // SIGNAL 8
-void headquater::updatedImageSignal(int _t1, unsigned short * _t2, int _t3, int _t4)
-{
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)), const_cast<void*>(reinterpret_cast<const void*>(&_t3)), const_cast<void*>(reinterpret_cast<const void*>(&_t4)) };
-    QMetaObject::activate(this, &staticMetaObject, 8, _a);
-}
-
-// SIGNAL 9
 void headquater::newDataSignal(int _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
-    QMetaObject::activate(this, &staticMetaObject, 9, _a);
+    QMetaObject::activate(this, &staticMetaObject, 8, _a);
 }
 QT_END_MOC_NAMESPACE

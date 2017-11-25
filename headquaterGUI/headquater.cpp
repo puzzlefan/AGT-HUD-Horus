@@ -1,7 +1,6 @@
 #include "headquater.h"
 
 #include <iostream>
-#include <mutex>
 
 #include <../Netzwerk/server/server.h>
 #include <../Netzwerk/User/User.h>
@@ -15,7 +14,6 @@
 #include <QPushButton>
 #include <QTabWidget>
 #include <QPixmap>
-#include <QPainter>
 #include <QVector>
 
 headquater::headquater(std::vector<user>*Informations, QWidget *parent)
@@ -112,85 +110,21 @@ void headquater::sortingData(int vectorNo)
 
 void headquater::newConfirmedID(int ID)
 {
-    switch (ID)
-    {
-    case 1:
-        PersonID1 = new Person(ID);
-        Persons.at(ID)->Name = Name[ID];
-        Persons.at(ID)->pageSetUp();
-        connect(Persons.at(ID)->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
+    Persons[ID] = new Person(ID);
+    Persons.at(ID)->Name = Name[ID];
+    Persons.at(ID)->pageSetUp();
+    connect(Persons.at(ID)->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
 
-        Tabs->addTab(Persons.at(ID)->personalTab, Persons[ID]->Name);
+    Persons.at(ID)->index = noPersons - 1;
+    tabIndex[Persons.at(ID)->index] = ID;
 
-        Persons.at(ID)->Status = new QLabel;
-        layout->addWidget(Persons.at(ID)->Status,noPersons,6,1,1,Qt::AlignCenter);
-        Persons.at(ID)->Status->setText(Persons.at(ID)->Name);
+    Tabs->addTab(Persons.at(ID)->personalTab, Persons[ID]->Name);
 
-        Persons.at(ID)->index = noPersons - 1;
-        tabIndex[Persons.at(ID)->index] = ID;
+    Persons.at(ID)->Status = new QLabel;
+    layout->addWidget(Persons.at(ID)->Status,noPersons,6,1,1,Qt::AlignCenter);
+    Persons.at(ID)->Status->setText(Persons.at(ID)->Name);
 
-        noPersons++;
-
-        break;
-
-    case 2:
-        PersonID2 = new Person(ID);
-        PersonID2->Name = Name[ID];
-        PersonID2->pageSetUp();
-        connect(PersonID2->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
-
-        Tabs->addTab(PersonID2->personalTab,PersonID2->Name);
-
-        PersonID2->Status = new QLabel;
-        layout->addWidget(PersonID2->Status,noPersons,6,1,1,Qt::AlignCenter);
-        PersonID2->Status->setText(PersonID2->Name);
-
-        PersonID2->index = noPersons - 1;
-        tabIndex[PersonID2->index] = ID;
-
-        noPersons++;
-
-        break;
-
-    case 3:
-        PersonID3 = new Person(ID);
-        PersonID3->Name = Name[ID];
-        PersonID3->pageSetUp();
-        connect(PersonID3->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
-
-        Tabs->addTab(PersonID3->personalTab,PersonID3->Name);
-
-        PersonID3->Status = new QLabel;
-        layout->addWidget(PersonID3->Status,noPersons,6,1,1,Qt::AlignCenter);
-        PersonID3->Status->setText(PersonID3->Name);
-
-        PersonID3->index = noPersons - 1;
-        tabIndex[PersonID3->index] = ID;
-
-        noPersons++;
-
-        break;
-
-    case 4:
-        PersonID4 = new Person(ID);
-        PersonID4->Name = Name[ID];
-        PersonID4->pageSetUp();
-        connect(PersonID4->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
-
-        Tabs->addTab(PersonID4->personalTab,PersonID4->Name);
-
-        PersonID4->Status = new QLabel;
-        layout->addWidget(PersonID4->Status,noPersons,6,1,1,Qt::AlignCenter);
-        PersonID4->Status->setText(PersonID4->Name);
-
-        PersonID4->index = noPersons - 1;
-        tabIndex[PersonID4->index] = ID;
-
-        noPersons++;
-
-        break;
-    }
-
+    noPersons++;
 }
 
 void headquater::updatedStatus(int ID, int recentStatus)
@@ -251,7 +185,7 @@ void headquater::sendNewMessage()
 
     txtMessage = Persons.at(sendToID)->messageText->toPlainText();
 
-    emit newMessage(sendToID,txtMessage);
+
 }
 
 void headquater::newTopTab(int index)
@@ -344,8 +278,10 @@ void Person::updateImage(unsigned short *data, int minValue, int maxValue)
 
     // Map "rawData" to rgb values in "rgbImage" via the colormap
     int diff = maxValue - minValue + 1;
-    for (int y = 0; y < FrameHeight; ++y) {
-        for (int x = 0; x < FrameWidth; ++x) {
+    for (int y = 0; y < FrameHeight; ++y)
+    {
+        for (int x = 0; x < FrameWidth; ++x)
+        {
             int baseValue = rawData[FrameWidth*y + x]; // take input value in [0, 65536)
             int scaledValue = 256*(baseValue - minValue)/diff; // map value to interval [0, 256), and set the pixel to its color value above
             rgbImage.setPixel(x, y, qRgb(colormap[3*scaledValue], colormap[3*scaledValue+1], colormap[3*scaledValue+2]));
@@ -354,7 +290,6 @@ void Person::updateImage(unsigned short *data, int minValue, int maxValue)
 
     // Update the on-screen image
     QPixmap pixmap = QPixmap::fromImage(rgbImage).scaled(ImageWidth, ImageHeight, Qt::KeepAspectRatio);
-    QPainter painter(&pixmap);
     // ... mark up pixmap, if so desired
     IRPicture->setPixmap(pixmap);
 }

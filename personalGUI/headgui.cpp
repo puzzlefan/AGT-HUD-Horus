@@ -37,10 +37,10 @@ HeadGUI::HeadGUI(QWidget *parent)
 void HeadGUI::createBiometric()
 {
     Personae = new QLabel;
-    layout->addWidget(Personae,0,2,1,1, Qt::AlignCenter);
+    layout->addWidget(Personae,0,2,1,1, Qt::AlignLeft);
 
     Light = new QLabel;
-    layout->addWidget(Light,0,3,1,1, Qt::AlignCenter);
+    layout->addWidget(Light,0,3,1,1, Qt::AlignRight);
     Light->setText(lightSwitch[0]);
     Light->setStyleSheet("QLabel{background-color : lightgrey;}");
 
@@ -121,13 +121,16 @@ void HeadGUI::createConnections()
     connect(this,SIGNAL(certifySignal()),this,SLOT(certify()));
     connect(this,SIGNAL(coosingStatusSignal()),this,SLOT(coosingStatus()));
     connect(this,SIGNAL(changingLightSignal()),this,SLOT(changingLight()));
-    //adresses?!
+    //from arduino
     connect(this,SIGNAL(updateBraceletSignal(int,int,int,int,int,int)),this,SLOT(updateBracelet(int,int,int,int,int,int)));
     connect(this,SIGNAL(updateTempHeadSignal(int)),this,SLOT(updateTempHead(int)));
     connect(this,SIGNAL(updateTempFootSignal(int)),this,SLOT(updateTempFoot(int)));
     connect(this,SIGNAL(updateCOHeadSignal(int)),this,SLOT(updateCOHead(int)));
     connect(this,SIGNAL(updateCOFootSignal(int)),this,SLOT(updateCOFoot(int)));
+    //from headquater
     connect(this,SIGNAL(messageRecivedSignal(QString)),this,SLOT(messageRecived(QString)));
+    //"to" headquater
+    connect(this,SIGNAL(newValuesForHeadquater()),this,SLOT(sortingValuesForHeadquater()));
 }
 
 void HeadGUI::createCommunication()
@@ -143,13 +146,37 @@ void HeadGUI::createCommunication()
 
 void HeadGUI::defauftValues()
 {
+    //values for menu
     horizontal = 0;
     vertical = 1;
+
+    answerPossible = false;
+
     emergencyPossible = false;
     SendEmergency = false;
-    recivedMessage= "Noch keine Nachrichten";
+
+    //values for communication with headquater
     recentStatus = 0;
-    answerPossible = false;
+    updatedStatus = false;
+
+    recentAnswer = 0;
+    answeredMessage = false;
+
+    recentTempHead = 0;
+    recentTempFoot = 0;
+    recentCOHead = 0;
+    recentCOFoot = 0;
+
+    updatedTempHead = false;
+    updatedTempFoot = false;
+    updatedCOHead = false;
+    updatedCOFoot = false;
+    newConfirmedID = false;
+
+    //values from headquater
+    recivedMessage= "Noch keine Nachrichten";
+
+    //other values
     lightOn = false;
 }
 
@@ -261,21 +288,26 @@ void HeadGUI::certify()
           {
             Status->setText(Stati[vertical]);
             Status->setStyleSheet("QLabel{background-color : lightgray;}");
-            recentStatus = vertical;
 
-            emit newStatusSignal(ID,vertical);
+            recentStatus = vertical;
+            updatedStatus = true;
+
+            emit newValuesForHeadquater();
 
             break;
           }
         case 1:
           {
             QString between ="Antwort: ";
-            QString txtMessage = recivedMessage +between+ messageAnswers[vertical];
+            QString txtMessage = recivedMessage + between + messageAnswers[vertical];
             Messages->setText(txtMessage);
             Messages->setStyleSheet("QLabel{background-color : lightgrey;}");
-            recentAnswer = vertical;
 
-            emit answeredMessage(ID,vertical);
+            recentAnswer = vertical;
+            answeredMessage = true;
+            answerPossible = false;
+
+            emit newValuesForHeadquater();
 
             break;
           }
@@ -298,9 +330,11 @@ void HeadGUI::certify()
         case 3:
 
             Personae->setText(Name[vertical]);
-            ID = vertical;
 
-            emit confirmedID(ID);
+            ID = vertical;
+            newConfirmedID = true;
+
+            emit newValuesForHeadquater();
 
             break;
         }
@@ -309,8 +343,11 @@ void HeadGUI::certify()
     {
         Status->setText("MAYDAY");
         Status->setStyleSheet("QLabel{background-color : red;}");
+
         recentStatus = 5;
-        emit newStatusSignal(ID,5);
+        updatedStatus = true;
+
+        emit newValuesForHeadquater();
     }
 }
 
@@ -360,6 +397,44 @@ void HeadGUI::coosingStatus()
     }
 }
 
+void HeadGUI::sortingValuesForHeadquater()
+{
+    if(newConfirmedID == true)
+    {
+        newConfirmedID = false;
+    }
+
+    if(updatedStatus == true)
+    {
+        updatedStatus = false;
+    }
+
+    if(answeredMessage == true)
+    {
+        answeredMessage = false;
+    }
+
+    if(updatedTempHead == true)
+    {
+        updatedTempHead = false;
+    }
+
+    if(updatedTempFoot == true)
+    {
+        updatedTempFoot = false;
+    }
+
+    if(updatedCOHead == true)
+    {
+        updatedCOHead = false;
+    }
+
+    if(updatedCOFoot == true)
+    {
+        updatedCOFoot = false;
+    }
+}
+
 void HeadGUI::messageRecived(QString sendMessage)
 {
     recivedMessage = sendMessage;
@@ -372,38 +447,38 @@ void HeadGUI::updateBracelet(int valueUp,int valueDown,int valueRight,int valueL
 
     if (valueCertify == 1)
     {
-        emit certifySignal();
         otherSignals = true;
+        emit certifySignal();
     }
 
     if (valueBack == 1 && otherSignals == false)
     {
-        emit backSignal();
         otherSignals = true;
+        emit backSignal();
     }
 
     if ( valueRight == 1 && otherSignals == false)
     {
-        emit rightSignal();
         otherSignals = true;
+        emit rightSignal();
     }
 
     if ( valueLeft == 1 && otherSignals == false)
     {
-        emit leftSignal();
         otherSignals = true;
+        emit leftSignal();
     }
 
     if (valueUp == 1 && otherSignals == false)
     {
-        emit upSignal();
         otherSignals = true;
+        emit upSignal();
     }
 
     if (valueDown == 1 && otherSignals == false)
     {
-        emit downSignal();
         otherSignals = true;
+        emit downSignal();
     }
 }
 
@@ -413,7 +488,10 @@ void HeadGUI::updateTempHead(int recentTemp)
     QString txtTempHead = txtrecentTemp+unitTemp;
     TempHead->setText(txtTempHead);
 
-    emit updatedTempHeadSignal(ID, recentTemp);
+    recentTempHead = recentTemp;
+    updatedTempHead = true;
+
+    emit newValuesForHeadquater();
 }
 
 void HeadGUI::updateTempFoot(int recentTemp)
@@ -422,7 +500,10 @@ void HeadGUI::updateTempFoot(int recentTemp)
     QString txtTempFoot = txtrecentTemp+unitTemp;
     TempFoot->setText(txtTempFoot);
 
-    emit updatedTempFootSignal(ID, recentTemp);
+    recentTempFoot = recentTemp;
+    updatedTempFoot =true;
+
+    emit newValuesForHeadquater();
 }
 
 void HeadGUI::updateCOHead(int recentCO)
@@ -431,7 +512,10 @@ void HeadGUI::updateCOHead(int recentCO)
     QString txtCOHead = txtrecentCO+unitCO;
     COHead->setText(txtCOHead);
 
-    emit updatedCOHeadSignal(ID,recentCO);
+    recentCOHead = recentCO;
+    updatedCOHead = true;
+
+    emit newValuesForHeadquater();
 }
 
 void HeadGUI::updateCOFoot(int recentCO)
@@ -440,7 +524,10 @@ void HeadGUI::updateCOFoot(int recentCO)
     QString txtCOFoot = txtrecentCO+unitCO;
     COHead->setText(txtCOFoot);
 
-    emit updatedCOFootSignal(ID, recentCO);
+    recentCOFoot = recentCO;
+    updatedCOFoot =true;
+
+    emit newValuesForHeadquater();
 }
 
 void HeadGUI::changingLight()

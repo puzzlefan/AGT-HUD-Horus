@@ -9,7 +9,6 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <QTabWidget>
-#include <QPainter>
 #include <QVector>
 
 #include <../Netzwerk/server/server.h>
@@ -31,15 +30,18 @@ public:
 
     //personal values
     int ID;
+    int index;
+    QString Name;
+
     int recentStatus;
+    int recentAnswer;
+    QString recentMessage;
+
     int recentTempHead;
     int recentTempFoot;
     int recentCOHead;
     int recentCOFoot;
-    QString Name;
-    QString recentMessage;
-    int recentAnswer;
-    int index;
+
 
     //for own page
     void pageSetUp();
@@ -49,6 +51,7 @@ public:
     void updateCOFoot();
     void updateTab();
     void updateMessage();
+
     QWidget *personalTab;
     QGridLayout *personalLayout;
     QLabel *answer;
@@ -66,9 +69,9 @@ public:
     QLabel *IRPicture;
     QVector<unsigned short> rawData;
     QImage rgbImage;
+
     int ImageWidth = 320;
     int ImageHeight = 240;
-    unsigned short rawMin, rawMax;
     int FrameWidth = 160;
     int FrameHeight = 120;
     int PacketWidth = 80;
@@ -78,10 +81,14 @@ public:
     int FrameWords = FrameWidth*FrameHeight;
     int SegmentHeight = FrameHeight/4;
     int SegmentPackets = 60;
+    unsigned short rawMin;
+    unsigned short rawMax;
 
    //for status
     void updateStatus();
+
     QLabel *Status;
+
     QString colon = ": ";
     QString Stati[5]= {"Status1","Status2","Status3","Status4","emergency"};
     QString Answers[3] = {" ","angenommen","nicht verfügbar"};
@@ -97,7 +104,6 @@ public:
     void newData(int vectorNo);
 
 signals:
-    void newMessage(int ID, QString Message);
     void newConfirmedIDSignal(int ID);
     void updatedStatusSignal(int ID, int recentStatus);
     void updatedTempHeadSignal(int ID, int recentTemp);
