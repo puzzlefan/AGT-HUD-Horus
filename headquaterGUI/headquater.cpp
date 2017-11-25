@@ -124,7 +124,7 @@ void headquater::newConfirmedID(int ID)
 
         Persons.at(ID)->Status = new QLabel;
         layout->addWidget(Persons.at(ID)->Status,noPersons,6,1,1,Qt::AlignCenter);
-        Persons.at(ID)->Status->setText(Persons.at(ID)]->Name);
+        Persons.at(ID)->Status->setText(Persons.at(ID)->Name);
 
         Persons.at(ID)->index = noPersons - 1;
         tabIndex[Persons.at(ID)->index] = ID;
