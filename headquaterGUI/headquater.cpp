@@ -116,18 +116,18 @@ void headquater::newConfirmedID(int ID)
     {
     case 1:
         PersonID1 = new Person(ID);
-        Persons[ID]->Name = Name[ID];
-        Persons[ID]->pageSetUp();
-        connect(Persons[ID]->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
+        Persons.at(ID)->Name = Name[ID];
+        Persons.at(ID)->pageSetUp();
+        connect(Persons.at(ID)->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
 
-        Tabs->addTab(Persons[ID]->personalTab, Persons[ID]->Name);
+        Tabs->addTab(Persons.at(ID)->personalTab, Persons[ID]->Name);
 
-        Persons[ID]->Status = new QLabel;
-        layout->addWidget(Persons[ID]->Status,noPersons,6,1,1,Qt::AlignCenter);
-        Persons[ID]->Status->setText(Persons[ID]->Name);
+        Persons.at(ID)->Status = new QLabel;
+        layout->addWidget(Persons.at(ID)->Status,noPersons,6,1,1,Qt::AlignCenter);
+        Persons.at(ID)->Status->setText(Persons.at(ID)]->Name);
 
-        Persons[ID]->index = noPersons - 1;
-        tabIndex[Persons[ID]->index] = ID;
+        Persons.at(ID)->index = noPersons - 1;
+        tabIndex[Persons.at(ID)->index] = ID;
 
         noPersons++;
 
@@ -195,52 +195,52 @@ void headquater::newConfirmedID(int ID)
 
 void headquater::updatedStatus(int ID, int recentStatus)
 {
-    Persons[ID]->recentStatus = recentStatus;
-    Persons[ID]->updateStatus();
+    Persons.at(ID)->recentStatus = recentStatus;
+    Persons.at(ID)->updateStatus();
 }
 
 void headquater::updatedTempHead(int ID, int recentTemp)
 {
-    Persons[ID]->recentTempHead = recentTemp;
-    if(Persons[ID]->index == Tabs->currentIndex())
+    Persons.at(ID)->recentTempHead = recentTemp;
+    if(Persons.at(ID)->index == Tabs->currentIndex())
     {
-        Persons[ID]->updateTempHead();
+        Persons.at(ID)->updateTempHead();
     }
 }
 
 void headquater::updatedTempFoot(int ID, int recentTemp)
 {
-    Persons[ID]->recentTempFoot = recentTemp;
-    if(Persons[ID]->index == Tabs->currentIndex())
+    Persons.at(ID)->recentTempFoot = recentTemp;
+    if(Persons.at(ID)->index == Tabs->currentIndex())
     {
-        Persons[ID]->updateTempFoot();
+        Persons.at(ID)->updateTempFoot();
     }
 }
 
 void headquater::updatedCOHead(int ID, int recentCO)
 {
-    Persons[ID]->recentCOHead = recentCO;
-    if(Persons[ID]->index == Tabs->currentIndex())
+    Persons.at(ID)->recentCOHead = recentCO;
+    if(Persons.at(ID)->index == Tabs->currentIndex())
     {
-        Persons[ID]->updateCOHead();
+        Persons.at(ID)->updateCOHead();
     }
 }
 
 void headquater::updatedCOFoot(int ID, int recentCO)
 {
-    Persons[ID]->recentCOFoot = recentCO;
-    if(Persons[ID]->index == Tabs->currentIndex())
+    Persons.at(ID)->recentCOFoot = recentCO;
+    if(Persons.at(ID)->index == Tabs->currentIndex())
     {
-        Persons[ID]->updateCOFoot();
+        Persons.at(ID)->updateCOFoot();
     }
 }
 
 void headquater::answerdMessage(int ID, int answer)
 {
-    Persons[ID]->recentAnswer = answer;
-    if(Persons[ID]->index == Tabs->currentIndex())
+    Persons.at(ID)->recentAnswer = answer;
+    if(Persons.at(ID)->index == Tabs->currentIndex())
     {
-        Persons[ID]->updateMessage();
+        Persons.at(ID)->updateMessage();
     }
 }
 
@@ -249,7 +249,7 @@ void headquater::sendNewMessage()
     int sendToID = tabIndex[Tabs->currentIndex()];
     QString txtMessage;
 
-    txtMessage = Persons[sendToID]->messageText->toPlainText();
+    txtMessage = Persons.at(sendToID)->messageText->toPlainText();
 
     emit newMessage(sendToID,txtMessage);
 }
@@ -257,14 +257,14 @@ void headquater::sendNewMessage()
 void headquater::newTopTab(int index)
 {
     int tabID = tabIndex[index];
-    Persons[tabID]->updateTab();
+    Persons.at(tabID)->updateTab();
 }
 
 void headquater::updatedImage(int ID, unsigned short *data, int minValue, int maxValue)
 {
-    if(Persons[ID]->index == Tabs->currentIndex())
+    if(Persons.at(ID)->index == Tabs->currentIndex())
     {
-        Persons[ID]->updateImage(data, minValue, maxValue);
+        Persons.at(ID)->updateImage(data, minValue, maxValue);
     }
 }
 
