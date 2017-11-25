@@ -15,7 +15,7 @@ int buttonCertify = 48;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial1.begin(38400);//doesent work any longer directly connected with computer
 
   pinMode(buttonUp,INPUT);
   pinMode(buttonDown,INPUT);
@@ -52,5 +52,6 @@ void loop()
   {
       transmit *= FACTOR_CERTIFY;
   }
-  Serial.println(transmit);
+  Serial1.println(transmit);
+  delay(25);
  }
