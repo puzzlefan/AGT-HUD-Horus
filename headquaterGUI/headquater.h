@@ -18,7 +18,7 @@ class QTableView;
 class QGridLayout;
 class QTabWidget;
 
-class Person : public QWidget
+class Person : public QWidget//%
 {
     Q_OBJECT
 
@@ -31,6 +31,7 @@ public:
     //personal values
     int ID;
     int index;
+    int vectorID;
     QString Name;
 
     int recentStatus;
@@ -104,7 +105,7 @@ public:
     void newData(int vectorNo);
 
 signals:
-    void newConfirmedIDSignal(int ID);
+    void newConfirmedIDSignal(int ID, int vectorNo);
     void updatedStatusSignal(int ID, int recentStatus);
     void updatedTempHeadSignal(int ID, int recentTemp);
     void updatedTempFootSignal(int ID,int recentTemp);
@@ -116,7 +117,7 @@ signals:
 
 
 private slots:
-    void newConfirmedID(int ID);
+    void newConfirmedID(int ID, int vectorNo);
     void updatedStatus(int ID, int recentStatus);
     void updatedTempHead(int ID, int recentTemp);
     void updatedTempFoot(int ID,int recentTemp);

@@ -1,23 +1,23 @@
 #include "headgui.h"
 
-#include <../Lepton/LeptonThread.h>
-//#include <../Netzwerk/client/client.h>
-//#include <../Netzwerk/User/User.h>
 #include <iostream>
+#include <wiringPiI2C.h>
 
-#include <QPainter>
+#include <../Lepton/LeptonThread.h>
+#include <../Netzwerk/User/User.h>
+#include <../I2C/DaTa/DaTa.h>
+
 #include <QWidget>
 #include <QMainWindow>
 #include <QLabel>
 #include <QGridLayout>
 #include <QResizeEvent>
+#include <QTimer>
 
 
-HeadGUI::HeadGUI(QWidget *parent)
+HeadGUI::HeadGUI(user *recentUser, DaTa *recentData, QWidget *parent)
     : QMainWindow(parent)
 {
-  //  user networkUser = new user;
-
     mainWidget = new QWidget;
     layout = new QGridLayout;
 
@@ -32,6 +32,13 @@ HeadGUI::HeadGUI(QWidget *parent)
     mainWidget->setWindowTitle("PersonalGUI Helmet");
     mainWidget->setLayout(layout);
     mainWidget->show();
+
+    networkUser = recentUser;
+    sensorData = recentData;
+
+    timerReadingSensors = new QTimer(this);
+    connect(timerReadingSensors,SIGNAL(timeout()),this,SLOT(readingSensors()));
+    timerReadingSensors->start(1000);
 }
 
 void HeadGUI::createBiometric()
@@ -105,7 +112,6 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue)
 
     // Update the on-screen image
     QPixmap pixmap = QPixmap::fromImage(rgbImage).scaled(ImageWidth, ImageHeight, Qt::KeepAspectRatio);
-    QPainter painter(&pixmap);
     // ... mark up pixmap, if so desired
     IRPicture->setPixmap(pixmap);
 }
@@ -113,24 +119,61 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue)
 void HeadGUI::createConnections()
 {
     connect(this,SIGNAL(certifyPersonaeSignal()),this,SLOT(certifyPersonae()));
+
     connect(this,SIGNAL(upSignal()),this,SLOT(up()));
     connect(this,SIGNAL(downSignal()),this,SLOT(down()));
     connect(this,SIGNAL(rightSignal()),this,SLOT(right()));
     connect(this,SIGNAL(leftSignal()),this,SLOT(left()));
     connect(this,SIGNAL(backSignal()),this,SLOT(back()));
     connect(this,SIGNAL(certifySignal()),this,SLOT(certify()));
+
     connect(this,SIGNAL(coosingStatusSignal()),this,SLOT(coosingStatus()));
-    connect(this,SIGNAL(changingLightSignal()),this,SLOT(changingLight()));
-    //from arduino
-    connect(this,SIGNAL(updateBraceletSignal(int,int,int,int,int,int)),this,SLOT(updateBracelet(int,int,int,int,int,int)));
+    connect(this,SIGNAL(updateBraceletSignal(bool,bool,bool,bool,bool,bool)),this,SLOT(updateBracelet(bool,bool,bool,bool,bool,bool)),Qt::DirectConnection);
+
     connect(this,SIGNAL(updateTempHeadSignal(int)),this,SLOT(updateTempHead(int)));
     connect(this,SIGNAL(updateTempFootSignal(int)),this,SLOT(updateTempFoot(int)));
     connect(this,SIGNAL(updateCOHeadSignal(int)),this,SLOT(updateCOHead(int)));
     connect(this,SIGNAL(updateCOFootSignal(int)),this,SLOT(updateCOFoot(int)));
-    //from headquater
-    connect(this,SIGNAL(messageRecivedSignal(QString)),this,SLOT(messageRecived(QString)));
-    //"to" headquater
+
+    connect(this,SIGNAL(changingLightSignal()),this,SLOT(changingLight()));
+    connect(this,SIGNAL(messageRecivedSignal(QString)),this,SLOT(messageRecived(QString)),Qt::DirectConnection);
+
+    connect(this,SIGNAL(newDataFromArduinoSignal()),this,SLOT(sortingNewDataFromArduino()),Qt::BlockingQueuedConnection);
+    connect(this,SIGNAL(newDataFromHeadquaterSignal()),this,SLOT(sortingDataFromHeadquater()),Qt::BlockingQueuedConnection);
     connect(this,SIGNAL(newValuesForHeadquater()),this,SLOT(sortingValuesForHeadquater()));
+}
+
+void HeadGUI::newDataFromHeadquater()
+{
+    emit newDataFromHeadquaterSignal();
+}
+
+void HeadGUI::newDataFromArduino()
+{
+    emit newDataFromArduinoSignal();
+}
+
+void HeadGUI::sortingNewDataFromHeadquater()
+{
+    if(networkUser->getBool(NEW_MESSAGE) == true)
+    {
+        networkUser->setBools(NEW_MESSAGE,false);
+        emit messageRecivedSignal(QString::fromStdString(networkUser->message));
+    }
+}
+
+void HeadGUI::sortingNewDataFromArduino()
+{
+    emit updateBraceletSignal(sensorData->getButton(KNOB_UP), sensorData->getButton(KNOB_DOWN), sensorData->getButton(KNOB_RIGHT), sensorData->getButton(KNOB_LEFT), sensorData->getButton(KNOB_BACK), sensorData->getButton(KNOB_CERTIFYSSS));
+}
+
+void HeadGUI::readingSensors()
+{
+    emit updateTempHeadSignal(sensorData->getRawDaTa(TEMPRETURE_OBOVE));
+    emit updateTempFootSignal(sensorData->getRawDaTa(TEMPRETURE_BELOW));
+
+    emit updateCOHeadSignal(sensorData->getRawDaTa(CO_TOP));
+    emit updateCOFootSignal(sensorData->getRawDaTa(CO_FLOP));
 }
 
 void HeadGUI::createCommunication()
@@ -401,36 +444,57 @@ void HeadGUI::sortingValuesForHeadquater()
 {
     if(newConfirmedID == true)
     {
+        networkUser->setBools(NEW_CONFIRMED_ID, true);
+        networkUser->setID(ID);
+
         newConfirmedID = false;
     }
 
     if(updatedStatus == true)
     {
+        networkUser->setBools(UPDATED_STATUS_SIGNAL, true);
+        networkUser->setInteger(RECENT_STATUS, recentStatus);
+
         updatedStatus = false;
     }
 
     if(answeredMessage == true)
     {
+        networkUser->setBools(ANSWERD_MESSAGE_SIGNAL, true);
+        networkUser->setInteger(ANSWER, recentAnswer);
+
         answeredMessage = false;
     }
 
     if(updatedTempHead == true)
     {
+        networkUser->setBools(UPDATED_TEMP_HEAD_SIGNAL, true);
+        networkUser->setInteger(RECENT_TEMP_HEAD, recentTempHead);
+
         updatedTempHead = false;
     }
 
     if(updatedTempFoot == true)
     {
+        networkUser->setBools(UPDATED_TEMP_FOOT_SIGNAL, true);
+        networkUser->setInteger(RECENT_TEMP_FOOT, recentTempFoot);
+
         updatedTempFoot = false;
     }
 
     if(updatedCOHead == true)
     {
+        networkUser->setBools(UPDATED_CO_HEAD_SIGNAL, true);
+        networkUser->setInteger(RECENT_CO_HEAD, recentCOHead);
+
         updatedCOHead = false;
     }
 
     if(updatedCOFoot == true)
     {
+        networkUser->setBools(UPDATED_CO_FOOT_SIGNAL, true);
+        networkUser->setInteger(RECENT_CO_FOOT, recentCOFoot);
+
         updatedCOFoot = false;
     }
 }
@@ -441,41 +505,41 @@ void HeadGUI::messageRecived(QString sendMessage)
     answerPossible = true;
 }
 
-void HeadGUI::updateBracelet(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify)
+void HeadGUI::updateBracelet(bool valueUp, bool valueDown, bool valueRight, bool valueLeft, bool valueBack,bool valueCertify)
 {
     otherSignals = false;
 
-    if (valueCertify == 1)
+    if (valueCertify == true)
     {
         otherSignals = true;
         emit certifySignal();
     }
 
-    if (valueBack == 1 && otherSignals == false)
+    if (valueBack == true && otherSignals == false)
     {
         otherSignals = true;
         emit backSignal();
     }
 
-    if ( valueRight == 1 && otherSignals == false)
+    if ( valueRight == true && otherSignals == false)
     {
         otherSignals = true;
         emit rightSignal();
     }
 
-    if ( valueLeft == 1 && otherSignals == false)
+    if ( valueLeft == true && otherSignals == false)
     {
         otherSignals = true;
         emit leftSignal();
     }
 
-    if (valueUp == 1 && otherSignals == false)
+    if (valueUp == true && otherSignals == false)
     {
         otherSignals = true;
         emit upSignal();
     }
 
-    if (valueDown == 1 && otherSignals == false)
+    if (valueDown == true && otherSignals == false)
     {
         otherSignals = true;
         emit downSignal();

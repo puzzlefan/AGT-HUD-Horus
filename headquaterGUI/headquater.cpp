@@ -50,16 +50,19 @@ headquater::headquater(std::vector<user>*Informations, QWidget *parent)
 
 void headquater::createConnections()
 {
-    connect(Tabs,SIGNAL(currentChanged(int)),this,SLOT(newTopTab(int)));
-    connect(this,SIGNAL(newConfirmedIDSignal(int)),this,SLOT(newConfirmedID(int)),Qt::DirectConnection);
+    connect(this,SIGNAL(newConfirmedIDSignal(int,int)),this,SLOT(newConfirmedID(int,int)),Qt::DirectConnection);
+
+    connect(this,SIGNAL(updatedImageSignal(int,unsigned short*,int,int)),this,SLOT(updatedImage(int,unsigned short*,int,int)),Qt::DirectConnection);
     connect(this,SIGNAL(updatedStatusSignal(int,int)),this,SLOT(updatedStatus(int,int)),Qt::DirectConnection);
+
     connect(this,SIGNAL(updatedTempHeadSignal(int,int)),this,SLOT(updatedTempHead(int,int)),Qt::DirectConnection);
     connect(this,SIGNAL(updatedTempFootSignal(int,int)),this, SLOT(updatedTempFoot(int,int)),Qt::DirectConnection);
     connect(this,SIGNAL(updatedCOHeadSignal(int,int)),this,SLOT(updatedCOHead(int,int)),Qt::DirectConnection);
     connect(this,SIGNAL(updatedCOFootSignal(int,int)),this,SLOT(updatedCOFoot(int,int)),Qt::DirectConnection);
     connect(this,SIGNAL(answerdMessageSignal(int,int)),this,SLOT(answerdMessage(int,int)),Qt::DirectConnection);
-    connect(this,SIGNAL(updatedImageSignal(int,unsigned short*,int,int)),this,SLOT(updatedImage(int,unsigned short*,int,int)),Qt::DirectConnection);
+
     connect(this,SIGNAL(newDataSignal(int)),this,SLOT(sortingData(int)),Qt::BlockingQueuedConnection);
+    connect(Tabs,SIGNAL(currentChanged(int)),this,SLOT(newTopTab(int)));
 }
 
 void headquater::newData(int vectorNo)
@@ -74,7 +77,7 @@ void headquater::sortingData(int vectorNo)
     if(Infos->at(vectorNo).getBool(NEW_CONFIRMED_ID) == true)
     {
         Infos->at(vectorNo).setBools(NEW_CONFIRMED_ID,false);
-        emit newConfirmedIDSignal(ID);
+        emit newConfirmedIDSignal(ID, vectorNo);
     }
 
     if(Infos->at(vectorNo).getBool(UPDATED_STATUS_SIGNAL) == true)
@@ -108,10 +111,11 @@ void headquater::sortingData(int vectorNo)
     }
 }
 
-void headquater::newConfirmedID(int ID)
+void headquater::newConfirmedID(int ID, int vectorNo)
 {
     Persons[ID] = new Person(ID);
     Persons.at(ID)->Name = Name[ID];
+    Persons.at(ID)->vectorID = vectorNo;
     Persons.at(ID)->pageSetUp();
     connect(Persons.at(ID)->enteringMessage,SIGNAL(clicked(bool)),this,SLOT(sendNewMessage()));
 
@@ -127,10 +131,40 @@ void headquater::newConfirmedID(int ID)
     noPersons++;
 }
 
+void headquater::updatedImage(int ID, unsigned short *data, int minValue, int maxValue)
+{
+    if(Persons.at(ID)->index == Tabs->currentIndex())
+    {
+        Persons.at(ID)->updateImage(data, minValue, maxValue);
+    }
+}
+
 void headquater::updatedStatus(int ID, int recentStatus)
 {
     Persons.at(ID)->recentStatus = recentStatus;
     Persons.at(ID)->updateStatus();
+}
+
+void headquater::sendNewMessage()
+{
+    int sendToID = tabIndex[Tabs->currentIndex()];
+    QString txtMessage;
+    std::string stdMessage;
+
+    txtMessage = Persons.at(sendToID)->messageText->toPlainText();
+    stdMessage = txtMessage.toUtf8().constData();
+
+    Infos->at(Persons.at(sendToID)->vectorID).setBools(NEW_MESSAGE,true);//%
+    Infos->at(Persons.at(sendToID)->vectorID).message = stdMessage;
+}
+
+void headquater::answerdMessage(int ID, int answer)
+{
+    Persons.at(ID)->recentAnswer = answer;
+    if(Persons.at(ID)->index == Tabs->currentIndex())
+    {
+        Persons.at(ID)->updateMessage();
+    }
 }
 
 void headquater::updatedTempHead(int ID, int recentTemp)
@@ -169,43 +203,17 @@ void headquater::updatedCOFoot(int ID, int recentCO)
     }
 }
 
-void headquater::answerdMessage(int ID, int answer)
-{
-    Persons.at(ID)->recentAnswer = answer;
-    if(Persons.at(ID)->index == Tabs->currentIndex())
-    {
-        Persons.at(ID)->updateMessage();
-    }
-}
-
-void headquater::sendNewMessage()
-{
-    int sendToID = tabIndex[Tabs->currentIndex()];
-    QString txtMessage;
-
-    txtMessage = Persons.at(sendToID)->messageText->toPlainText();
-
-
-}
-
 void headquater::newTopTab(int index)
 {
     int tabID = tabIndex[index];
     Persons.at(tabID)->updateTab();
 }
 
-void headquater::updatedImage(int ID, unsigned short *data, int minValue, int maxValue)
-{
-    if(Persons.at(ID)->index == Tabs->currentIndex())
-    {
-        Persons.at(ID)->updateImage(data, minValue, maxValue);
-    }
-}
-
 headquater::~headquater()
 {
 
 }
+
 
 Person::Person(int trueID)
 {
@@ -300,6 +308,12 @@ void Person::updateStatus()
     Status->setText(txt);
 }
 
+
+void Person::updateMessage()
+{
+    answer->setText(Answers[recentAnswer]);
+}
+
 void Person::updateTempHead()
 {
     QString Temp = QString::number(recentTempHead);
@@ -326,11 +340,6 @@ void Person::updateCOFoot()
     QString CO = QString::number(recentCOFoot);
     QString txt = CO + unitCO;
     COFoot->setText(txt);
-}
-
-void Person::updateMessage()
-{
-    answer->setText(Answers[recentAnswer]);
 }
 
 void Person::updateTab()

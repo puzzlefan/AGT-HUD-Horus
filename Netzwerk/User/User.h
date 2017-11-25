@@ -19,6 +19,8 @@
 #define RECENT_CO_FOOT          4
 #define LEAST_SIGNIFICANT_PIXEL 5
 #define MOST_SIGNIFICANT_PIXEL  6
+#define NEW_MESSAGE             7
+#define ANSWER                  8
 
 #include <string>
 #include <vector>
@@ -27,7 +29,7 @@ class user{
 private:
   int id; //identification number
   static const int integerCount = 7;//length of integer Array
-  static const int boolCount = 8;//Length of bool Array
+  static const int boolCount = 8/*vlient*/+1/*server*/;//Length of bool Array
   static const int messageLength = 140;//because why not could get dynamic
   static const int BITBildSize = 39360;//IS HARDCODED; BECAUASE OF TIME SO CHANGE IT IF THE RESOLUTION CHANGES
   int integers[integerCount];

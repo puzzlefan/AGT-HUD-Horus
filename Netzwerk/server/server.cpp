@@ -132,7 +132,7 @@ void Server::ServerPrivateThread(int counti)
 							}
 							Continue=true;
 							fall=0;
-							//HQ->newData(counti);
+							HQ->newData(counti);
 							break;
 			case 2:	command = 200;
 					write(ClientFd[counti],&command,1);

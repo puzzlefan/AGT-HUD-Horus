@@ -20,7 +20,7 @@ int main(int argc, char const *argv[]) {
   a.message = "hey";
   a.setBools(true,0);
 
-  int ID = 2;
+  int ID = 3;
 
   a.setID(ID);
 
@@ -32,6 +32,7 @@ int main(int argc, char const *argv[]) {
 
   int* xyz[] = { &recentStatus, &Temp1, &Temp2, &CO1, &CO2};
 
+  a.setBools(NEW_CONFIRMED_ID,1);
   while (true)
   {
       /*

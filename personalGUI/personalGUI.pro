@@ -43,17 +43,21 @@ SOURCES += \
         headgui.cpp \
     ../Lepton/LeptonThread.cpp \
     ../Netzwerk/client/client.cpp \
-    ../Netzwerk/User/User.cpp
+    ../Netzwerk/User/User.cpp \
+    ../I2C/DaTa/DaTa.cpp \
+    ../I2C/I2C.cpp
 
 HEADERS += \
         headgui.h \
     ../Lepton/LeptonThread.h \
     ../Netzwerk/client/client.h \
-    ../Netzwerk/User/User.h
+    ../Netzwerk/User/User.h \
+    ../I2C/DaTa/DaTa.h \
+    ../I2C/I2C.h
 
 QMAKE_CXXFLAGS += -std=c++0x -pthread
 
-LIBS += -pthread
+LIBS += -pthread -lwiringPi
 
 unix:LIBS += -L$${RPI_LIBS}/$${LEPTONSDK}/Debug -lLEPTON_SDK
 

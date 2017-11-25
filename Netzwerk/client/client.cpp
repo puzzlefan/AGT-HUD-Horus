@@ -12,11 +12,13 @@
 #include "../User/User.h"
 #include <sys/time.h>//macht zeit
 #include <sys/select.h>
+#include "../../personalGUI/headgui.h"
 #include "client.h"
 
-Client::Client(user *point)
+Client::Client(user *point, HeadGUI *NotSoInsaneUSer)
 {
   mine = point;
+  InsaneUser = NotSoInsaneUSer;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
   if (sockfd<0) {
     std::cout << "error opening socket" << '\n';
@@ -95,6 +97,7 @@ void Client::communicator()
                                     read(sockfd,&Char,1);
                                     mine->message += Char;
                                 }
+                                InsaneUser->newDataFromHeadquater();
                                 break;
                     default : std::cout << "something went horrible wrong through out reading" << '\n';
                   }

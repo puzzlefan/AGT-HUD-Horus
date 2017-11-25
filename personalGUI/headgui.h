@@ -1,15 +1,17 @@
 #ifndef HEADGUI_H
 #define HEADGUI_H
 
+#include <wiringPiI2C.h>
+
 #include <QMainWindow>
 #include <QLabel>
 #include <QGridLayout>
 #include <QResizeEvent>
-#include <QPainter>
+#include <QTimer>
 
 #include <../Lepton/LeptonThread.h>
-//#include <../Netzwerk/client/client.h>
-//#include <../Netzwerk/User/User.h>
+#include <../Netzwerk/User/User.h>
+#include <../I2C/DaTa/DaTa.h>
 
 class QLabel;
 class QPixmap;
@@ -20,31 +22,38 @@ class HeadGUI : public QMainWindow
     Q_OBJECT
 
 public:
-    HeadGUI(QWidget *parent = 0);
+    HeadGUI(user *recentUser, DaTa *recentData, QWidget *parent = 0);
     ~HeadGUI();
+    void newDataFromHeadquater();
+    void newDataFromArduino();
 
 public slots:
     void updateImage(unsigned short *, int, int);
 
 signals:
-    void changingLightSignal();
     void certifyPersonaeSignal();
+
     void upSignal();
     void downSignal();
     void rightSignal();
     void leftSignal();
     void backSignal();
     void certifySignal();
-    void coosingStatusSignal();
-    //Singals to headquater
-    void newValuesForHeadquater();
-    //from where does the signal come?
-    void updateBraceletSignal(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify);
+
+    void messageRecivedSignal(QString sendMessage);
+    void updateBraceletSignal(bool valueUp, bool valueDown, bool valueRight, bool valueLeft, bool valueBack, bool valueCertify);
+
     void updateTempHeadSignal(int recentTemp);
     void updateTempFootSignal(int recentTemp);
     void updateCOHeadSignal(int recentCO);
     void updateCOFootSignal(int recentCO);
-    void messageRecivedSignal(QString sendMessage);// from headquater
+
+    void changingLightSignal();
+    void coosingStatusSignal();
+
+    void newDataFromHeadquaterSignal();
+    void newDataFromArduinoSignal();
+    void newValuesForHeadquater();
 
 private slots:
     void certifyPersonae();
@@ -57,7 +66,7 @@ private slots:
     void certify();
 
     void coosingStatus();
-    void updateBracelet(int valueUp,int valueDown,int valueRight,int valueLeft,int valueBack,int valueCertify);
+    void updateBracelet(bool valueUp, bool valueDown, bool valueRight, bool valueLeft, bool valueBack, bool valueCertify);
 
     void updateTempHead(int recentTemp);
     void updateTempFoot(int recentTemp);
@@ -68,6 +77,9 @@ private slots:
     void changingLight();
 
     void sortingValuesForHeadquater();
+    void sortingNewDataFromHeadquater();
+    void sortingNewDataFromArduino();
+    void readingSensors();
 
 private:
     //other
@@ -76,6 +88,9 @@ private:
 
     QGridLayout *layout;
     QWidget *mainWidget;
+
+    user *networkUser;
+    DaTa *sensorData;
 
 
     //menu/communication
@@ -102,6 +117,7 @@ private:
     //biometric data
     void createBiometric();
 
+    QTimer *timerReadingSensors;
     QLabel *Personae;
     QLabel *TempHead;
     QLabel *TempFoot;
