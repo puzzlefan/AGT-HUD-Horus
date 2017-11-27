@@ -1,8 +1,7 @@
 //Bluetooth zeug
 #include "Bluetooth.h"
 
-#define STATE_PIN 0
-#define EN_PIN 2
+#define STATE_PIN -1
 #define ERROR_PIN 13
 #define VALUE_COUNT 1
 //variables
@@ -39,7 +38,7 @@ void setup()
   pinMode(buttonBack,INPUT);
   pinMode(buttonCertify,INPUT);
 
-  Slave = new Bluetooth(false, ERROR_PIN, EN_PIN, STATE_PIN, VALUE_COUNT);
+  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, VALUE_COUNT);
 }
 
 void loop()

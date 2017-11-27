@@ -12,13 +12,13 @@ private:
 
   bool changed = false;//if to write commad writes
   int ValCount;//needs to be counted in this case it reads a Analog Port on the other Arduino
-  int error_pin, en_pin , state_pin;
+  int error_pin, state_pin;
   int *writeArray,*readArray;//pointers which become array to hold in and outgoing data
 
   void MasterSetup();
   void SlaveSetup();
 public:
-  Bluetooth(bool Master, int errorPin, int enPin, int statePin, int ValueCount);
+  Bluetooth(bool Master, int errorPin, int statePin, int ValueCount);
   ~Bluetooth();
 
   void read();
@@ -28,9 +28,9 @@ public:
   void setWrite(int pos, int val);
 };
 
-Bluetooth::Bluetooth(bool Master, int errorPin, int enPin, int statePin, int ValueCount){
+Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int ValueCount)//if statePin == 0 the statePin is not used, because the electric department does not want to correct an incompensateble error
+{
   error_pin = errorPin;
-  en_pin = enPin;
   state_pin=statePin;
   ValCount=ValueCount;
 
@@ -49,23 +49,23 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int enPin, int statePin, int Val
   //variables
   int counter = 0;
   // setting up the Pins to standart connection
-  pinMode(en_pin,OUTPUT);
   pinMode(error_pin,OUTPUT);
-
-  digitalWrite(en_pin,LOW);
   digitalWrite(error_pin,LOW);
 
   //Start Serialport 0 for Error Messages
   Serial.begin(9600);
   Serial.println("Waiting for connection");
   //wait until a connection has beend established
-  while(analogRead(state_pin)<AnalogTreshhold)
+  if(statePin >= 0)
   {
-    if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
+    while(analogRead(state_pin)<AnalogTreshhold)
     {
-      Serial.println("Still struggles with connection");
+      if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
+      {
+        Serial.println("Still struggles with connection");
+      }
+      counter++;
     }
-    counter++;
   }
   counter = 0;
   //Start and test the connection
@@ -82,7 +82,8 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int enPin, int statePin, int Val
     SlaveSetup();
   }
 }
-Bluetooth::~Bluetooth(){
+Bluetooth::~Bluetooth()
+{
   free(writeArray);
   writeArray = NULL;
   free(readArray);
