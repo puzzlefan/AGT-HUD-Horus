@@ -35,7 +35,7 @@ void setup()   /****** SETUP: RUNS ONCE ******/
   Serial.println("LED should blink SLOWLY: 2 Seconds ON/OFF");
   delay(2000);
   Serial.println("Enter AT commands in top window.");
-  Serial1.begin(38400);// HC-05 default speed in AT command mode
+  Serial3.begin(38400);// HC-05 default speed in AT command mode
 
 }//--(end setup )---
 
@@ -43,16 +43,16 @@ void setup()   /****** SETUP: RUNS ONCE ******/
 void loop()   /****** LOOP: RUNS CONSTANTLY ******/
 {
   // READ from HC-05 and WRITE to Arduino Serial Monitor
-  if (Serial1.available())
+  if (Serial3.available())
   {
-    Serial.write(Serial1.read());
+    Serial.write(Serial3.read());
     //Serial.println("sollte lesen");
   }
 
   // READ Arduino Serial Monitor and WRITE to HC-05
   if (Serial.available())
   {
-    Serial1.write(Serial.read());
+    Serial3.write(Serial.read());
     //Serial.println("soltel schreiben");
   }
 
@@ -60,5 +60,5 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
 
 /*-----( Declare User-written Functions )-----*/
 //NONE
-
+//14,3,60CA2
 //*********( THE END )***********
