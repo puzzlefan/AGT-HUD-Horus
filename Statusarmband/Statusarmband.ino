@@ -38,7 +38,7 @@ void setup()
   pinMode(buttonBack,INPUT);
   pinMode(buttonCertify,INPUT);
 
-  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, VALUE_COUNT);
+  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
 }
 
 void loop()

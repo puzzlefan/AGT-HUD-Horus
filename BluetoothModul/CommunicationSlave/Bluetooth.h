@@ -2,6 +2,10 @@
 
 int endDelay = 100;
 
+#define SERIAL_ONE    0
+#define SERIAL_TWO    1
+#define SERIAL_THREE  2
+
 class Bluetooth{
 private:
   //varaibles
@@ -11,14 +15,17 @@ private:
   int ModuloWait = 100000;
 
   bool changed = false;//if to write commad writes
+  int Port = 0;
   int ValCount;//needs to be counted in this case it reads a Analog Port on the other Arduino
   int error_pin, state_pin;
   int *writeArray,*readArray;//pointers which become array to hold in and outgoing data
 
+  HardwareSerial SerialPort[3]={Serial1, Serial2, Serial3};
+
   void MasterSetup();
   void SlaveSetup();
 public:
-  Bluetooth(bool Master, int errorPin, int statePin, int ValueCount);
+  Bluetooth(bool Master, int errorPin, int statePin, int port, int ValueCount);
   ~Bluetooth();
 
   void read();
@@ -28,10 +35,11 @@ public:
   void setWrite(int pos, int val);
 };
 
-Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int ValueCount)//if statePin == 0 the statePin is not used, because the electric department does not want to correct an incompensateble error
+Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int ValueCount)//if statePin == 0 the statePin is not used, because the electric department does not want to correct an incompensateble error
 {
   error_pin = errorPin;
   state_pin=statePin;
+  Port = port;
   ValCount=ValueCount;
 
   writeArray = calloc(sizeof(int), ValCount);
@@ -70,7 +78,7 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int ValueCount)//i
   counter = 0;
   //Start and test the connection
   Serial.println("Test the connection");
-  Serial1.begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
+  SerialPort[Port].begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
 
   //unshared init
   if (Master)
@@ -94,8 +102,8 @@ void Bluetooth::MasterSetup(){
   //variables
   int counter = 0;
 
-  Serial1.write(TestConnection);
-  while (!Serial1.available())
+  SerialPort[Port].write(TestConnection);
+  while (!SerialPort[Port].available())
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
@@ -103,12 +111,12 @@ void Bluetooth::MasterSetup(){
         Serial.println("Still waiting for answer struggles with connection ");
         Serial.println("Resending teset");
       }
-      Serial1.write(TestConnection);
+      SerialPort[Port].write(TestConnection);
     }
     counter++;
   }
-  //Serial.println(Serial1.read());
-  if(Serial1.read()!=TestConnection)
+  //Serial.println(SerialPort[Port].read());
+  if(SerialPort[Port].read()!=TestConnection)
   {
     digitalWrite(error_pin,HIGH);
     if(Serial0) Serial.println("Test failed");
@@ -119,7 +127,7 @@ void Bluetooth::SlaveSetup() {
   //variables
   int counter = 0;
 
-  while (!Serial1.available())
+  while (!SerialPort[Port].available())
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
@@ -127,14 +135,14 @@ void Bluetooth::SlaveSetup() {
     }
     counter++;
   }
-  if(Serial1.read()!=TestConnection)
+  if(SerialPort[Port].read()!=TestConnection)
   {
     digitalWrite(error_pin,HIGH);
     Serial.println("Test failed");
   }
   else
   {
-    Serial1.write(TestConnection);
+    SerialPort[Port].write(TestConnection);
   }
   Serial.println("Starting loop");
 }
@@ -164,20 +172,20 @@ void Bluetooth::write(){
     }
     ToWrite.remove(ToWrite.length()-1);
     ToWrite+=";";
-    Serial1.println(ToWrite);
+    SerialPort[Port].println(ToWrite);
     changed = false;
   }
 }
 void Bluetooth::read() {
-    if(Serial1.available())
+    if(SerialPort[Port].available())
     {
         int counter = 0;
         String integer, ToReadSTRING = "";
         while(true)
         {
-            if(Serial1.available())
+            if(SerialPort[Port].available())
             {
-                char character = Serial1.read();
+                char character = SerialPort[Port].read();
                 ToReadSTRING+=character;
                 if(character==';') break;
             }
