@@ -19,6 +19,7 @@ private:
   int ValCount;//needs to be counted in this case it reads a Analog Port on the other Arduino
   int error_pin, state_pin;
   int *writeArray,*readArray;//pointers which become array to hold in and outgoing data
+  String ToReadSTRING = "";
 
   HardwareSerial* SerialPort[3]={&Serial1, &Serial2, &Serial3};
 
@@ -41,6 +42,7 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   state_pin=statePin;
   Port = port;
   ValCount=ValueCount;
+  ToReadSTRING.reserve(6 * ValueCount);//6 because a 16bit integerneeds 5 letters and one is neededd for the ,
 
   writeArray = calloc(sizeof(int), ValCount);
   assert(writeArray);
@@ -180,7 +182,8 @@ void Bluetooth::read() {
     if(SerialPort[Port]->available())
     {
         int counter = 0;
-        String integer, ToReadSTRING = "";
+        String integer;
+        ToReadSTRING = "";
         while(true)
         {
             if(SerialPort[Port]->available())
@@ -190,20 +193,19 @@ void Bluetooth::read() {
                 if(character==';') break;
             }
         }
-
         for(int i = 0;i<ToReadSTRING.length();i++)
         {
-        if(ToReadSTRING[i]==','||ToReadSTRING[i]==';')
-        {
-          readArray[counter]=integer.toInt();
-            counter++;
-            integer.remove(0);
-        }
-        else
-        {
-          integer+=ToReadSTRING[i];
-        }
-        if (ToReadSTRING[i]==';') break;
+            if (ToReadSTRING[i]==';') break;
+            if(ToReadSTRING[i]==','||ToReadSTRING[i]==';')
+            {
+                readArray[counter]=integer.toInt();
+                counter++;
+                integer.remove(0);
+            }
+            else
+            {
+                integer+=ToReadSTRING[i];
+            }
         }
     }
 }
