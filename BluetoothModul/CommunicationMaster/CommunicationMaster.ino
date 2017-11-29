@@ -10,7 +10,7 @@ int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
 Bluetooth *Master;
 
 void setup() {
-  Master = new Bluetooth(true, ERROR_PIN, STATE_PIN, SERIAL_THREE, VALUE_COUNT);
+  Master = new Bluetooth(true, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
 }
 
 void loop() {
