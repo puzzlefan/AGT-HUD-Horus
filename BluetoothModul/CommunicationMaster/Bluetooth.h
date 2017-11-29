@@ -193,9 +193,9 @@ void Bluetooth::read() {
                 if(character==';') break;
             }
         }
+        Serial.println(ToReadSTRING);
         for(int i = 0;i<ToReadSTRING.length();i++)
         {
-            if (ToReadSTRING[i]==';') break;
             if(ToReadSTRING[i]==','||ToReadSTRING[i]==';')
             {
                 readArray[counter]=integer.toInt();
@@ -206,6 +206,7 @@ void Bluetooth::read() {
             {
                 integer+=ToReadSTRING[i];
             }
+            if (ToReadSTRING[i]==';') break;
         }
     }
 }
