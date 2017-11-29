@@ -211,7 +211,7 @@ void Bluetooth::read() {
         }
     }
 }
-voif Bluetooth::update(){
+void Bluetooth::update(){
     read();
     write();
 }
