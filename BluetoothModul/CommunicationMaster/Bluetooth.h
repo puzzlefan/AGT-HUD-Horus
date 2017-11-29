@@ -20,7 +20,7 @@ private:
   int error_pin, state_pin;
   int *writeArray,*readArray;//pointers which become array to hold in and outgoing data
 
-  HardwareSerial SerialPort[3]={Serial1, Serial2, Serial3};
+  HardwareSerial* SerialPort[3]={&Serial1, &Serial2, &Serial3};
 
   void MasterSetup();
   void SlaveSetup();
@@ -78,7 +78,7 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   counter = 0;
   //Start and test the connection
   Serial.println("Test the connection");
-  SerialPort[Port].begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
+  SerialPort[Port]->begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
 
   //unshared init
   if (Master)
@@ -102,8 +102,8 @@ void Bluetooth::MasterSetup(){
   //variables
   int counter = 0;
 
-  SerialPort[Port].write(TestConnection);
-  while (!SerialPort[Port].available())
+  SerialPort[Port]->write(TestConnection);
+  while (!SerialPort[Port]->available())
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
@@ -111,12 +111,12 @@ void Bluetooth::MasterSetup(){
         Serial.println("Still waiting for answer struggles with connection ");
         Serial.println("Resending teset");
       }
-      SerialPort[Port].write(TestConnection);
+      SerialPort[Port]->write(TestConnection);
     }
     counter++;
   }
-  //Serial.println(SerialPort[Port].read());
-  if(SerialPort[Port].read()!=TestConnection)
+  //Serial.println(SerialPort[Port]->read());
+  if(SerialPort[Port]->read()!=TestConnection)
   {
     digitalWrite(error_pin,HIGH);
     if(Serial0) Serial.println("Test failed");
@@ -127,7 +127,7 @@ void Bluetooth::SlaveSetup() {
   //variables
   int counter = 0;
 
-  while (!SerialPort[Port].available())
+  while (!SerialPort[Port]->available())
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
@@ -135,14 +135,14 @@ void Bluetooth::SlaveSetup() {
     }
     counter++;
   }
-  if(SerialPort[Port].read()!=TestConnection)
+  if(SerialPort[Port]->read()!=TestConnection)
   {
     digitalWrite(error_pin,HIGH);
     Serial.println("Test failed");
   }
   else
   {
-    SerialPort[Port].write(TestConnection);
+    SerialPort[Port]->write(TestConnection);
   }
   Serial.println("Starting loop");
 }
@@ -172,20 +172,20 @@ void Bluetooth::write(){
     }
     ToWrite.remove(ToWrite.length()-1);
     ToWrite+=";";
-    SerialPort[Port].println(ToWrite);
+    SerialPort[Port]->println(ToWrite);
     changed = false;
   }
 }
 void Bluetooth::read() {
-    if(SerialPort[Port].available())
+    if(SerialPort[Port]->available())
     {
         int counter = 0;
         String integer, ToReadSTRING = "";
         while(true)
         {
-            if(SerialPort[Port].available())
+            if(SerialPort[Port]->available())
             {
-                char character = SerialPort[Port].read();
+                char character = SerialPort[Port]->read();
                 ToReadSTRING+=character;
                 if(character==';') break;
             }
