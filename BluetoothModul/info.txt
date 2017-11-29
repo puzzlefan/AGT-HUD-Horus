@@ -1,1 +1,3 @@
 note that the header files of Master and slave need to be equal
+
+Acknowledge could be added in case of buffer overflow
