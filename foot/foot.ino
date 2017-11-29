@@ -32,6 +32,7 @@ void ppmMeasure(){
 
 void ppm_debug_out(){
   ppm = analogRead(PPM_Pin);
+  Serial.print("ppm: ");
   Serial.println(ppm);
 }
 
@@ -47,6 +48,7 @@ void TempMeasure(){
 void temp_debug_out(){
   Temp = analogRead(temp_Pin);
   Temp = Temp * TemperaturConstant;
+  Serial.print("Temp: ");
   Serial.println(Temp);
 }
 
