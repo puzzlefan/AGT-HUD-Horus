@@ -2,7 +2,7 @@
 
 #define STATE_PIN -1
 #define ERROR_PIN 13
-#define VALUE_COUNT 1
+#define VALUE_COUNT 2
 //variables
 
 int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
