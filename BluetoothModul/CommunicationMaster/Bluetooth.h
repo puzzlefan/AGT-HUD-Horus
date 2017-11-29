@@ -31,6 +31,7 @@ public:
 
   void read();
   void write();
+  void update();
 
   int getRead(int pos);
   void setWrite(int pos, int val);
@@ -209,4 +210,8 @@ void Bluetooth::read() {
             if (ToReadSTRING[i]==';') break;
         }
     }
+}
+voif Bluetooth::update(){
+    read();
+    write();
 }
