@@ -64,6 +64,9 @@ void setup()
 void loop()
 {
   TempMeasure();
+  //temp_debug_out();
   ppmMeasure();
+  //ppm_debug_out();
   Slave->write();
+  delay(endDelay);
 }
