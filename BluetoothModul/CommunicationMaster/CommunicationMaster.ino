@@ -15,7 +15,10 @@ void setup() {
 
 void loop() {
   Master->read();
+  Serial.print("PPM: ")
   Serial.println(Master->getRead(0));
+  Serial.print("Tmp in C: ")
+  Serial.println(Master->getRead(1));
   delay(endDelay);
 }
 
