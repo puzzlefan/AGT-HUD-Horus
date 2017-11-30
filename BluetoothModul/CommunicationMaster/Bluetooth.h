@@ -215,6 +215,7 @@ void Bluetooth::read() {
             }
             if (ToReadSTRING[i]==';') break;
         }
+        Serial.println(readArray[ValCount-1]);
     }
 }
 void Bluetooth::update(){
