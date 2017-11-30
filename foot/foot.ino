@@ -69,6 +69,6 @@ void loop()
   //temp_debug_out();
   ppmMeasure();
   //ppm_debug_out();
-  Slave->write();
+  Slave->update();
   delay(endDelay);
 }

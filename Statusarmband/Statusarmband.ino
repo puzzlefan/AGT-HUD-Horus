@@ -69,6 +69,6 @@ void loop()
       transmit *= FACTOR_CERTIFY;
   }
   Slave->setWrite(0, transmit);
-  Slave->write();
+  Slave->update();
   delay(25);
  }

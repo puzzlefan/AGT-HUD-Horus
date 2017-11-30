@@ -12,7 +12,7 @@ private:
   bool Serial0 = true;//Error merssages over Serial 0
   char TestConnection = 1;//value to test if the other end of the line is the one we want to talk to
   int AnalogTreshhold = 500;//value which would be called high to detect if the BT-Modul is connected to anythyng
-  int ComTreshold = 10;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
+  int ComTreshold = 100;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
   int ModuloWait = 100000;//a kind of delay
 
   bool MASTER = false;//safes if the device is the master of the communication
