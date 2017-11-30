@@ -1,6 +1,6 @@
 #include "Bluetooth.h"
 
-#define STATE_PIN 0
+#define STATE_PIN -1
 #define ERROR_PIN 13
 #define VALUE_COUNT 2
 //variables
@@ -17,6 +17,7 @@ void loop() {
   Slave->update();
   Slave->setWrite(0,analogRead(0));
   Slave->setWrite(1,analogRead(0));
+  Serial.println("round");
 }
 
 void something(int val)//does something with the Data which has been archived

@@ -9,32 +9,36 @@ int endDelay = 100;
 class Bluetooth{
 private:
   //varaibles
-  bool Serial0 = true;
-  char TestConnection = 1;
-  int AnalogTreshhold = 500;
-  int ModuloWait = 100000;
+  bool Serial0 = true;//Error merssages over Serial 0
+  char TestConnection = 1;//value to test if the other end of the line is the one we want to talk to
+  int AnalogTreshhold = 500;//value which would be called high to detect if the BT-Modul is connected to anythyng
+  int ComTreshold = 10;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
+  int ModuloWait = 100000;//a kind of delay
 
+  bool MASTER = false;//safes if the device is the master of the communication
   bool changed = false;//if to write commad writes
-  int Port = 0;
+  int WaitingTimeCount = 0;//counter to restart snowball game when there is no action left
+  int WaitingTimeCountTwo = 0;//counter to stop waitng for serial data
+  int Port = 0;//The Serial port which is used
   int ValCount;//needs to be counted in this case it reads a Analog Port on the other Arduino
-  int error_pin, state_pin;
+  int error_pin, state_pin;//vaiables for used Pins
   int *writeArray,*readArray;//pointers which become array to hold in and outgoing data
-  String ToReadSTRING = "";
+  String ToReadSTRING = "";//input string to hold incoming data, is gloable, because if the space is not reserved early enough the programm commits suicide sometimes
 
-  HardwareSerial* SerialPort[3]={&Serial1, &Serial2, &Serial3};
+  HardwareSerial* SerialPort[3]={&Serial1, &Serial2, &Serial3};//Array of available SerialPorts
 
-  void MasterSetup();
-  void SlaveSetup();
+  void MasterSetup();//kind of a constructer for the master side
+  void SlaveSetup();//kind of a constructer for the slave side
 public:
-  Bluetooth(bool Master, int errorPin, int statePin, int port, int ValueCount);
-  ~Bluetooth();
+  Bluetooth(bool Master, int errorPin, int statePin, int port, int ValueCount);//constructer
+  ~Bluetooth();//destructer
 
-  void read();
-  void write();
-  void update();
+  void read();//read Serial input
+  void write();//writes write array
+  void update();//does both + ensures that only things are send which can be reseved
 
-  int getRead(int pos);
-  void setWrite(int pos, int val);
+  int getRead(int pos);//ouputs the readings safed in the read array
+  void setWrite(int pos, int val);//sets value in the write array
 };
 
 Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int ValueCount)//if statePin == 0 the statePin is not used, because the electric department does not want to correct an incompensateble error
@@ -42,8 +46,9 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   error_pin = errorPin;
   state_pin=statePin;
   Port = port;
-  ValCount=ValueCount;
-  ToReadSTRING.reserve(6 * ValueCount);//6 because a 16bit integerneeds 5 letters and one is neededd for the ,
+  MASTER = Master;
+  ValCount=ValueCount + 1;//reserves the space for the aknowledge bit
+  ToReadSTRING.reserve(6 * ValueCount + 2);//6 because a 16bit integerneeds 5 letters and one is neededd for the ,/; +2 reserves the space for the aknowledge bit and the ;
 
   writeArray = calloc(sizeof(int), ValCount);
   assert(writeArray);
@@ -86,6 +91,8 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   //unshared init
   if (Master)
   {
+    changed = true;
+    readArray[ValCount-1]=1;//starts the snowball game with the Master
     MasterSetup();
   }
   else
@@ -193,8 +200,20 @@ void Bluetooth::read() {
                 ToReadSTRING+=character;
                 if(character==';') break;
             }
+            else
+            {
+              WaitingTimeCountTwo++;
+              if(WaitingTimeCountTwo==ComTreshold)
+              {
+                if (Serial0)
+                {
+                  Serial.println("Communication timed out waitet to long");
+                }
+                WaitingTimeCountTwo = 0;
+                return;
+              }
+            }
         }
-        Serial.println(ToReadSTRING);
         for(int i = 0;i<ToReadSTRING.length();i++)
         {
             if(ToReadSTRING[i]==','||ToReadSTRING[i]==';')
@@ -213,5 +232,28 @@ void Bluetooth::read() {
 }
 void Bluetooth::update(){
     read();
-    write();
+    if(getRead(ValCount-1)==1)//if the last element of the read Array is 1 the other side is ready for the next info
+    {
+      writeArray[ValCount-1] = 1;//ensures the last parameter is the needet 1 to keep the snowball game alive
+      changed = true;//sames
+      write();//actually writes the array
+      readArray[ValCount-1] = 0;//ensures this part does not end in an infinite loop with itself
+    }
+    else
+    {
+        if(MASTER)
+        {
+          WaitingTimeCount++;
+          if (WaitingTimeCount==ComTreshold)
+          {
+            readArray[ValCount-1] = 1;
+            changed = true;
+            WaitingTimeCount = 0;
+            if (Serial0)
+            {
+              Serial.println("Communication timed out refused answear");
+            }
+          }
+        }
+    }
 }
