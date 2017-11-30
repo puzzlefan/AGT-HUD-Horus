@@ -19,6 +19,8 @@ void loop() {
   Serial.println(Master->getRead(0));
   Serial.print("Tmp in C: ");
   Serial.println(Master->getRead(1));
+  Serial.print("CommState: ");
+  Serial.println(Master->getRead(2));
   delay(endDelay);
 }
 

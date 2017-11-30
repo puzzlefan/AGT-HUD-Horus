@@ -10,7 +10,7 @@ int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
 Bluetooth *Slave;
 
 void setup() {
-  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
+  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_THREE, VALUE_COUNT);
 }
 
 void loop() {
