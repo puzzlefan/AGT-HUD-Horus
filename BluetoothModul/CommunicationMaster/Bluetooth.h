@@ -215,13 +215,14 @@ void Bluetooth::read() {
             }
             if (ToReadSTRING[i]==';') break;
         }
-        Serial.println(readArray[ValCount-1]);
     }
 }
 void Bluetooth::update(){
     read();
+    Serial.println(readArray[ValCount-1]);
     if(getRead(ValCount-1)==1)//if the last element of the read Array is 1 the other side is ready for the next info
     {
+      Serial.println(""heih);
       setWrite(ValCount-1,1);//ensures the last parameter is the needet 1 to keep the snowball game alive
       write();//actually writes the array
       readArray[ValCount-1] = 0;//ensures this part does not end in an infinite loop with itself
