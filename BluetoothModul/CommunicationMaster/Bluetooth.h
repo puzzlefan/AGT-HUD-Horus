@@ -90,6 +90,7 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   //unshared init
   if (Master)
   {
+    changed = true;
     readArray[ValCount-1]=1;//starts the snowball game with the Master
     MasterSetup();
   }
@@ -232,6 +233,7 @@ void Bluetooth::update(){
           if (WaitingTimeCount==ComTreshold)
           {
             readArray[ValCount-1] = 1;
+            changed = true;
           }
           if (Serial0)
           {
