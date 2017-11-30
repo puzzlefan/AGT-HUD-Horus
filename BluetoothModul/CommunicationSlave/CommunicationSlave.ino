@@ -2,7 +2,7 @@
 
 #define STATE_PIN 0
 #define ERROR_PIN 13
-#define VALUE_COUNT 1
+#define VALUE_COUNT 2
 //variables
 
 int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
@@ -14,8 +14,9 @@ void setup() {
 }
 
 void loop() {
-  Slave->read();
-  something(Slave->getRead(0));
+  Slave->update();
+  Slave->setWrite(0,analogRead(0));
+  Slave->setWrite(1,analogRead(0));
 }
 
 void something(int val)//does something with the Data which has been archived

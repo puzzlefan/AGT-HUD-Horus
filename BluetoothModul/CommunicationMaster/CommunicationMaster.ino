@@ -14,7 +14,7 @@ void setup() {
 }
 
 void loop() {
-  Master->read();
+  Master->update();
   Serial.print("PPM: ");
   Serial.println(Master->getRead(0));
   Serial.print("Tmp in C: ");

@@ -21,9 +21,10 @@
 /*-----( Declare Constants and Pin Numbers )-----*/
 #define HC_05_EN        2
 #define HC_05_State     0 //has to be analog because voltage to small
+#define SerialConnection 1
 
 /*-----( Declare Variables )-----*/
-//NONE
+HardwareSerial* SerialPort[4]={&Serial, &Serial1, &Serial2, &Serial3};
 
 void setup()   /****** SETUP: RUNS ONCE ******/
 {
@@ -35,7 +36,7 @@ void setup()   /****** SETUP: RUNS ONCE ******/
   Serial.println("LED should blink SLOWLY: 2 Seconds ON/OFF");
   delay(2000);
   Serial.println("Enter AT commands in top window.");
-  Serial1.begin(38400);// HC-05 default speed in AT command mode
+  SerialPort[SerialConnection]->begin(38400);// HC-05 default speed in AT command mode
 
 }//--(end setup )---
 
@@ -43,16 +44,16 @@ void setup()   /****** SETUP: RUNS ONCE ******/
 void loop()   /****** LOOP: RUNS CONSTANTLY ******/
 {
   // READ from HC-05 and WRITE to Arduino Serial Monitor
-  if (Serial1.available())
+  if (SerialPort[SerialConnection]->available())
   {
-    Serial.write(Serial1.read());
+    Serial.write(SerialPort[SerialConnection]->read());
     //Serial.println("sollte lesen");
   }
 
   // READ Arduino Serial Monitor and WRITE to HC-05
   if (Serial.available())
   {
-    Serial1.write(Serial.read());
+    SerialPort[SerialConnection]->write(Serial.read());
     //Serial.println("soltel schreiben");
   }
 
