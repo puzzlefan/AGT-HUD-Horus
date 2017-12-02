@@ -9,6 +9,8 @@ void setup() {
   // define callbacks for i2c communication / declare interrupt functions
   Wire.onReceive(receiveData);
   Wire.onRequest(sendData);
+  //ensures all is set up for use of i2c
+  I2CSetup();
 
   //Anables Serial Communication for debugging
   Serial.begin(9600);

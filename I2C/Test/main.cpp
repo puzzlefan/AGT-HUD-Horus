@@ -7,11 +7,12 @@ int main (void)
   wiringPiSetup();
   int fd = wiringPiI2CSetup(0x42);
   int out = 0;
+  int port = 0;
   while(true)
   {
-    std::cout<<wiringPiI2CReadReg16(fd, 0)<<std::endl;
+    std::cout<<"Reading: "<<wiringPiI2CReadReg16(fd, port)<<std::endl;
     std::cin >> out;
-    wiringPiI2CWriteReg16 (fd,0, out) ;
+    wiringPiI2CWriteReg16 (fd,port, out) ;
   }
   return 0 ;
 }

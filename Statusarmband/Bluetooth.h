@@ -1,6 +1,6 @@
 #include <assert.h>
 
-int endDelay = 100;
+int endDelay = 200;
 
 #define SERIAL_ONE    0
 #define SERIAL_TWO    1
@@ -12,7 +12,7 @@ private:
   bool Serial0 = true;//Error merssages over Serial 0
   char TestConnection = 1;//value to test if the other end of the line is the one we want to talk to
   int AnalogTreshhold = 500;//value which would be called high to detect if the BT-Modul is connected to anythyng
-  int ComTreshold = 100;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
+  int ComTreshold = 1000;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
   int ModuloWait = 100000;//a kind of delay
 
   bool MASTER = false;//safes if the device is the master of the communication
@@ -69,7 +69,7 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   digitalWrite(error_pin,LOW);
 
   //Start Serialport 0 for Error Messages
-  Serial.begin(9600);
+  //Serial.begin(9600);
   Serial.println("Waiting for connection");
   //wait until a connection has beend established
   if(statePin >= 0)
@@ -184,6 +184,7 @@ void Bluetooth::write(){
     ToWrite+=";";
     SerialPort[Port]->println(ToWrite);
     changed = false;
+    Serial.println(ToWrite);
   }
 }
 void Bluetooth::read() {
@@ -214,6 +215,7 @@ void Bluetooth::read() {
               }
             }
         }
+        Serial.println(ToReadSTRING);
         for(int i = 0;i<ToReadSTRING.length();i++)
         {
             if(ToReadSTRING[i]==','||ToReadSTRING[i]==';')

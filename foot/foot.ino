@@ -60,7 +60,7 @@ void setup()
 {
   //enable for debug_out
   //Serial.beginn(9600);
-  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_THREE, VALUE_COUNT);
+  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
 }
 
 void loop()
