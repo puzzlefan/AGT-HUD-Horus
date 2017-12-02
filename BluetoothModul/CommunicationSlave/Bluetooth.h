@@ -6,13 +6,15 @@ int endDelay = 100;
 #define SERIAL_TWO    1
 #define SERIAL_THREE  2
 
+//define to enable Serial Debug
+#define SERIAL_DEBUG
+
 class Bluetooth{
 private:
   //varaibles
-  bool Serial0 = true;//Error merssages over Serial 0
   char TestConnection = 1;//value to test if the other end of the line is the one we want to talk to
   int AnalogTreshhold = 500;//value which would be called high to detect if the BT-Modul is connected to anythyng
-  int ComTreshold = 100;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
+  int ComTreshold = 1000;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
   int ModuloWait = 100000;//a kind of delay
 
   bool MASTER = false;//safes if the device is the master of the communication
@@ -68,9 +70,11 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   pinMode(error_pin,OUTPUT);
   digitalWrite(error_pin,LOW);
 
-  //Start Serialport 0 for Error Messages
-  Serial.begin(9600);
-  Serial.println("Waiting for connection");
+  #ifdef SERIAL_DEBUG
+    //Start Serialport 0 for Error Messages
+    if(!Serial) Serial.begin(9600);
+    Serial.println("Waiting for connection");
+  #endif
   //wait until a connection has beend established
   if(statePin >= 0)
   {
@@ -78,14 +82,18 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
     {
       if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
       {
-        Serial.println("Still struggles with connection");
+        #ifdef SERIAL_DEBUG
+          Serial.println("Still struggles with connection");
+        #endif
       }
       counter++;
     }
   }
   counter = 0;
   //Start and test the connection
-  Serial.println("Test the connection");
+  #ifdef SERIAL_DEBUG
+    Serial.println("Test the connection");
+  #endif
   SerialPort[Port]->begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
 
   //unshared init
@@ -117,21 +125,24 @@ void Bluetooth::MasterSetup(){
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
-      if(Serial0){
+      #ifdef SERIAL_DEBUG
         Serial.println("Still waiting for answer struggles with connection ");
         Serial.println("Resending teset");
-      }
+      #endif
       SerialPort[Port]->write(TestConnection);
     }
     counter++;
   }
-  //Serial.println(SerialPort[Port]->read());
   if(SerialPort[Port]->read()!=TestConnection)
   {
     digitalWrite(error_pin,HIGH);
-    if(Serial0) Serial.println("Test failed");
+    #ifdef SERIAL_DEBUG
+      Serial.println("Test failed");
+    #endif
   }
-  if(Serial0) Serial.println("Starting loop");
+  #ifdef SERIAL_DEBUG
+    Serial.println("Starting loop");
+  #endif
 }
 void Bluetooth::SlaveSetup() {
   //variables
@@ -141,20 +152,26 @@ void Bluetooth::SlaveSetup() {
   {
     if(counter%ModuloWait==0)//every ModuloWait times it sends a mmesage that it still struggles to connect
     {
-      Serial.println("Still waiting for request struggles with connection ");
+      #ifdef SERIAL_DEBUG
+        Serial.println("Still waiting for request struggles with connection ");
+      #endif
     }
     counter++;
   }
   if(SerialPort[Port]->read()!=TestConnection)
   {
     digitalWrite(error_pin,HIGH);
-    Serial.println("Test failed");
+    #ifdef SERIAL_DEBUG
+      Serial.println("Test failed");
+    #endif
   }
   else
   {
     SerialPort[Port]->write(TestConnection);
   }
-  Serial.println("Starting loop");
+  #ifdef SERIAL_DEBUG
+    Serial.println("Starting loop");
+  #endif
 }
 
 int Bluetooth::getRead(int pos) {
@@ -182,52 +199,27 @@ void Bluetooth::write(){
     }
     ToWrite.remove(ToWrite.length()-1);
     ToWrite+=";";
-    SerialPort[Port]->println(ToWrite);
+    SerialPort[Port]->print(ToWrite);
     changed = false;
+    #ifdef SERIAL_DEBUG
+      Serial.println(ToWrite);
+    #endif
   }
 }
-void Bluetooth::read() {
+void Bluetooth::read() {//may be need to add a real read to remove the ;
     if(SerialPort[Port]->available())
     {
-        int counter = 0;
-        String integer;
-        ToReadSTRING = "";
-        while(true)
-        {
-            if(SerialPort[Port]->available())
-            {
-                char character = SerialPort[Port]->read();
-                ToReadSTRING+=character;
-                if(character==';') break;
-            }
-            else
-            {
-              WaitingTimeCountTwo++;
-              if(WaitingTimeCountTwo==ComTreshold)
-              {
-                if (Serial0)
-                {
-                  Serial.println("Communication timed out waitet to long");
-                }
-                WaitingTimeCountTwo = 0;
-                return;
-              }
-            }
-        }
-        for(int i = 0;i<ToReadSTRING.length();i++)
-        {
-            if(ToReadSTRING[i]==','||ToReadSTRING[i]==';')
-            {
-                readArray[counter]=integer.toInt();
-                counter++;
-                integer.remove(0);
-            }
-            else
-            {
-                integer+=ToReadSTRING[i];
-            }
-            if (ToReadSTRING[i]==';') break;
-        }
+      for(int i = 0; i < ValCount;i++)
+      {
+        readArray[i]=SerialPort[Port]->parseInt();
+        #ifdef SERIAL_DEBUG
+          Serial.print("Read array position: ");
+          Serial.print(i);
+          Serial.print(" value: ");
+          Serial.println(readArray[i]);
+        #endif
+        if(SerialPort[Port]->peek()==';') break;
+      }
     }
 }
 void Bluetooth::update(){
@@ -249,10 +241,9 @@ void Bluetooth::update(){
             readArray[ValCount-1] = 1;
             changed = true;
             WaitingTimeCount = 0;
-            if (Serial0)
-            {
+            #ifdef SERIAL_DEBUG
               Serial.println("Communication timed out refused answear");
-            }
+            #endif
           }
         }
     }
