@@ -32,6 +32,7 @@ void setup() {
 
   //Pins
   pinMode(Lampe,OUTPUT);
+  pinMode(12,OUTPUT);
 
 
 }
@@ -63,5 +64,6 @@ void loop() {
   {
     digitalWrite(Lampe,LOW);
   }
+
   delay(endDelay);
 }

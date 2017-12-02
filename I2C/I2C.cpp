@@ -1,10 +1,13 @@
 #include "I2C.h"
 
-I2C::I2C(DaTa* DaTaToGo, HeadGUI* NotSoInsaneUSer)
+#include <iostream>
+
+I2C::I2C(DaTa* DaTaToGo/*, HeadGUI* NotSoInsaneUSer*/)
 {
     MyLittleData = DaTaToGo;
-    InsaneUser = NotSoInsaneUSer;
+    //InsaneUser = NotSoInsaneUSer;
     fd = wiringPiI2CSetup(ADDR);
+    pinMode(29,INPUT);
     SinkThread = new std::thread(&I2C::ReadLoop,this);
 }
 I2C::~I2C()
@@ -21,9 +24,14 @@ void I2C::ReadLoop()
             int temp = wiringPiI2CReadReg16(fd, i);
             if(i==KNOBS && MyLittleData->getRawDaTa(i)!=temp)
             {
-                InsaneUser->newDataFromArduino();
+                MyLittleData->setDaTa(temp,i);
+                //InsaneUser->newDataFromArduino();
             }
-            MyLittleData->setDaTa(temp,i);
+            else
+            {
+              MyLittleData->setDaTa(temp,i);
+            }
+            usleep(50000);
         }
         if(MyLittleData->WriteOrDontWrite())
         {
