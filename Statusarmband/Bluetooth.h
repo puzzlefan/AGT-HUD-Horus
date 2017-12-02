@@ -14,7 +14,7 @@ private:
   //varaibles
   char TestConnection = 1;//value to test if the other end of the line is the one we want to talk to
   int AnalogTreshhold = 500;//value which would be called high to detect if the BT-Modul is connected to anythyng
-  int ComTreshold = 1000;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
+  int ComTreshold = 25;//times whre the Master has not recived an answer from client (may be a litle bit low for generell use, but in our case the slave is pretty lazy)
   int ModuloWait = 100000;//a kind of delay
 
   bool MASTER = false;//safes if the device is the master of the communication
@@ -101,11 +101,11 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   {
     changed = true;
     readArray[ValCount-1]=1;//starts the snowball game with the Master
-    MasterSetup();
+    //MasterSetup();
   }
   else
   {
-    SlaveSetup();
+    //SlaveSetup();
   }
 }
 Bluetooth::~Bluetooth()

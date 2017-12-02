@@ -9,7 +9,7 @@
 #define VALUE_COUNT_FOOT  2
 #define VALUE_COUNT_ARM   1
 
-Bluetooth /**MasterFoot,*/ *MasterArm;
+Bluetooth *MasterFoot, *MasterArm;
 
 //pins
 int Lampe = 13;
@@ -18,7 +18,8 @@ void setup() {
   //Anables Serial Communication for debugging
   Serial.begin(9600);
   //BT
-  //MasterFoot = new Bluetooth(true, ERROR_PIN, STATE_FOOT, SERIAL_ONE, VALUE_COUNT_FOOT);
+  MasterFoot = new Bluetooth(true, ERROR_PIN, STATE_FOOT, SERIAL_ONE, VALUE_COUNT_FOOT);
+  delay(endDelay);
   MasterArm = new Bluetooth(true, ERROR_PIN, STATE_ARM, SERIAL_TWO, VALUE_COUNT_ARM);
   //I2C
   //initialize i2c as slave
@@ -46,15 +47,13 @@ void setup() {
 */
 
 void loop() {
-  //Serial.println("here we are");
-  //MasterFoot->update();
+  MasterFoot->update();
   MasterArm->update();
-  //Serial.println("and here not");
 
   Register[0] = MasterArm->getRead(0);//gets factor of button primes
-  //Register[1] = MasterFoot->getRead(1);//gets temp of foot multiplaid by 100 so we dont luse the digits after , directly
+  Register[1] = MasterFoot->getRead(1);//gets temp of foot multiplaid by 100 so we dont luse the digits after , directly
   Register[2] = random(0,255);//simulates hear read out of Tempreture
-  //Register[3] = MasterFoot->getRead(0);//gets ppm foot
+  Register[3] = MasterFoot->getRead(0);//gets ppm foot
   Register[4] = random(0,255);//simulates hear read out of ppm
   if(Register[5]==1)
   {

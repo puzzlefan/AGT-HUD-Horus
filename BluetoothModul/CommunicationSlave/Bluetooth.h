@@ -101,11 +101,11 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   {
     changed = true;
     readArray[ValCount-1]=1;//starts the snowball game with the Master
-    MasterSetup();
+    //MasterSetup();
   }
   else
   {
-    SlaveSetup();
+    //SlaveSetup();
   }
 }
 Bluetooth::~Bluetooth()
