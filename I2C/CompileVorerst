@@ -1,4 +1,5 @@
 #!/bin/bash
 #compile command für server bis make file
 
+#g++ main.cpp Serial.cpp DaTa/DaTa.cpp -o main -pthread -std=c++0x -g -lwiringPi
 g++ main.cpp I2C.cpp DaTa/DaTa.cpp -o main -pthread -std=c++0x -g -lwiringPi

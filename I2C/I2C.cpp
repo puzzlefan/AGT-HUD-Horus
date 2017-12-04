@@ -31,7 +31,7 @@ void I2C::ReadLoop()
             {
               MyLittleData->setDaTa(temp,i);
             }
-            usleep(50000);
+            usleep(20000);
         }
         if(MyLittleData->WriteOrDontWrite())
         {
