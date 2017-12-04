@@ -7,7 +7,6 @@ I2C::I2C(DaTa* DaTaToGo/*, HeadGUI* NotSoInsaneUSer*/)
     MyLittleData = DaTaToGo;
     //InsaneUser = NotSoInsaneUSer;
     fd = wiringPiI2CSetup(ADDR);
-    pinMode(29,INPUT);
     SinkThread = new std::thread(&I2C::ReadLoop,this);
 }
 I2C::~I2C()
