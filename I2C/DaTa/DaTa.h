@@ -33,8 +33,8 @@ public:
     static const int FarewellAmount = 1;//amount of stuff to send
     static const int ButtonAmount = 6;//amount of buttons
 
-    DaTa();
-    ~DaTa();
+    DaTa();//Constructer
+    ~DaTa();//Deconstructor
 
     int getRawDaTa(int pos);//returns actual RawData
     int getWriteDaTa(int pos);//retunrs the Data to write
@@ -44,26 +44,21 @@ public:
     void setDaTa(int val, int pos);//gets RawDaTa from I2C thread
     void setSendData(int val, int pos);//gets the Data to send
 private:
-    int knob_up_prim        =  2;
-    int knob_down_prim      =  3;
-    int knob_right_prim     =  5;
-    int knob_left_prim      =  7;
-    int knob_back_prim      = 11;
-    int knob_certify_prim   = 13;
-    int Primfactors[ButtonAmount] = {knob_up_prim, knob_down_prim, knob_right_prim, knob_left_prim, knob_back_prim, knob_certify_prim};
+    //Array to calculate the bools for the buttons back
+    int Primfactors[ButtonAmount] = {KNOB_UP_PRIM, KNOB_DOWN_PRIM, KNOB_RIGHT_PRIM, KNOB_LEFT_PRIM, KNOB_BACK_PRIM, KNOB_CERTIFY_PRIM};
 
 
     int RawDaTa[DaTaAmount]; //the raw stuff
     bool Buttons[ButtonAmount]; //processesd Buttons
 
-    int Farewell[FarewellAmount];
+    int Farewell[FarewellAmount];//DaTa to send
 
     bool SomeonePushedThatButton = false;//Stores if button state has chnaged unrecocnised
     bool SomeoneToSayGodbyTo = false; //Stores if there is Data to be send
 
     void boolise();//function to calc prim product back to bool
 
-    std::mutex DaTaa;
+    std::mutex DaTaa;//mutex for secure multithreading 
 };
 
 
