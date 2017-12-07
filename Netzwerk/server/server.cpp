@@ -59,6 +59,7 @@ void Server::ServerMainThread()
 		SocketLengths.push_back(sizeof(ClientAddresses[count]));//get the size of the stored address
 		ClientFd.push_back(accept(sockfd, (struct sockaddr *) &ClientAddresses[count], &SocketLengths[count]));//taking a connection and extract it, store fd in vector
 		user* tuess = new user();
+		tuess->fill();
 		(*mine).push_back(*tuess);
 	 	if (ClientFd[count] < 0)//wenn error nix neu thread
 	 	{
@@ -73,13 +74,32 @@ void Server::ServerMainThread()
 
 void Server::ServerPrivateThread(int counti)
 {
+
+	//
+	// !!!TEST!!!
+	//
+	(*mine)[counti].setBools(2,0);
+	//
+	//
+	//
 	int fall = 0;
 	int command = 0;
 	int Position;
 	char Bool, Char;
 	char Integer[4];
+	char MLength[] = {0,0,0,0};
 	bool Continue = true;
 	while (true) {
+		//
+		//	!!! TEST
+		//
+		if((*mine)[counti].getBool(2)){
+			(*mine)[counti].setBools(2,0);
+			(*mine)[counti].setMessage("Server");
+		}
+		//
+		//
+		//
 		switch (fall) {
 			case 0:	read(ClientFd[counti],&command,1);
 							fall = command;
@@ -128,16 +148,14 @@ void Server::ServerPrivateThread(int counti)
 												} while(true);
 												break;
 									case 103: 	(*mine)[counti].recieveMessage("");
-					                    char MLength[4];
-					                    read(sockfd,&MLength[0],4);
-					                    int RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
-															RecivingLength++;
-					                    char MessagE [RecivingLength];
-					                    read(sockfd,&MessagE,RecivingLength);
-					                    std::string mESSAGe(MessagE,RecivingLength);
-															(*mine)[counti].recieveMessage(mESSAGe);
-															RecivingLength--;
-					                    break;
+					                    		read(ClientFd[counti],&MLength,4);
+					                    		int RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
+					                    		char MessagE [RecivingLength];
+					                    		read(ClientFd[counti],&MessagE,RecivingLength);
+					                    		std::string mESSAGe(MessagE,RecivingLength);
+																	(*mine)[counti].recieveMessage(mESSAGe);
+																	RecivingLength--;
+					                    		break;
 								}
 							}
 							Continue=true;
@@ -147,30 +165,32 @@ void Server::ServerPrivateThread(int counti)
 							#endif
 							break;
 			case 2:	command = 200;
-					write(ClientFd[counti],&command,1);
-					char chaInt[4];
-					for (int i = 0; i < (*mine)[counti].getIntegerCount() ; i++)
-					{
-						if ((*mine)[counti].getIntegersChanged(i)) {
-							write(ClientFd[counti],&i,1);
-							IntChar((*mine)[counti].transmitInt(i), chaInt);
-							write(ClientFd[counti], chaInt, 4);
-						}
-					}
-					command = 253;
-					write(ClientFd[counti],&command,1);
-					command = 201;
-				    write(ClientFd[counti], &command, CommandLength);//send to sockfd command 102 with length 1
-				    for (int i = 0; i < (*mine)[counti].getBoolCount(); i++)
-				    {
-				    	if ((*mine)[counti].getBoolChanged(i)) {
-				     		write(ClientFd[counti],&i,1);
-				         	char asdf = (*mine)[counti].transmitBool(i);
-				         	write(ClientFd[counti], &asdf, 1);
-						}
-				    }
-				    command = 253;
-			     	write(ClientFd[counti],&command,1);
+							write(ClientFd[counti],&command,1);
+							char chaInt[4];
+							for (int i = 0; i < (*mine)[counti].getIntegerCount() ; i++)
+							{
+								if ((*mine)[counti].getIntegersChanged(i)) {
+									write(ClientFd[counti],&i,1);
+									IntChar((*mine)[counti].transmitInt(i), chaInt);
+									write(ClientFd[counti], chaInt, 4);
+								}
+							}
+							command = 253;
+							write(ClientFd[counti],&command,1);
+
+							command = 201;
+				    	write(ClientFd[counti], &command, CommandLength);//send to sockfd command 102 with length 1
+				    	for (int i = 0; i < (*mine)[counti].getBoolCount(); i++)
+				    	{
+				    		if ((*mine)[counti].getBoolChanged(i)) {
+				     			write(ClientFd[counti],&i,1);
+				         		char asdf = (*mine)[counti].transmitBool(i);
+				         		write(ClientFd[counti], &asdf, 1);
+									}
+				    	}
+				    	command = 253;
+			     		write(ClientFd[counti],&command,1);
+/*
 					if((*mine)[counti].getMessageChanged())
 					{
 						command = 202;
@@ -181,20 +201,22 @@ void Server::ServerPrivateThread(int counti)
 									write(ClientFd[counti], &a, 1);
 		      			}
 					}
-					if((*mine)[counti].getMessageChanged())
-		      {
-		      	command = 202;
-		        write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
-		        //sent itnt for length
-		        char charMessageLength[4];
-		        IntChar((*mine)[counti].getMessageLength()+1,charMessageLength);
-		        write(sockfd, charMessageLength, 4);
-		        write(sockfd, (*mine)[counti].transmitMessage().c_str(), (*mine)[counti].getMessageLength()+1);
-		      }
-					command = 003;
-					write(ClientFd[counti], &command, 1);
+*/
+						if((*mine)[counti].getMessageChanged())
+		      	{
+		      		command = 202;
+		        	write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
+		        	//sent itnt for length
+		        	char charMessageLength[4] = {0,0,0,0};
+		        	IntChar((*mine)[counti].getMessageLength()+1,charMessageLength);
+		        	write(ClientFd[counti], charMessageLength, 4);
+		        	write(ClientFd[counti], (*mine)[counti].transmitMessage().c_str(), (*mine)[counti].getMessageLength()+1);
+		      	}
+
+						command = 003;
+						write(ClientFd[counti], &command, 1);
 			  		fall=0;
-					break;
+						break;
 			default: std::cout << "something went wrong" << '\n';
 		}
 	}

@@ -38,7 +38,7 @@ void user::fill()
   }
   for(int i = 0; i < boolCount;i++)
   {
-    setBools(i,1);//i%2;
+    setBools(i,0);//i%2;
   }
   message = "abc";
   for(int i = 0; i<= 19200 * 2;i++){

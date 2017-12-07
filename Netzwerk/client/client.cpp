@@ -93,14 +93,14 @@ void Client::communicator()
                                 } while(true);
                                 break;
                     case 202:   mine->recieveMessage("");
-                                char MLength[4];
+                                char MLength[4] = {0,0,0,0};
                                 read(sockfd,&MLength,4);
                                 RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
                                 char MessagE [RecivingLength];
                                 //for (int i = 0; i < mine->getMessageLength(); i++)
                                 //{
                                 read(sockfd,&MessagE,RecivingLength);
-                                std::string mESSAGe(MessagE,RecivingLength-1);
+                                std::string mESSAGe(MessagE,RecivingLength);
                                 mine->recieveMessage(mESSAGe);
                                 //}
                                 break;

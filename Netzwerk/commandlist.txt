@@ -21,7 +21,3 @@ when no command preceded the recived bytes the byte count = 0
 253 = end of actual transmission
 254 = error
 255 = response to error to reestablish link
-
--to add
-  - lost connection check
-  - ensure ID is set before Client starts

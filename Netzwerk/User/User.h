@@ -19,6 +19,8 @@
 #define RECENT_CO_FOOT          4
 #define LEAST_SIGNIFICANT_PIXEL 5
 #define MOST_SIGNIFICANT_PIXEL  6
+#define NEW_MESSAGE             7
+#define ANSWER                  8
 
 //Includes which are needet for the user Class
 #include <string>
@@ -33,8 +35,8 @@ private:
   // constant values
   //
 
-  static const int integerCount = 7;//length of integer Array
-  static const int boolCount = 8;//Length of bool Array
+  static const int integerCount = 8;//length of integer Array
+  static const int boolCount = 8/*von client zurück*/ + 1;//Length of bool Array
   static const int BITBildSize = 39360;//IS HARDCODED; BECAUASE OF TIME. SO CHANGE IT IF THE RESOLUTION CHANGES
   //static const int messageLength = 140;//because why not could get dynamic
 
