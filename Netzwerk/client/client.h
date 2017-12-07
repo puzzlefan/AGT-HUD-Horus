@@ -15,9 +15,7 @@
 #include "../User/User.h"
 #include <sys/time.h>//macht zeit
 #include <sys/select.h>
-#include "../../personalGUI/headgui.h"
-#include <QApplication>
-
+#include "client.h"
 
 class Client
 {
@@ -30,10 +28,8 @@ private://the ip adress of the server stands in the cpp fron the client because 
   std::thread *ClientThread;
 
   user *mine;
-
-  HeadGUI *InsaneUser;
 public:
-  Client(user *point, HeadGUI *NotSoInsaneUSer);
+  Client(user *point);
   ~Client();
 
   void communicator();

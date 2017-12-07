@@ -17,11 +17,7 @@ int main(void)
 	Server ItsMe(&v);
 	while (true)
 	{
-		//if(a.getBool(0))
-		//{
-		//	std::cout << a.message << '\n';
-		//	a.setBools(false,0);
-		//}
+		//abc
 	}
 	return 0;
 }
