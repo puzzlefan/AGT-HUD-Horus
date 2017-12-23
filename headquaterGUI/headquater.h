@@ -68,8 +68,8 @@ public:
 
     //for IRPicture
     QLabel *IRPicture;
-    QVector<unsigned short> rawData;
-    QImage rgbImage;
+    QVector<unsigned short> *rawData;
+    QImage *rgbImage;
 
     int ImageWidth = 320;
     int ImageHeight = 240;

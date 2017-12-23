@@ -14,9 +14,10 @@
 #include <sys/select.h>
 #include "client.h"
 
-Client::Client(user *point)
+Client::Client(user *point , HeadGUI *PointerHeadGUI)
 {
   mine = point;
+  GUI = PointerHeadGUI;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
   if (sockfd<0) {
     std::cout << "error opening socket" << '\n';
@@ -29,7 +30,8 @@ Client::Client(user *point)
 
   if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
   {
-        std::cout<<"ERROR connecting"<<"\n";
+        std::cout<<"ERROR connecting Netzwerk client"<<"\n";
+        return;
   }
 
   ClientThread = new std::thread(&Client::communicator,this);
@@ -67,7 +69,7 @@ void Client::communicator()
                 {
                     read(sockfd, &command, CommandLength);
                     switch (command) {
-                    default : std::cout << "something went horrible wrong through out reading" << '\n';
+                    default : //std::cout << "something went horrible wrong through out reading" << '\n';
                                 break;
                     case 3:     break;
                     case 200:   do
@@ -108,6 +110,7 @@ void Client::communicator()
                   }
                 } while(command!=003);
                 fall = 001;
+                GUI->newDataFromHeadquater();
                 break;
 
       case 3:   command = 003;
@@ -189,7 +192,7 @@ void Client::communicator()
                 fall = 003;
                 break;
 
-      default:  std::cout << "something wemt horrebly wrong" << '\n';
+      default:  //std::cout << "something wemt horrebly wrong" << '\n';
                 break;
     }
   }

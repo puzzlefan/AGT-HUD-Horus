@@ -17,7 +17,7 @@
 
 HeadGUI::HeadGUI(user *recentUser, DaTa *recentData, QWidget *parent)
     : QMainWindow(parent)
-{
+  {
     mainWidget = new QWidget;
     layout = new QGridLayout;
 
@@ -71,8 +71,7 @@ void HeadGUI::createBiometric()
     std::cout <<" created Biometric"<<std::endl;
 }
 
-void HeadGUI::createIRPicture()//: rawData(LeptonThread::FrameWords),
-    //rgbImage(LeptonThread::FrameWidth, LeptonThread::FrameHeight, QImage::Format_RGB888)
+void HeadGUI::createIRPicture()
 {
     IRPicture = new QLabel;
     layout->addWidget(IRPicture, 0, 0, 3, 2, Qt::AlignCenter);
@@ -84,7 +83,7 @@ void HeadGUI::createIRPicture()//: rawData(LeptonThread::FrameWords),
 
     thread = new LeptonThread();
     connect(thread, SIGNAL(updateImage(unsigned short *,int,int)), this, SLOT(updateImage(unsigned short *, int,int)));
-
+    std::cout <<"conected to Camera"<<std::endl;
     thread->start();
 }
 
@@ -93,6 +92,9 @@ const int colormap[] = {255, 255, 255, 253, 253, 253, 251, 251, 251, 249, 249, 2
 
 void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue)
 {
+    QImage rgbImage = QImage(FrameWidth,FrameHeight,QImage::Format_RGB888);
+    QVector<unsigned short> rawData = QVector<unsigned short> (FrameWords);
+
    // Record the raw data and min/max values
     memcpy(&rawData[0], data, 2*LeptonThread::FrameWords);//memcpy(wohin gespeichert,woher daten, Nummer der Bytes die kopiert werden)
     rawMin = minValue;
@@ -158,13 +160,14 @@ void HeadGUI::sortingNewDataFromHeadquater()
     if(networkUser->getBool(NEW_MESSAGE) == true)
     {
         networkUser->setBools(NEW_MESSAGE,false);
-        emit messageRecivedSignal(QString::fromStdString(networkUser->message));
+        QString newMessage = QString::fromStdString(networkUser->getMessage());
+        emit messageRecivedSignal(newMessage);
     }
 }
 
 void HeadGUI::sortingNewDataFromArduino()
 {
-    emit updateBraceletSignal(sensorData->getButton(KNOB_UP), sensorData->getButton(KNOB_DOWN), sensorData->getButton(KNOB_RIGHT), sensorData->getButton(KNOB_LEFT), sensorData->getButton(KNOB_BACK), sensorData->getButton(KNOB_CERTIFYSSS));
+    emit updateBraceletSignal(sensorData->getButton(KNOB_UP), sensorData->getButton(KNOB_DOWN), sensorData->getButton(KNOB_RIGHT), sensorData->getButton(KNOB_LEFT), sensorData->getButton(KNOB_BACK), sensorData->getButton(KNOB_CERTIFY));
 }
 
 void HeadGUI::readingSensors()

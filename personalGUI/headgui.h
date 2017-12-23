@@ -8,6 +8,7 @@
 #include <QGridLayout>
 #include <QResizeEvent>
 #include <QTimer>
+#include <QPixmap>
 
 #include <../Lepton/LeptonThread.h>
 #include <../Netzwerk/User/User.h>
@@ -18,6 +19,7 @@ class QPixmap;
 class QGridLayout;
 
 class HeadGUI : public QMainWindow
+
 {
     Q_OBJECT
 
@@ -135,8 +137,8 @@ private:
     void createIRPicture();
 
     QLabel *IRPicture;
-    QImage rgbImage;
-    QVector<unsigned short> rawData;
+    QImage *rgbImage;
+    QVector<unsigned short> *rawData;
     LeptonThread *thread;
 
     int ImageWidth = 320;

@@ -15,6 +15,7 @@
 #include "../User/User.h"
 #include <sys/time.h>//macht zeit
 #include <sys/select.h>
+#include "../../personalGUI/headgui.h"
 #include "client.h"
 
 class Client
@@ -28,8 +29,9 @@ private://the ip adress of the server stands in the cpp fron the client because 
   std::thread *ClientThread;
 
   user *mine;
+  HeadGUI *GUI;
 public:
-  Client(user *point);
+  Client(user *point, HeadGUI *PointerHeadGUI);
   ~Client();
 
   void communicator();
