@@ -142,10 +142,10 @@ void HeadGUI::createConnections()
     connect(this,SIGNAL(updateCOFootSignal(int)),this,SLOT(updateCOFoot(int)));
 
     connect(this,SIGNAL(changingLightSignal()),this,SLOT(changingLight()));
-    connect(this,SIGNAL(messageRecivedSignal(QString)),this,SLOT(messageRecived(QString)),Qt::DirectConnection);
+    connect(this,SIGNAL(messageRecivedSignal(QString)),this,SLOT(messageRecived(QString)));
 
-    connect(this,SIGNAL(newDataFromArduinoSignal()),this,SLOT(sortingNewDataFromArduino()),Qt::BlockingQueuedConnection);
-    connect(this,SIGNAL(newDataFromHeadquaterSignal()),this,SLOT(sortingDataFromHeadquater()),Qt::BlockingQueuedConnection);
+    connect(this,SIGNAL(newDataFromArduinoSignal()),this,SLOT(sortingNewDataFromArduino()));
+    connect(this,SIGNAL(newDataFromHeadquaterSignal()),this,SLOT(sortingNewDataFromHeadquater()));
     connect(this,SIGNAL(newValuesForHeadquater()),this,SLOT(sortingValuesForHeadquater()));
 }
 
@@ -162,7 +162,7 @@ void HeadGUI::newDataFromArduino()
 void HeadGUI::sortingNewDataFromHeadquater()
 {
     if(networkUser->getBool(NEW_MESSAGE) == true)
-    {
+    {std::cout<<"new Message at Person"<<std::endl;
         networkUser->setBools(NEW_MESSAGE,false);
         QString newMessage = QString::fromStdString(networkUser->getMessage());
         emit messageRecivedSignal(newMessage);
@@ -521,6 +521,8 @@ void HeadGUI::sortingValuesForHeadquater()
 void HeadGUI::messageRecived(QString sendMessage)
 {
     recivedMessage = sendMessage;
+    Messages->setText(recivedMessage);
+
     answerPossible = true;
 }
 

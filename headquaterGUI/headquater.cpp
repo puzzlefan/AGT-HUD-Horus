@@ -50,18 +50,18 @@ headquater::headquater(std::vector<user>*Informations, QWidget *parent)
 
 void headquater::createConnections()
 {
-    connect(this,SIGNAL(newConfirmedIDSignal(int,int)),this,SLOT(newConfirmedID(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(newConfirmedIDSignal(int,int)),this,SLOT(newConfirmedID(int,int)));
 
-    connect(this,SIGNAL(updatedImageSignal(int,unsigned char*)),this,SLOT(updatedImage(int,unsigned char*)),Qt::DirectConnection);
-    connect(this,SIGNAL(updatedStatusSignal(int,int)),this,SLOT(updatedStatus(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(updatedImageSignal(int,unsigned char*)),this,SLOT(updatedImage(int,unsigned char*)));
+    connect(this,SIGNAL(updatedStatusSignal(int,int)),this,SLOT(updatedStatus(int,int)));
 
-    connect(this,SIGNAL(updatedTempHeadSignal(int,int)),this,SLOT(updatedTempHead(int,int)),Qt::DirectConnection);
-    connect(this,SIGNAL(updatedTempFootSignal(int,int)),this, SLOT(updatedTempFoot(int,int)),Qt::DirectConnection);
-    connect(this,SIGNAL(updatedCOHeadSignal(int,int)),this,SLOT(updatedCOHead(int,int)),Qt::DirectConnection);
-    connect(this,SIGNAL(updatedCOFootSignal(int,int)),this,SLOT(updatedCOFoot(int,int)),Qt::DirectConnection);
-    connect(this,SIGNAL(answerdMessageSignal(int,int)),this,SLOT(answerdMessage(int,int)),Qt::DirectConnection);
+    connect(this,SIGNAL(updatedTempHeadSignal(int,int)),this,SLOT(updatedTempHead(int,int)));
+    connect(this,SIGNAL(updatedTempFootSignal(int,int)),this, SLOT(updatedTempFoot(int,int)));
+    connect(this,SIGNAL(updatedCOHeadSignal(int,int)),this,SLOT(updatedCOHead(int,int)));
+    connect(this,SIGNAL(updatedCOFootSignal(int,int)),this,SLOT(updatedCOFoot(int,int)));
+    connect(this,SIGNAL(answerdMessageSignal(int,int)),this,SLOT(answerdMessage(int,int)));
 
-    connect(this,SIGNAL(newDataSignal(int)),this,SLOT(sortingData(int)),Qt::BlockingQueuedConnection);
+    connect(this,SIGNAL(newDataSignal(int)),this,SLOT(sortingData(int)));
     connect(Tabs,SIGNAL(currentChanged(int)),this,SLOT(newTopTab(int)));
 }
 

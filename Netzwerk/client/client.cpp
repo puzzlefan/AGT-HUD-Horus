@@ -25,7 +25,8 @@ Client::Client(user *point , HeadGUI *PointerHeadGUI)
 
   bzero((char *) &serv_addr, sizeof(serv_addr));//making endpoint socket identifaier ready
   serv_addr.sin_family = AF_INET;//ist im internet
-  inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
+  inet_pton(AF_INET, "192.168.2.50", &(serv_addr.sin_addr));
+  //inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
   serv_addr.sin_port = htons(portno);
 
   if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)

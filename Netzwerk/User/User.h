@@ -37,7 +37,7 @@ private:
 
   static const int integerCount = 8;//length of integer Array
   static const int boolCount = 8/*von client zurück*/ + 1;//Length of bool Array
-  static const int BITBildSize = 39360;//IS HARDCODED; BECAUASE OF TIME. SO CHANGE IT IF THE RESOLUTION CHANGES
+  static const int BITBildSize = 39360;//PacketWords(82 80 Pixel + 2 Header wörter)*2(Wörter sind 2 übertragende Byes) * 120(Anzahl Zeilen) * 2(zwei Segmente pro Zeile)//IS HARDCODED; BECAUASE OF TIME. SO CHANGE IT IF THE RESOLUTION CHANGES
   //static const int messageLength = 140;//because why not could get dynamic
 
   //
