@@ -30,13 +30,14 @@ static const uint qt_meta_data_Person[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-       7,   35,   35,   35, 0x0a,
+       7,   35,   40,   40, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Person[] = {
-    "Person\0updateImage(unsigned char*)\0\0"
+    "Person\0updateImage(unsigned char*)\0"
+    "data\0\0"
 };
 
 void Person::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -123,8 +124,8 @@ static const uint qt_meta_data_headquater[] = {
      499,  275,   53,   53, 0x08,
      523,   53,   53,   53, 0x08,
      540,  555,   53,   53, 0x08,
-     561,  324,   53,   53, 0x08,
-     594,  347,   53,   53, 0x08,
+     561,  594,   53,   53, 0x08,
+     604,  347,   53,   53, 0x08,
 
        0        // eod
 };
@@ -146,7 +147,7 @@ static const char qt_meta_stringdata_headquater[] = {
     "answerdMessage(int,int)\0sendNewMessage()\0"
     "newTopTab(int)\0index\0"
     "updatedImage(int,unsigned char*)\0"
-    "sortingData(int)\0"
+    "ID,result\0sortingData(int)\0"
 };
 
 void headquater::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

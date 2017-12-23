@@ -30,14 +30,15 @@ static const uint qt_meta_data_LeptonThread[] = {
        1,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      13,   50,   53,   53, 0x05,
+      13,   65,   69,   69, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_LeptonThread[] = {
-    "LeptonThread\0updateImage(unsigned short*,int,int)\0"
-    ",,\0\0"
+    "LeptonThread\0"
+    "updateImage(unsigned short*,int,int,unsigned char*)\0"
+    ",,,\0\0"
 };
 
 void LeptonThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -46,7 +47,7 @@ void LeptonThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         Q_ASSERT(staticMetaObject.cast(_o));
         LeptonThread *_t = static_cast<LeptonThread *>(_o);
         switch (_id) {
-        case 0: _t->updateImage((*reinterpret_cast< unsigned short*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
+        case 0: _t->updateImage((*reinterpret_cast< unsigned short*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< unsigned char*(*)>(_a[4]))); break;
         default: ;
         }
     }
@@ -92,9 +93,9 @@ int LeptonThread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void LeptonThread::updateImage(unsigned short * _t1, int _t2, int _t3)
+void LeptonThread::updateImage(unsigned short * _t1, int _t2, int _t3, unsigned char * _t4)
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)), const_cast<void*>(reinterpret_cast<const void*>(&_t3)) };
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)), const_cast<void*>(reinterpret_cast<const void*>(&_t3)), const_cast<void*>(reinterpret_cast<const void*>(&_t4)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_END_MOC_NAMESPACE

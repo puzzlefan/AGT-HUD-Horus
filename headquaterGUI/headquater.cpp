@@ -139,11 +139,11 @@ void headquater::newConfirmedID(int ID, int vectorNo)
     noPersons++;
 }
 
-void headquater::updatedImage(int ID, unsigned char *data)
+void headquater::updatedImage(int ID, unsigned char *result)
 {
     if(Persons.at(ID)->index == Tabs->currentIndex())
     {
-        Persons.at(ID)->updateImage(data);
+        Persons.at(ID)->updateImage(result);
     }
 }
 
@@ -288,9 +288,11 @@ const int colormap[] = {255, 255, 255, 253, 253, 253, 251, 251, 251, 249, 249, 2
 
 void Person::updateImage(unsigned char *data)
 {
-    QVector<unsigned char> result = QVector<unsigned char> (2 * PacketBytes*FrameHeight);
     QImage rgbImage = QImage(FrameWidth,FrameHeight,QImage::Format_RGB888);
     QVector<unsigned short> rawData = QVector<unsigned short> (FrameWords);
+    QVector<unsigned char> result = QVector<unsigned char> (2 * PacketBytes*FrameHeight);
+
+    memcpy(&result[0], data, 2*FrameWords);
 
     uint16_t minValue = 65535;
     uint16_t maxValue = 0;
@@ -318,10 +320,6 @@ void Person::updateImage(unsigned char *data)
             *(out++) = value;//weist rawdata die Werte zu
         }
     }
-
-    // Record the raw data and min/max values
-    memcpy(&rawData[0], data, 2*FrameWords);//memcpy(wohin gespeichert,woher daten, Nummer der Bytes die kopiert werden)
-    rawMin = minValue; rawMax = maxValue;
 
     // Map "rawData" to rgb values in "rgbImage" via the colormap
     int diff = maxValue - minValue + 1;

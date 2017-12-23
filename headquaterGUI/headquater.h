@@ -23,7 +23,7 @@ class Person : public QWidget//%
     Q_OBJECT
 
 public slots:
-    void updateImage(unsigned char *);
+    void updateImage(unsigned char *data);
 
 public:
     Person(int ID);
@@ -127,7 +127,7 @@ private slots:
     void answerdMessage(int ID, int answer);
     void sendNewMessage();
     void newTopTab(int index);
-    void updatedImage(int ID,unsigned char *);
+    void updatedImage(int ID,unsigned char *result);
     void sortingData(int vectorNo);
 
 private:

@@ -34,6 +34,9 @@ Client::Client(user *point , HeadGUI *PointerHeadGUI)
         return;
   }
 
+  mine->setID(1);
+  mine->setBools(NEW_CONFIRMED_ID,true);
+
   ClientThread = new std::thread(&Client::communicator,this);
 }
 
@@ -180,6 +183,7 @@ void Client::communicator()
                     char ToWrite = mine->transmitBITBild(i);
                     write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
                 }
+                mine->setBools(UPDATE_IMAGE_SIGNAL,true);
                 fall = 003;
                 break;
                 //OLD

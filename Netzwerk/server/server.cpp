@@ -85,6 +85,7 @@ void Server::ServerPrivateThread(int counti)
 	int fall = 0;
 	int command = 0;
 	int Position;
+	//unsigned char bILD[BITBildSize];
 	char Bool, Char;
 	char Integer[4];
 	char MLength[] = {0,0,0,0};
@@ -140,10 +141,9 @@ void Server::ServerPrivateThread(int counti)
 												break;
 									case 104:	for(int i = 0;i < (*mine)[counti].getBITBildSize(); i++)
 												{
-													read(ClientFd[counti], &Char,1);
+													read(ClientFd[counti], &Char,1);//&bILD,BITBildSize);
 													(*mine)[counti].recieveBITBild(Char,i);
-												} while(true);
-												(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL,true);
+												}
 												break;
 												//OLD
 												/*

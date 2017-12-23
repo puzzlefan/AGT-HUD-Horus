@@ -71,7 +71,7 @@ public:
     void run();
 
 signals:
-    void updateImage(unsigned short *, int, int);
+    void updateImage(unsigned short *, int, int, unsigned char*);
 };
 
 #endif

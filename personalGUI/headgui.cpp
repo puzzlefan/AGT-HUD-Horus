@@ -82,7 +82,7 @@ void HeadGUI::createIRPicture()
     std::cout <<"created Image"<<std::endl;
 
     thread = new LeptonThread();
-    connect(thread, SIGNAL(updateImage(unsigned short *,int,int)), this, SLOT(updateImage(unsigned short *, int,int)));
+    connect(thread, SIGNAL(updateImage(unsigned short *,int,int, unsigned char*)), this, SLOT(updateImage(unsigned short *, int, int, unsigned char*)));
     std::cout <<"conected to Camera"<<std::endl;
     thread->start();
 }

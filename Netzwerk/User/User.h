@@ -53,7 +53,7 @@ private:
   bool ChangedInts[integerCount];//ensures only values get transmittet when they have changed for integers
   bool ChangedBools[boolCount];//same as above for booles
 
-  std::vector<unsigned char> *BITBild;//Vector in which the picture is stored
+  std::vector<unsigned char> *BITBild = new std::vector<unsigned char>(BITBildSize);//Vector in which the picture is stored
   std::vector<bool> *BITBildChanged;//stores for the vector which values need to be transmittet
 
   std::string message;  //message storage

@@ -192,7 +192,7 @@ void LeptonThread::run() {
 				*(out++) = value;//weist rawdata die Werte zu
 			}
 		}
-		emit updateImage(&rawData[0], minValue, maxValue);//signal for the updateImage slot of mainwindow.cpp
+		emit updateImage(&rawData[0], minValue, maxValue, &result[0]);//signal for the updateImage slot of mainwindow.cpp
 		//std::cout << "hier auch nicht" << '\n';
 #if !HAVE_LEPTON
 		usleep(50000);  // Need to slow things down if no ioctl call!
