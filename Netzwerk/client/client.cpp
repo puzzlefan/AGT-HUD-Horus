@@ -174,6 +174,17 @@ void Client::communicator()
                 break;
 
       case 104: command = 104;//needs change
+                write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
+                for(int i = 0; i< mine->getBITBildSize();i++)
+                {
+                    char ToWrite = mine->transmitBITBild(i);
+                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
+                }
+                fall = 003;
+                break;
+                //OLD
+                /*
+                command = 104;//needs change
                 char nUMMBER[4];
                 write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
                 for(int i = 0; i< mine->getBITBildSize();i++)
@@ -191,6 +202,7 @@ void Client::communicator()
                 write(sockfd,STOP,4);
                 fall = 003;
                 break;
+                */
 
       default:  //std::cout << "something wemt horrebly wrong" << '\n';
                 break;

@@ -16,7 +16,7 @@
 
 
 using namespace std;
-Server::Server(std::vector<user> *point /*, headquater *abc*/)
+Server::Server(std::vector<user> *point , headquater *abc)
 {
 	mine = point;
 	#ifdef SERVER_STANDALONE
@@ -138,7 +138,16 @@ void Server::ServerPrivateThread(int counti)
 													(*mine)[counti].recieveBool(Bool,Position);
 												} while(true);
 												break;
-									case 104:	do
+									case 104:	for(int i = 0;i < (*mine)[counti].getBITBildSize(); i++)
+												{
+													read(ClientFd[counti], &Char,1);
+													(*mine)[counti].recieveBITBild(Char,i);
+												} while(true);
+												(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL,true);
+												break;
+												//OLD
+												/*
+												do
 												{
 													read(ClientFd[counti],Integer,4);
 													int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
@@ -146,7 +155,9 @@ void Server::ServerPrivateThread(int counti)
 													read(ClientFd[counti], &Char,1);
 													(*mine)[counti].recieveBITBild(Char,Zahl);
 												} while(true);
+												(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL,true);
 												break;
+												*/
 									case 103: 	(*mine)[counti].recieveMessage("");
 					                    		read(ClientFd[counti],&MLength,4);
 					                    		int RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];

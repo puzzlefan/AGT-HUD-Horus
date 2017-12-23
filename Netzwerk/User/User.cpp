@@ -91,10 +91,10 @@ int user::getBoolCount()
   return boolCount;
 }
 
-unsigned char user::getBITBild(int pos)
+unsigned char* user::getBITBild()
 {
-  std::lock_guard<std::mutex> lock(mutex_BitBild);
-  return (*BITBild)[pos];
+  //kein Mutex wird von Hand gesetzt um prozess zu vereinfachen
+  return &(*BITBild)[0];
 }
 bool user::getBITBildChanged(int pos)
 {
@@ -146,9 +146,12 @@ void user::setBools(int Pos, bool Bools)
 }
 void user::setBITBild(unsigned char Char, int Pos)
 {
-  std::lock_guard<std::mutex> lock(mutex_BitBild);
-  (*BITBild)[Pos]=Char;
-  (*BITBildChanged)[Pos]=true;
+  //std::lock_guard<std::mutex> lock(mutex_BitBild); Mutex umgeh funktion angewendt
+  if((*BITBild)[Pos]!=Char)
+  {
+      (*BITBild)[Pos]=Char;
+      (*BITBildChanged)[Pos]=true;
+  }
 }
 void user::setMessage(std::string Message)
 {
@@ -156,7 +159,17 @@ void user::setMessage(std::string Message)
   message = Message;
   MessageChanged = true;
 }
-
+void user::setBITBildMutex(bool PowerOnOff)
+{
+    if(PowerOnOff)
+    {
+        mutex_BitBild.lock();
+    }
+    else
+    {
+        mutex_BitBild.unlock();
+    }
+}
 //
 //  transmits, used to send the data to anther device
 //

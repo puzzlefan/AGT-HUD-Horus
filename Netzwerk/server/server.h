@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-//#define SERVER_STANDALONE //constructer manuel ändern
+#define SERVER_STANDALONE //constructer manuel ändern
 
 #include <unistd.h>     //System interaction, probably
 #include <sys/types.h>  //introduces more data types (probabl derived ones which make things easier)
@@ -44,7 +44,7 @@ private:
   headquater *HQ;
   #endif
 public:
-	Server(std::vector<user> *point/*, headquater *abc*/);
+	Server(std::vector<user> *point, headquater *abc);
 	~Server();
 
 	void ServerMainThread();//{return 1;}

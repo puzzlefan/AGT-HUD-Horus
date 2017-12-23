@@ -50,26 +50,26 @@ static const uint qt_meta_data_HeadGUI[] = {
      490,   32,   32,   32, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-     515,  552,   32,   32, 0x0a,
-     555,   32,   32,   32, 0x08,
-     573,   32,   32,   32, 0x08,
-     578,   32,   32,   32, 0x08,
-     585,   32,   32,   32, 0x08,
-     593,   32,   32,   32, 0x08,
-     600,   32,   32,   32, 0x08,
-     607,   32,   32,   32, 0x08,
-     617,   32,   32,   32, 0x08,
-     633,  207,   32,   32, 0x08,
-     679,  295,   32,   32, 0x08,
-     699,  295,   32,   32, 0x08,
-     719,  737,   32,   32, 0x08,
-     750,  768,   32,   32, 0x08,
-     781,  143,   32,   32, 0x08,
-     805,   32,   32,   32, 0x08,
+     515,  567,   32,   32, 0x0a,
+     571,   32,   32,   32, 0x08,
+     589,   32,   32,   32, 0x08,
+     594,   32,   32,   32, 0x08,
+     601,   32,   32,   32, 0x08,
+     609,   32,   32,   32, 0x08,
+     616,   32,   32,   32, 0x08,
+     623,   32,   32,   32, 0x08,
+     633,   32,   32,   32, 0x08,
+     649,  207,   32,   32, 0x08,
+     695,  295,   32,   32, 0x08,
+     715,  295,   32,   32, 0x08,
+     735,  753,   32,   32, 0x08,
+     766,  784,   32,   32, 0x08,
+     797,  143,   32,   32, 0x08,
      821,   32,   32,   32, 0x08,
-     850,   32,   32,   32, 0x08,
-     881,   32,   32,   32, 0x08,
-     909,   32,   32,   32, 0x08,
+     837,   32,   32,   32, 0x08,
+     866,   32,   32,   32, 0x08,
+     897,   32,   32,   32, 0x08,
+     925,   32,   32,   32, 0x08,
 
        0        // eod
 };
@@ -89,8 +89,8 @@ static const char qt_meta_stringdata_HeadGUI[] = {
     "newDataFromHeadquaterSignal()\0"
     "newDataFromArduinoSignal()\0"
     "newValuesForHeadquater()\0"
-    "updateImage(unsigned short*,int,int)\0"
-    ",,\0certifyPersonae()\0up()\0down()\0"
+    "updateImage(unsigned short*,int,int,unsigned char*)\0"
+    ",,,\0certifyPersonae()\0up()\0down()\0"
     "right()\0left()\0back()\0certify()\0"
     "coosingStatus()\0"
     "updateBracelet(bool,bool,bool,bool,bool,bool)\0"
@@ -128,7 +128,7 @@ void HeadGUI::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 15: _t->newDataFromHeadquaterSignal(); break;
         case 16: _t->newDataFromArduinoSignal(); break;
         case 17: _t->newValuesForHeadquater(); break;
-        case 18: _t->updateImage((*reinterpret_cast< unsigned short*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
+        case 18: _t->updateImage((*reinterpret_cast< unsigned short*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< unsigned char*(*)>(_a[4]))); break;
         case 19: _t->certifyPersonae(); break;
         case 20: _t->up(); break;
         case 21: _t->down(); break;
