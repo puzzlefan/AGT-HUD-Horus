@@ -292,7 +292,7 @@ void Person::updateImage(unsigned char *data)
     QVector<unsigned short> rawData = QVector<unsigned short> (FrameWords);
     QVector<unsigned char> result = QVector<unsigned char> (2 * PacketBytes*FrameHeight);
 
-    memcpy(&result[0], data, 2*FrameWords);
+    memcpy(&result[0], data, 39360);
 
     uint16_t minValue = 65535;
     uint16_t maxValue = 0;
