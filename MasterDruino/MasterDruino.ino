@@ -4,10 +4,12 @@
 #define ERROR_PIN   13 //LED could blink in case of error
 
 #define STATE_FOOT  -1//Indication pin Foot Bluetooth has a connection
-#define STATE_ARM   -1//Indication pij Arm Bluetooth has a connection
+#define STATE_ARM   -1//Indication pin Arm Bluetooth has a connection
+#define STATE_PI    -1//indicates connectiopn to pi
 
 #define VALUE_COUNT_FOOT  2
 #define VALUE_COUNT_ARM   1
+#define VALUE_COUT_PI     6
 
 Bluetooth *MasterFoot, *MasterArm;
 
@@ -21,6 +23,7 @@ void setup() {
   MasterFoot = new Bluetooth(true, ERROR_PIN, STATE_FOOT, SERIAL_ONE, VALUE_COUNT_FOOT);
   delay(endDelay);
   MasterArm = new Bluetooth(true, ERROR_PIN, STATE_ARM, SERIAL_TWO, VALUE_COUNT_ARM);
+
   //I2C
   //initialize i2c as slave
   Wire.begin(SLAVE_ADDRESS);
@@ -64,6 +67,5 @@ void loop() {
   {
     digitalWrite(Lampe,LOW);
   }
-
-  delay(endDelay);
+//  delay(endDelay);
 }

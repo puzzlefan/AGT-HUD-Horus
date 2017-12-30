@@ -5,7 +5,7 @@
 #include <wiringPiI2C.h>
 #include <thread>
 #include <unistd.h>
-//#include "../personalGUI/headgui.h"
+#include "../personalGUI/headgui.h"
 #include "DaTa/DaTa.h"
 
 class I2C
@@ -24,12 +24,12 @@ private:
 	   std::thread *SinkThread;
 
     //class to interrupt on Button
-    //HeadGUI *InsaneUser;
+    HeadGUI *InsaneUser;
 public:
-    I2C(DaTa* DaTaToGo/*, HeadGUI* NotSoInsaneUSer*/);
-    ~I2C();
+    I2C(DaTa* DaTaToGo, HeadGUI* NotSoInsaneUSer);//Constructer starts thread
+    ~I2C();//Destructor
 
-    void ReadLoop();//thread function may need a delay to let Arduino work
+    void ReadLoop();//thread function that polls the Arduino with 50 Hz
 };
 
 #endif

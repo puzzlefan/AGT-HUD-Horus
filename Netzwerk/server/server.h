@@ -1,6 +1,8 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#define SERVER_STANDALONE //constructer manuel ändern
+
 #include <unistd.h>     //System interaction, probably
 #include <sys/types.h>  //introduces more data types (probabl derived ones which make things easier)
 #include <sys/socket.h> //socket library accept...
@@ -12,9 +14,9 @@
 #include "../User/User.h"
 //#include <sys/time.h>//macht zeit
 #include <sys/select.h>
-//#include "../../headquaterGUI/headquater.h"
+#ifdef SERVER_STANDALONE
 #include "../../headquaterGUI/headquater.h"
-
+#endif
 class headquater;
 
 class Server
@@ -38,7 +40,9 @@ private:
 
 	std::vector<user> *mine;
 
-    headquater *HQ;
+  #ifdef SERVER_STANDALONE
+  headquater *HQ;
+  #endif
 public:
 	Server(std::vector<user> *point, headquater *abc);
 	~Server();

@@ -21,7 +21,7 @@
 /*-----( Declare Constants and Pin Numbers )-----*/
 #define HC_05_EN        2
 #define HC_05_State     0 //has to be analog because voltage to small
-#define SerialConnection 1
+#define SerialConnection 3
 
 /*-----( Declare Variables )-----*/
 HardwareSerial* SerialPort[4]={&Serial, &Serial1, &Serial2, &Serial3};

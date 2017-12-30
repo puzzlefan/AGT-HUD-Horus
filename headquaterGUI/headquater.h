@@ -23,7 +23,7 @@ class Person : public QWidget//%
     Q_OBJECT
 
 public slots:
-    void updateImage(unsigned short *, int, int);
+    void updateImage(unsigned char *data);
 
 public:
     Person(int ID);
@@ -68,8 +68,9 @@ public:
 
     //for IRPicture
     QLabel *IRPicture;
-    QVector<unsigned short> rawData;
-    QImage rgbImage;
+    QVector<unsigned char> *result;
+    QVector<unsigned short> *rawData;
+    QImage *rgbImage;
 
     int ImageWidth = 320;
     int ImageHeight = 240;
@@ -112,7 +113,7 @@ signals:
     void updatedCOHeadSignal(int ID, int recentCO);
     void updatedCOFootSignal(int ID, int recentCO);
     void answerdMessageSignal(int ID, int answer);
-    void updatedImageSignal(int ID, unsigned short *, int, int);
+    void updatedImageSignal(int ID, unsigned char*);
     void newDataSignal(int vectorNo);
 
 
@@ -126,7 +127,7 @@ private slots:
     void answerdMessage(int ID, int answer);
     void sendNewMessage();
     void newTopTab(int index);
-    void updatedImage(int ID,unsigned short *, int, int);
+    void updatedImage(int ID,unsigned char *result);
     void sortingData(int vectorNo);
 
 private:

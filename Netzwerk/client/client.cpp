@@ -12,13 +12,12 @@
 #include "../User/User.h"
 #include <sys/time.h>//macht zeit
 #include <sys/select.h>
-#include "../../personalGUI/headgui.h"
 #include "client.h"
 
-Client::Client(user *point, HeadGUI *NotSoInsaneUSer)
+Client::Client(user *point , HeadGUI *PointerHeadGUI)
 {
   mine = point;
-  InsaneUser = NotSoInsaneUSer;
+  GUI = PointerHeadGUI;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
   if (sockfd<0) {
     std::cout << "error opening socket" << '\n';
@@ -26,13 +25,18 @@ Client::Client(user *point, HeadGUI *NotSoInsaneUSer)
 
   bzero((char *) &serv_addr, sizeof(serv_addr));//making endpoint socket identifaier ready
   serv_addr.sin_family = AF_INET;//ist im internet
-  inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
+  inet_pton(AF_INET, "192.168.2.50", &(serv_addr.sin_addr));
+  //inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
   serv_addr.sin_port = htons(portno);
 
   if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
   {
-        std::cout<<"ERROR connecting"<<"\n";
+        std::cout<<"ERROR connecting Netzwerk client"<<"\n";
+        return;
   }
+
+  mine->setID(1);
+  mine->setBools(NEW_CONFIRMED_ID,true);
 
   ClientThread = new std::thread(&Client::communicator,this);
 }
@@ -64,10 +68,13 @@ void Client::communicator()
                 char Bool;
                 char Char;
                 char Integer[4];
+                int RecivingLength;
                 do
                 {
                     read(sockfd, &command, CommandLength);
                     switch (command) {
+                    default : //std::cout << "something went horrible wrong through out reading" << '\n';
+                                break;
                     case 3:     break;
                     case 200:   do
                                 {
@@ -91,18 +98,23 @@ void Client::communicator()
                                     mine->recieveBool(Bool,Position);
                                 } while(true);
                                 break;
-                    case 202:   mine->message = "";
-                                for (int i = 0; i < mine->getMessageLength(); i++)
-                                {
-                                    read(sockfd,&Char,1);
-                                    mine->message += Char;
-                                }
-                                InsaneUser->newDataFromHeadquater();
+                    case 202:   mine->recieveMessage("");
+                                char MLength[4] = {0,0,0,0};
+                                read(sockfd,&MLength,4);
+                                RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
+                                char MessagE [RecivingLength];
+                                //for (int i = 0; i < mine->getMessageLength(); i++)
+                                //{
+                                read(sockfd,&MessagE,RecivingLength);
+                                std::string mESSAGe(MessagE,RecivingLength);
+                                mine->recieveMessage(mESSAGe);
+                                //}
                                 break;
-                    default : std::cout << "something went horrible wrong through out reading" << '\n';
+
                   }
                 } while(command!=003);
                 fall = 001;
+                GUI->newDataFromHeadquater();
                 break;
 
       case 3:   command = 003;
@@ -153,16 +165,31 @@ void Client::communicator()
                 {
                     command = 103;
                     write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
-                    for(int i = 0; i< mine->getMessageLength();i++)
-                    {
-                        write(sockfd, &mine->message[i], 1);
-                    }
-                    mine->setMessageChanged(false);
+                    //sent itnt for length
+                    char charMessageLength[4];
+                    IntChar(mine->getMessageLength()+1,charMessageLength);
+                    write(sockfd, charMessageLength, 4);
+                    //for(int i = 0; i< mine->getMessageLength();i++)
+                    //{
+                    write(sockfd, mine->transmitMessage().c_str(), mine->getMessageLength()+1);
+                    //}
                 }
                 fall = 104;
                 break;
 
       case 104: command = 104;//needs change
+                write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
+                for(int i = 0; i< mine->getBITBildSize();i++)
+                {
+                    char ToWrite = mine->transmitBITBild(i);
+                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
+                }
+                mine->setBools(UPDATE_IMAGE_SIGNAL,true);
+                fall = 003;
+                break;
+                //OLD
+                /*
+                command = 104;//needs change
                 char nUMMBER[4];
                 write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
                 for(int i = 0; i< mine->getBITBildSize();i++)
@@ -180,8 +207,9 @@ void Client::communicator()
                 write(sockfd,STOP,4);
                 fall = 003;
                 break;
+                */
 
-      default:  std::cout << "something wemt horrebly wrong" << '\n';
+      default:  //std::cout << "something wemt horrebly wrong" << '\n';
                 break;
     }
   }
