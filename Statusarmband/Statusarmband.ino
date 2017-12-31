@@ -1,9 +1,10 @@
 //Bluetooth zeug
+#include "MPU6050.h"
 #include "Bluetooth.h"
 
 #define STATE_PIN -1
 #define ERROR_PIN 13
-#define VALUE_COUNT 1
+#define VALUE_COUNT 2
 //variables
 
 int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
@@ -29,7 +30,7 @@ int buttonCertify = 48;
 
 void setup()
 {
-  Serial.begin(9600); 
+  Serial.begin(9600);
   //Serial1.begin(38400);//doesent work any longer directly connected with computer
 
   pinMode(buttonUp,INPUT);
@@ -38,6 +39,8 @@ void setup()
   pinMode(buttonLeft,INPUT);
   pinMode(buttonBack,INPUT);
   pinMode(buttonCertify,INPUT);
+
+  MPU6050_setup();
 
   Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
 
@@ -71,6 +74,7 @@ void loop()
       transmit *= FACTOR_CERTIFY;
   }
   Slave->setWrite(0, transmit);
+  Slave->setWrite(1, MPU6050_loop_very_activ());
   Slave->update();
 //  Serial.println(transmit);
   delay(25);

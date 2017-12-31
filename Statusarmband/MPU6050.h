@@ -1,11 +1,13 @@
 //wichtige Zeilen (passen eventuell nicht mehr da durch hinzufügen verrutscht)
-//public Domain     019
-//adresse MPU6050   634
-//Unfug von mir     679
-//MPU6050_setup     689 (inklusive Serail behginn)
-//device defaults   703
-//test Led setup    732
-//loop very active  737
+//public Domain       019
+//adresse MPU6050     634
+//Unfug von mir       679
+//MPU6050_setup       800 (inklusive Serail behginn)
+//device defaults     814
+//test Led setup      841
+//loop very active    846
+//Loop not so active  961
+//compare funf        684
 
 #ifndef MPU6050
 #define MPU6050
@@ -679,181 +681,9 @@ typedef union accel_t_gyro_union
  } value;
 };
 
-
-//
-// ADDED BY ME
-//
-unsigned long TIME;
-unsigned long ShortTIME;
-int count = 0;
-int16_t lastVals[6];//hold last values to refer later to them
-bool first = true;//stopping from making panic at initialisation
-
-void MPU6050_setup()
-{
- int error;
- uint8_t c;
-
-
- Serial.begin(9600);
- Serial.println(F("InvenSense MPU-6050"));
- Serial.println(F("June 2012"));
-
- // Initialize the 'Wire' class for the I2C-bus.
- Wire.begin();
-
-
- // default at power-up:
- //    Gyro at 250 degrees second
- //    Acceleration at 2g
- //    Clock source at internal 8MHz
- //    The device is in sleep mode.
- //
-
- error = MPU6050_read (MPU6050_WHO_AM_I, &c, 1);
- Serial.print(F("WHO_AM_I : "));
- Serial.print(c,HEX);
- Serial.print(F(", error = "));
- Serial.println(error,DEC);
-
- // According to the datasheet, the 'sleep' bit
- // should read a '1'.
- // That bit has to be cleared, since the sensor
- // is in sleep mode at power-up.
- error = MPU6050_read (MPU6050_PWR_MGMT_1, &c, 1);
- Serial.print(F("PWR_MGMT_1 : "));
- Serial.print(c,HEX);
- Serial.print(F(", error = "));
- Serial.println(error,DEC);
-
-
- // Clear the 'sleep' bit to start the sensor.
- MPU6050_write_reg (MPU6050_PWR_MGMT_1, 0);
-
- pinMode(13,OUTPUT);
- digitalWrite(13,LOW);
-}
-
-
-void MPU6050_loop_very_activ()
-{
- if(ShortTIME + 100 < millis())
-   {
- int error;
- accel_t_gyro_union accel_t_gyro;
-
- // Read the raw values.
- // Read 14 bytes at once,
- // containing acceleration, temperature and gyro.
- // With the default settings of the MPU-6050,
- // there is no filter enabled, and the values
- // are not very stable.
- error = MPU6050_read (MPU6050_ACCEL_XOUT_H, (uint8_t *) &accel_t_gyro, sizeof(accel_t_gyro));
-
-
-
- // Swap all high and low bytes.
- // After this, the registers values are swapped,
- // so the structure name like x_accel_l does no
- // longer contain the lower byte.
- uint8_t swap;
- #define SWAP(x,y) swap = x; x = y; y = swap
-
- SWAP (accel_t_gyro.reg.x_accel_h, accel_t_gyro.reg.x_accel_l);
- SWAP (accel_t_gyro.reg.y_accel_h, accel_t_gyro.reg.y_accel_l);
- SWAP (accel_t_gyro.reg.z_accel_h, accel_t_gyro.reg.z_accel_l);
- SWAP (accel_t_gyro.reg.t_h, accel_t_gyro.reg.t_l);
- SWAP (accel_t_gyro.reg.x_gyro_h, accel_t_gyro.reg.x_gyro_l);
- SWAP (accel_t_gyro.reg.y_gyro_h, accel_t_gyro.reg.y_gyro_l);
- SWAP (accel_t_gyro.reg.z_gyro_h, accel_t_gyro.reg.z_gyro_l);
-
- //my fault
- bool alert = true;
- if(first)
- {
-    first = false;
- }
- else
- {
-     if(!comp(lastVals[0],accel_t_gyro.value.x_accel))
-     {
-       count--;
-     }
-     else
-     {
-       count++;
-     }
-     if(!comp(lastVals[1],accel_t_gyro.value.y_accel))
-     {
-       count--;
-     }
-     else
-     {
-       count++;
-     }
-     if(!comp(lastVals[2],accel_t_gyro.value.z_accel))
-     {
-       count--;
-     }
-     else
-     {
-       count++;
-     }
-     if(!comp(lastVals[3],accel_t_gyro.value.x_gyro))
-     {
-       count--;
-     }
-     else
-     {
-       count++;
-     }
-     if(!comp(lastVals[4],accel_t_gyro.value.y_gyro))
-     {
-       count--;
-     }
-     else
-     {
-       count++;
-     }
-     if(!comp(lastVals[5],accel_t_gyro.value.z_gyro))
-     {
-       count--;
-     }
-     else
-     {
-       count++;
-     }
-     ShortTIME=millis();
- }
- lastVals[0] = accel_t_gyro.value.x_accel;
- lastVals[1] = accel_t_gyro.value.y_accel;
- lastVals[2] = accel_t_gyro.value.z_accel;
- lastVals[3] = accel_t_gyro.value.x_gyro;
- lastVals[4] = accel_t_gyro.value.y_gyro;
- lastVals[5] = accel_t_gyro.value.z_gyro;
-
- if(TIME + 5000 < millis())
- {
-   TIME = millis();
-   Serial.println(count);
-   if(count > 0)
-   {
-     digitalWrite(13,HIGH);
-   }
-   else
-   {
-     digitalWrite(13,LOW);
-   }
-   count = 0;
- }
-   }
- //delay(100);
-}
-
 //my fault
-bool comp(int16_t oldVal, int16_t newVal)
+bool comp(int16_t oldVal, int16_t newVal, double toleranz)
 {
- double toleranz = 0.3;
  oldVal = abs(oldVal);
  newVal = abs(newVal);
  if(oldVal * (1-toleranz) < newVal && oldVal * (1+toleranz) > newVal) return true;
@@ -956,6 +786,283 @@ int MPU6050_write_reg(int reg, uint8_t data)
  return (error);
 }
 
+
+//
+// ADDED BY ME
+//
+unsigned long TIME;
+unsigned long ShortTIME;
+int count = 0;
+int16_t lastVals[6];//hold last values to refer later to them
+bool first = true;//stopping from making panic at initialisation
+bool lastReturn = false;
+
+void MPU6050_setup()
+{
+ int error;
+ uint8_t c;
+
+
+ Serial.begin(9600);
+ Serial.println(F("InvenSense MPU-6050"));
+ Serial.println(F("June 2012"));
+
+ // Initialize the 'Wire' class for the I2C-bus.
+ Wire.begin();
+
+
+ // default at power-up:
+ //    Gyro at 250 degrees second
+ //    Acceleration at 2g
+ //    Clock source at internal 8MHz
+ //    The device is in sleep mode.
+ //
+
+ error = MPU6050_read (MPU6050_WHO_AM_I, &c, 1);
+ Serial.print(F("WHO_AM_I : "));
+ Serial.print(c,HEX);
+ Serial.print(F(", error = "));
+ Serial.println(error,DEC);
+
+ // According to the datasheet, the 'sleep' bit
+ // should read a '1'.
+ // That bit has to be cleared, since the sensor
+ // is in sleep mode at power-up.
+ error = MPU6050_read (MPU6050_PWR_MGMT_1, &c, 1);
+ Serial.print(F("PWR_MGMT_1 : "));
+ Serial.print(c,HEX);
+ Serial.print(F(", error = "));
+ Serial.println(error,DEC);
+
+
+ // Clear the 'sleep' bit to start the sensor.
+ MPU6050_write_reg (MPU6050_PWR_MGMT_1, 0);
+
+ pinMode(13,OUTPUT);
+ digitalWrite(13,LOW);
+}
+
+
+bool MPU6050_loop_very_activ()
+{
+  double toleranz = 0.3;
+
+ if(ShortTIME + 100 < millis())
+   {
+ int error;
+ accel_t_gyro_union accel_t_gyro;
+
+ // Read the raw values.
+ // Read 14 bytes at once,
+ // containing acceleration, temperature and gyro.
+ // With the default settings of the MPU-6050,
+ // there is no filter enabled, and the values
+ // are not very stable.
+ error = MPU6050_read (MPU6050_ACCEL_XOUT_H, (uint8_t *) &accel_t_gyro, sizeof(accel_t_gyro));
+
+
+
+ // Swap all high and low bytes.
+ // After this, the registers values are swapped,
+ // so the structure name like x_accel_l does no
+ // longer contain the lower byte.
+ uint8_t swap;
+ #define SWAP(x,y) swap = x; x = y; y = swap
+
+ SWAP (accel_t_gyro.reg.x_accel_h, accel_t_gyro.reg.x_accel_l);
+ SWAP (accel_t_gyro.reg.y_accel_h, accel_t_gyro.reg.y_accel_l);
+ SWAP (accel_t_gyro.reg.z_accel_h, accel_t_gyro.reg.z_accel_l);
+ SWAP (accel_t_gyro.reg.t_h, accel_t_gyro.reg.t_l);
+ SWAP (accel_t_gyro.reg.x_gyro_h, accel_t_gyro.reg.x_gyro_l);
+ SWAP (accel_t_gyro.reg.y_gyro_h, accel_t_gyro.reg.y_gyro_l);
+ SWAP (accel_t_gyro.reg.z_gyro_h, accel_t_gyro.reg.z_gyro_l);
+
+ //my fault
+ bool alert = true;
+ if(first)
+ {
+    first = false;
+ }
+ else
+ {
+     if(!comp(lastVals[0],accel_t_gyro.value.x_accel,toleranz))
+     {
+       count--;
+     }
+     else
+     {
+       count++;
+     }
+     if(!comp(lastVals[1],accel_t_gyro.value.y_accel,toleranz))
+     {
+       count--;
+     }
+     else
+     {
+       count++;
+     }
+     if(!comp(lastVals[2],accel_t_gyro.value.z_accel,toleranz))
+     {
+       count--;
+     }
+     else
+     {
+       count++;
+     }
+     if(!comp(lastVals[3],accel_t_gyro.value.x_gyro,toleranz))
+     {
+       count--;
+     }
+     else
+     {
+       count++;
+     }
+     if(!comp(lastVals[4],accel_t_gyro.value.y_gyro,toleranz))
+     {
+       count--;
+     }
+     else
+     {
+       count++;
+     }
+     if(!comp(lastVals[5],accel_t_gyro.value.z_gyro,toleranz))
+     {
+       count--;
+     }
+     else
+     {
+       count++;
+     }
+     ShortTIME=millis();
+ }
+ lastVals[0] = accel_t_gyro.value.x_accel;
+ lastVals[1] = accel_t_gyro.value.y_accel;
+ lastVals[2] = accel_t_gyro.value.z_accel;
+ lastVals[3] = accel_t_gyro.value.x_gyro;
+ lastVals[4] = accel_t_gyro.value.y_gyro;
+ lastVals[5] = accel_t_gyro.value.z_gyro;
+
+ if(TIME + 5000 < millis())
+ {
+   TIME = millis();
+   Serial.println(count);
+   if(count > 0)
+   {
+     lastReturn = true;
+     //digitalWrite(13,HIGH);
+   }
+   else
+   {
+     lastReturn = false;
+     //digitalWrite(13,LOW);
+   }
+   count = 0;
+ }
+   }
+ //delay(100);
+ return lastReturn;
+}
+
+void MPU6050_loop_not_so_activ()
+{
+  double toleranz[] = {0.4,0.4,0.4,0.5,0.5,0.5};
+
+ if(ShortTIME + 100 < millis())
+   {
+ int error;
+ accel_t_gyro_union accel_t_gyro;
+
+ // Read the raw values.
+ // Read 14 bytes at once,
+ // containing acceleration, temperature and gyro.
+ // With the default settings of the MPU-6050,
+ // there is no filter enabled, and the values
+ // are not very stable.
+ error = MPU6050_read (MPU6050_ACCEL_XOUT_H, (uint8_t *) &accel_t_gyro, sizeof(accel_t_gyro));
+
+
+
+ // Swap all high and low bytes.
+ // After this, the registers values are swapped,
+ // so the structure name like x_accel_l does no
+ // longer contain the lower byte.
+ uint8_t swap;
+ #define SWAP(x,y) swap = x; x = y; y = swap
+
+ SWAP (accel_t_gyro.reg.x_accel_h, accel_t_gyro.reg.x_accel_l);
+ SWAP (accel_t_gyro.reg.y_accel_h, accel_t_gyro.reg.y_accel_l);
+ SWAP (accel_t_gyro.reg.z_accel_h, accel_t_gyro.reg.z_accel_l);
+ SWAP (accel_t_gyro.reg.t_h, accel_t_gyro.reg.t_l);
+ SWAP (accel_t_gyro.reg.x_gyro_h, accel_t_gyro.reg.x_gyro_l);
+ SWAP (accel_t_gyro.reg.y_gyro_h, accel_t_gyro.reg.y_gyro_l);
+ SWAP (accel_t_gyro.reg.z_gyro_h, accel_t_gyro.reg.z_gyro_l);
+
+ //my fault
+ bool alert = true;
+ if(first)
+ {
+    first = false;
+ }
+ else
+ {
+     if(!comp(lastVals[0],accel_t_gyro.value.x_accel,toleranz[0]))
+     {
+       alert = false;
+     }
+     if(!comp(lastVals[1],accel_t_gyro.value.y_accel,toleranz[1]))
+     {
+       alert = false;
+     }
+     if(!comp(lastVals[2],accel_t_gyro.value.z_accel,toleranz[2]))
+     {
+       alert = false;
+     }
+     if(!comp(lastVals[3],accel_t_gyro.value.x_gyro,toleranz[3]))
+     {
+       alert = false;
+     }
+     if(!comp(lastVals[4],accel_t_gyro.value.y_gyro,toleranz[4]))
+     {
+       alert = false;
+     }
+     if(!comp(lastVals[5],accel_t_gyro.value.z_gyro,toleranz[5]))
+     {
+       alert = false;
+     }
+     if(alert)
+     {
+       count++;
+     }
+     else
+     {
+       count--;
+     }
+     ShortTIME=millis();
+ }
+ lastVals[0] = accel_t_gyro.value.x_accel;
+ lastVals[1] = accel_t_gyro.value.y_accel;
+ lastVals[2] = accel_t_gyro.value.z_accel;
+ lastVals[3] = accel_t_gyro.value.x_gyro;
+ lastVals[4] = accel_t_gyro.value.y_gyro;
+ lastVals[5] = accel_t_gyro.value.z_gyro;
+
+ if(TIME + 5000 < millis())
+ {
+   TIME = millis();
+   Serial.println(count);
+   if(count > 0)
+   {
+     digitalWrite(13,HIGH);
+   }
+   else
+   {
+     digitalWrite(13,LOW);
+   }
+   count = 0;
+ }
+   }
+ //delay(100);
+}
 
 
 #endif
