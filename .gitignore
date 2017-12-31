@@ -2,10 +2,9 @@
 raspberrypi_libs/**
 **/SDK/**
 
-#Qt related things
+#Qt related things..
 **/*.pro.user
 **/*.pro.user.*
 **/*.cpp.save
 **/gen_mocs/**
 **/gen_objs/**
-**/*bulid-*/**
