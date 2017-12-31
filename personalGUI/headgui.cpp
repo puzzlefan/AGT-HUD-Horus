@@ -6,6 +6,7 @@
 #include <../Lepton/LeptonThread.h>
 #include <../Netzwerk/User/User.h>
 #include <../I2C/DaTa/DaTa.h>
+#include <../I2C/I2C.h>
 
 #include <QWidget>
 #include <QMainWindow>
@@ -79,11 +80,9 @@ void HeadGUI::createIRPicture()
     QPixmap filler(ImageWidth, ImageHeight);
     filler.fill(Qt::red);
     IRPicture->setPixmap(filler);
-    std::cout <<"created Image"<<std::endl;
 
     thread = new LeptonThread();
     connect(thread, SIGNAL(updateImage(unsigned short *,int,int, unsigned char*)), this, SLOT(updateImage(unsigned short *, int, int, unsigned char*)));
-    std::cout <<"conected to Camera"<<std::endl;
     thread->start();
 }
 
@@ -155,14 +154,14 @@ void HeadGUI::newDataFromHeadquater()
 }
 
 void HeadGUI::newDataFromArduino()
-{
+{std::cout<<"new Data"<<std::endl;
     emit newDataFromArduinoSignal();
 }
 
 void HeadGUI::sortingNewDataFromHeadquater()
 {
     if(networkUser->getBool(NEW_MESSAGE) == true)
-    {std::cout<<"new Message at Person"<<std::endl;
+    {
         networkUser->setBools(NEW_MESSAGE,false);
         QString newMessage = QString::fromStdString(networkUser->getMessage());
         emit messageRecivedSignal(newMessage);
@@ -170,7 +169,7 @@ void HeadGUI::sortingNewDataFromHeadquater()
 }
 
 void HeadGUI::sortingNewDataFromArduino()
-{
+{std::cout<<"calling Update Bracelet"<<std::endl;
     emit updateBraceletSignal(sensorData->getButton(KNOB_UP), sensorData->getButton(KNOB_DOWN), sensorData->getButton(KNOB_RIGHT), sensorData->getButton(KNOB_LEFT), sensorData->getButton(KNOB_BACK), sensorData->getButton(KNOB_CERTIFY));
 }
 
@@ -527,41 +526,41 @@ void HeadGUI::messageRecived(QString sendMessage)
 }
 
 void HeadGUI::updateBracelet(bool valueUp, bool valueDown, bool valueRight, bool valueLeft, bool valueBack,bool valueCertify)
-{
+{std::cout<<"update Bracelet"<<std::endl;
     otherSignals = false;
 
     if (valueCertify == true)
-    {
+    {std::cout<<"certify"<<std::endl;
         otherSignals = true;
         emit certifySignal();
     }
 
     if (valueBack == true && otherSignals == false)
-    {
+    {std::cout<<"back"<<std::endl;
         otherSignals = true;
         emit backSignal();
     }
 
     if ( valueRight == true && otherSignals == false)
-    {
+    {std::cout<<"right"<<std::endl;
         otherSignals = true;
         emit rightSignal();
     }
 
     if ( valueLeft == true && otherSignals == false)
-    {
+    {std::cout<<"left"<<std::endl;
         otherSignals = true;
         emit leftSignal();
     }
 
     if (valueUp == true && otherSignals == false)
-    {
+    {std::cout<<"up"<<std::endl;
         otherSignals = true;
         emit upSignal();
     }
 
     if (valueDown == true && otherSignals == false)
-    {
+    {std::cout<<"down"<<std::endl;
         otherSignals = true;
         emit downSignal();
     }

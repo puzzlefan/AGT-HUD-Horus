@@ -30,6 +30,7 @@ void I2C::ReadLoop()
             {
               MyLittleData->setDaTa(temp,i);//refreshes stored value
             }
+            std::cout<<MyLittleData->getRawDaTa(0)<<std::endl;
             usleep(20000);
         }
         if(MyLittleData->WriteOrDontWrite())//if there is new DaTa the write registers get written
