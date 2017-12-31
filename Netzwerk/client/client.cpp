@@ -48,6 +48,7 @@ Client::~Client()
 
 void Client::communicator()
 {
+  bool id_confirmed = false;
   char command = 0;
   //bool ReadWrite[] = {false, false};//for later use
   int fall = 0;
@@ -55,7 +56,14 @@ void Client::communicator()
   while (1!=2)
   {
     switch (fall) {
-      case 0:   fall = 1;//activates first order
+      case 0:   if(id_confirmed || mine->getBool(NEW_CONFIRMED_ID))
+                {
+                  fall = 1;//activates first order
+                }
+                else
+                {
+                  fall = 0;
+                }
                 break;
       case 1:   command = 001;
                 write(sockfd, &command, CommandLength);//send to sockfd command 1 with length 1
