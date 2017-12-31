@@ -8,4 +8,4 @@ raspberrypi_libs/**
 **/*.cpp.save
 **/gen_mocs/**
 **/gen_objs/**
-bulid*/**
+**/*bulid-*/**
