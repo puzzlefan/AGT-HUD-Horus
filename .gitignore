@@ -1,5 +1,6 @@
-raspberrypi_libs/
+raspberrypi_libs/**
 
 #Qt related things
 **/*.pro.user
 **/*.pro.user.*
+++/*.cpp.save
