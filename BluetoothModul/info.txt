@@ -1,13 +1,3 @@
 note that the header files of Master and slave need to be equal
 
 Acknowledge could be added in case of buffer overflow
-
-what has to be changed to shrink or expand the amount of sendet Data
-
-betroffene Bluetoothkanäle müssen um eins in ihrer Kapazutät erhöht werden
-daten müssen in sende Array geschrieben werden
-daten müssen in lese Array geschriben werden
-Registergröße des I2C Register vergrößern
-in DaTa DaTa oder FareWell amount entsprechend anpassen
-
-GUI bescheid sagen

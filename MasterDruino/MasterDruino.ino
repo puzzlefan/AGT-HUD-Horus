@@ -8,8 +8,8 @@
 #define STATE_PI    -1//indicates connectiopn to pi
 
 #define VALUE_COUNT_FOOT  2
-#define VALUE_COUNT_ARM   2
-//value count for i2c needs to be adjusted in header because otherwise the class does not understand
+#define VALUE_COUNT_ARM   1
+#define VALUE_COUT_PI     6
 
 Bluetooth *MasterFoot, *MasterArm;
 
@@ -59,8 +59,7 @@ void loop() {
   Register[2] = random(0,255);//simulates hear read out of Tempreture
   Register[3] = MasterFoot->getRead(0);//gets ppm foot
   Register[4] = random(0,255);//simulates hear read out of ppm
-  Register[5] = MasterArm->getRead(1);//gets the alive bit
-  if(Register[6]==1)
+  if(Register[5]==1)
   {
     digitalWrite(Lampe,HIGH);
   }
