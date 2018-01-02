@@ -23,6 +23,7 @@ int main(int argc, char const *argv[]) {
   int ID = 2;
 
   a.setID(ID);
+  a.setBools(0,1);
 
   int recentStatus = 0;
   int Temp1 = 0;

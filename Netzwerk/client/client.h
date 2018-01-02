@@ -15,8 +15,8 @@
 #include "../User/User.h"
 #include <sys/time.h>//macht zeit
 #include <sys/select.h>
-#include "../../personalGUI/headgui.h"
-#include "client.h"
+//#include "../../personalGUI/headgui.h"
+#include "csignal"
 
 class Client
 {
@@ -28,16 +28,25 @@ private://the ip adress of the server stands in the cpp fron the client because 
   struct sockaddr_in serv_addr;
   std::thread *ClientThread;
 
+  //Network readable writable check
+  fd_set rfds,wfds;//generates buffers which hold the sockets for select to check
+  struct timeval WaitingTime;//specifais the time select waits for data select returns in struct length of unwaitet time but since it is zero ...
+  //duration set in constructor (actually around a second)
+
   user *mine;
-  HeadGUI *GUI;
+  //HeadGUI *GUI;
 public:
-  Client(user *point, HeadGUI *PointerHeadGUI);
+  Client(user *point/*, HeadGUI *PointerHeadGUI*/);
   ~Client();
 
   void communicator();
   void communicationWithTheCommunicator();
 
-  void rwteble(bool *ari);
+  //time out safed read writes with error handling
+  int s_read(int sockFD, char *buffer, int length);
+
+  bool readable();//checks if something can be read over the socket
+  bool writable();//checks if something can be written over the socket
   void IntChar(int Inte, char *ptr);
 };
 

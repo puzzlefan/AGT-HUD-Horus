@@ -22,3 +22,9 @@ when no command preceded the recived bytes the byte count = 0
 254 = error
 255 = response to error to reestablish link
 
+/*
+  open new thread
+  start read
+  start timer in main thread
+  if expires kill try reconnect
+*/

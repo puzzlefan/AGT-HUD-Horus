@@ -16,7 +16,7 @@
 
 
 using namespace std;
-Server::Server(std::vector<user> *point , headquater *abc)
+Server::Server(std::vector<user> *point /*, headquater *abc*/)
 {
 	mine = point;
 	#ifdef SERVER_STANDALONE
@@ -78,7 +78,7 @@ void Server::ServerPrivateThread(int counti)
 	//
 	// !!!TEST!!!
 	//
-	(*mine)[counti].setBools(2,0);
+	//(*mine)[counti].setBools(2,0);
 	//
 	//
 	//
@@ -94,13 +94,15 @@ void Server::ServerPrivateThread(int counti)
 		//
 		//	!!! TEST
 		//
-		if((*mine)[counti].getBool(2)){
-			(*mine)[counti].setBools(2,0);
-			(*mine)[counti].setMessage("Server");
-		}
+		//if((*mine)[counti].getBool(2)){
+		//(*mine)[counti].setBools(2,0);
+		//(*mine)[counti].setMessage("Server");
+		//}
 		//
 		//
 		//
+		char abc[1];
+		while(true) read(ClientFd[counti],&abc,1);
 		switch (fall) {
 			case 0:	read(ClientFd[counti],&command,1);
 							fall = command;
