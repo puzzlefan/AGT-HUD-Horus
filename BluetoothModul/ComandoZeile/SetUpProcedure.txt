@@ -40,3 +40,12 @@
 
 6.Disconnect module
 7.Connect Module to final Pins
+
+
+
+
+
+what is WHAT
+
+Serial Port 3 Kopf Fuß Port 3
+Serial Port 2 Kopf Arm Port 1
