@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = personalGUI
 TEMPLATE = app
 
-RPI_LIBS = ../raspberrypi_libs
+RPI_LIBS = ../../raspberrypi_libs
 LEPTONSDK = leptonSDKEmb32PUB
 
 PRE_TARGETDEPS += sdk
