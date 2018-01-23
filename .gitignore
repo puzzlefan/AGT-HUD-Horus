@@ -9,3 +9,8 @@ raspberrypi_libs/**
 **/gen_mocs/**
 **/gen_objs/**
 build-*/**
+headquaterGUI/headquaterGUI
+headquaterGUI/Makefile
+personalGUI/personalGUI
+personalGUI/Makefile
+
