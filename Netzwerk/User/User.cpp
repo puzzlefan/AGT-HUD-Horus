@@ -7,14 +7,7 @@ user::user()
 {
   BITBild = new std::vector<unsigned char>(BITBildSize);//potentially dangerous at first call
   BITBildChanged = new std::vector<bool>(BITBildSize);
-  for (int i = 0; i < boolCount; i++) {
-    ChangedBools[i]=0;
-  }
-  for(int i = 0; i < integerCount;i++)
-  {
-    ChangedInts[i]=0;
-  }
-  //fill();
+  fill();
 }
 user::user(const user&)
 {
@@ -31,18 +24,31 @@ user::~user()
 
 void user::fill()
 {
-  setID(2);
+  //ensure ID is not set
+  id = 0;
+  idChanged = 0;
+
+  //ensure integers are not set
   for(int i = 0; i < integerCount;i++)
   {
-     setInteger(i, i+3);
+     integers[i] = 0;
+     ChangedInts[i] = false;
   }
+
+  //ensure bools are not set
   for(int i = 0; i < boolCount;i++)
   {
-    setBools(i,0);//i%2;
+    bools[i] = 0;
+    ChangedBools[i] = 0;
   }
-  message = "abc";
+
+  //ensure message is clear
+  message = "";
+  MessageChanged = false;
+
+  //ensure the pictureframe is empty
   for(int i = 0; i<= 19200 * 2;i++){
-    (*BITBild)[i]=252;
+    (*BITBild)[i]=0;
   }
 }
 

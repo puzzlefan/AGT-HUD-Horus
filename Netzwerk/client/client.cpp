@@ -14,10 +14,12 @@
 #include <sys/select.h>
 #include "client.h"
 
-Client::Client(user *point /*, HeadGUI *PointerHeadGUI*/)
+Client::Client(user *point , HeadGUI *PointerHeadGUI)
 {
+  std::signal(SIGPIPE, SIG_IGN);//let write errors dont crash the programm
+
   mine = point;
-//  GUI = PointerHeadGUI;
+  GUI = PointerHeadGUI;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
   if (sockfd<0) {
     std::cout << "error opening socket" << '\n';
@@ -25,7 +27,8 @@ Client::Client(user *point /*, HeadGUI *PointerHeadGUI*/)
 
   bzero((char *) &serv_addr, sizeof(serv_addr));//making endpoint socket identifaier ready
   serv_addr.sin_family = AF_INET;//ist im internet
-  inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1 converts human redable to computer readable and stores in socket
+  inet_pton(AF_INET, "192.168.178.32", &(serv_addr.sin_addr));
+  //inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
   serv_addr.sin_port = htons(portno);
 
   if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
@@ -33,12 +36,6 @@ Client::Client(user *point /*, HeadGUI *PointerHeadGUI*/)
         std::cout<<"ERROR connecting Netzwerk client"<<"\n";
         return;
   }
-
-  //timeout on connection
-  WaitingTime.tv_sec = 1;//seconds
-  WaitingTime.tv_usec = 0;//microsecond (10^-6)
-  //ensures that a loss of connection does not quit the programm but also dont tells anybody about that
-  std::signal(SIGPIPE, SIG_IGN);
 
   ClientThread = new std::thread(&Client::communicator,this);
 }
@@ -50,15 +47,11 @@ Client::~Client()
 
 void Client::communicator()
 {
-  bool id_confirmed = false;
-  char command = 0;
-  //bool ReadWrite[] = {false, false};//for later use
-  int fall = 0;
-  //rwteble(ReadWrite);//for later use
-  char abc[1];
-  while(true) write(sockfd,abc,1);
-  std::cout << "/* message */" << '\n';
-  while (1!=2)
+  bool id_confirmed = false;//bool for blocking data while waiting
+  char command = 0;//short time storage of commands
+  int fall = 0;//short time storage of next Step
+
+  while (1!=2)//endless loop
   {
     switch (fall) {
       case 0:   if(id_confirmed || mine->getBool(NEW_CONFIRMED_ID))
@@ -67,7 +60,7 @@ void Client::communicator()
                 }
                 else
                 {
-                  fall = 0;
+                  fall = 0;//continue until an id has been confirmed
                 }
                 break;
       case 1:   command = 001;
@@ -84,41 +77,41 @@ void Client::communicator()
                 int RecivingLength;
                 do
                 {
-                    s_read(sockfd, &command, CommandLength);
+                    recie(sockfd, &command, CommandLength);
                     switch (command) {
                     default : //std::cout << "something went horrible wrong through out reading" << '\n';
                                 break;
                     case 3:     break;
                     case 200:   do
                                 {
-                                    s_read(sockfd, &Position, 1);
+                                    recie(sockfd, &Position, 1);
                                     if(Position == 253)
                                     {
                                         break;
                                     }
-                                    s_read(sockfd, Integer, 4);
+                                    recie(sockfd, &Integer, 4);
                                     mine->recieveInt((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
                                 } while(true);
                                 break;
                     case 201:   do
                                 {
-                                    s_read(sockfd, &Position, 1);
+                                    recie(sockfd, &Position, 1);
                                     if(Position == 253)
                                     {
                                         break;
                                     }
-                                    s_read(sockfd, &Bool, 1);
+                                    recie(sockfd, &Bool, 1);
                                     mine->recieveBool(Bool,Position);
                                 } while(true);
                                 break;
                     case 202:   mine->recieveMessage("");
                                 char MLength[4] = {0,0,0,0};
-                                s_read(sockfd,MLength,4);
+                                recie(sockfd,&MLength,4);
                                 RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
                                 char MessagE [RecivingLength];
                                 //for (int i = 0; i < mine->getMessageLength(); i++)
                                 //{
-                                s_read(sockfd,MessagE,RecivingLength);
+                                recie(sockfd,&MessagE,RecivingLength);
                                 std::string mESSAGe(MessagE,RecivingLength);
                                 mine->recieveMessage(mESSAGe);
                                 //}
@@ -127,7 +120,7 @@ void Client::communicator()
                   }
                 } while(command!=003);
                 fall = 001;
-                //GUI->newDataFromHeadquater();
+                GUI->newDataFromHeadquater();
                 break;
 
       case 3:   command = 003;
@@ -200,37 +193,20 @@ void Client::communicator()
                 mine->setBools(UPDATE_IMAGE_SIGNAL,true);
                 fall = 003;
                 break;
-                //OLD
-                /*
-                command = 104;//needs change
-                char nUMMBER[4];
-                write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
-                for(int i = 0; i< mine->getBITBildSize();i++)
-                {
-                  if(mine->getBITBildChanged(i))
-                  {
-                    IntChar(i,nUMMBER);
-                    write(sockfd, &nUMMBER, 4);
-                    char ToWrite = mine->transmitBITBild(i);
-                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
-                  }
-                }
-                char STOP[4];
-                IntChar(0xFFFFFFFF,STOP);
-                write(sockfd,STOP,4);
-                fall = 003;
-                break;
-                */
-
       default:  //std::cout << "something wemt horrebly wrong" << '\n';
                 break;
     }
   }
 }
 
-
 bool Client::readable()
 {
+  fd_set rfds,wfds;//generates buffers which hold the sockets for select to check
+  struct timeval WaitingTime;
+  //specifais the time select waits for data select returns in struct length of unwaitet time but since it is zero ...
+  WaitingTime.tv_sec = 0;
+  WaitingTime.tv_usec = 0;
+
   FD_ZERO(&rfds);//clear all FDs
   FD_SET(0, &rfds);//because of reasons we add fd 0
   FD_SET(sockfd, &rfds);//adding the socket which we may want to read
@@ -247,7 +223,7 @@ bool Client::readable()
 bool Client::writable()
 {
   FD_ZERO(&wfds);//clear all FDs
-  FD_SET(0, &wfds);//because of reasons we add fd 0
+  FD_SET(0, &rfds);//because of reasons we add fd 0
   FD_SET(sockfd, &wfds);//adding the socket which we may want to write
   if (0<select(sockfd+1,NULL, &wfds, NULL, &WaitingTime)) //http://manpages.courier-mta.org/htmlman2/select.2.html watch for reading possebilety
   {
@@ -268,23 +244,46 @@ void Client::IntChar(int Inte, char *ptr)
   ptr[3] = Inte & 0x000000FF;
 }
 
-int Client::s_read(int sockFD, char *buffer, int length)
+int Client::recie(int fd,void *buf, size_t length)
 {
-  if(readable())
-  {
-    read(sockFD, buffer, length);
-    return 0;
-  }
-  std::cout << "connection lost nothing to read" << '\n';
-  return -1;
+    int ret = recv(fd, buf, length, MSG_WAITALL);
+    if (ret < length) {//detect an error
+      perror(NULL);//print error message
+      //call reconection routine
+    }
+    return ret;
 }
 
-//static void Client::writeERROR(int code)
-//{
-//  //std::cout << "/* message */" << '\n';
-//}
-
-void Client::communicationWithTheCommunicator()
+int Client::reconnect()
 {
+  protocolReboot = true;
+  retryCount++;
 
+  //basicly completly reconfigures socket
+  //
+  //actualy testing if this is realy needet
+  //
+
+/*
+  sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
+  if (sockfd<0) {
+    std::cout << "error opening socket" << '\n';
+  }
+
+  bzero((char *) &serv_addr, sizeof(serv_addr));//making endpoint socket identifaier ready
+  serv_addr.sin_family = AF_INET;//ist im internet
+  //inet_pton(AF_INET, "192.168.2.50", &(serv_addr.sin_addr));
+  inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
+  serv_addr.sin_port = htons(portno);
+*/
+  if(retryCount < 1000000000)
+  {
+    if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+    {
+          std::cout<<"ERROR connecting Netzwerk client"<<"\n";
+          reconnect();
+          return -1;
+    }
+  }
+  return 0;
 }

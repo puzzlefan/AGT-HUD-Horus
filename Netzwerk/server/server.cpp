@@ -16,8 +16,10 @@
 
 
 using namespace std;
-Server::Server(std::vector<user> *point /*, headquater *abc*/)
+Server::Server(std::vector<user> *point , headquater *abc)
 {
+	 std::signal(SIGPIPE, SIG_IGN);//let write errors dont crash the programm
+
 	mine = point;
 	#ifdef SERVER_STANDALONE
 	HQ = abc;
@@ -44,11 +46,6 @@ Server::Server(std::vector<user> *point /*, headquater *abc*/)
 	//starting the first thread, that one only handles acception of connection because it ohterwise would block the continuation of the programm
 	//
 	ServerMain = new thread(&Server::ServerMainThread,this);
-}
-
-void Server::dataExchange()
-{
-
 }
 
 void Server::ServerMainThread()
@@ -91,18 +88,6 @@ void Server::ServerPrivateThread(int counti)
 	char MLength[] = {0,0,0,0};
 	bool Continue = true;
 	while (true) {
-		//
-		//	!!! TEST
-		//
-		//if((*mine)[counti].getBool(2)){
-		//(*mine)[counti].setBools(2,0);
-		//(*mine)[counti].setMessage("Server");
-		//}
-		//
-		//
-		//
-		char abc[1];
-		while(true) read(ClientFd[counti],&abc,1);
 		switch (fall) {
 			case 0:	read(ClientFd[counti],&command,1);
 							fall = command;
@@ -147,19 +132,6 @@ void Server::ServerPrivateThread(int counti)
 													(*mine)[counti].recieveBITBild(Char,i);
 												}
 												break;
-												//OLD
-												/*
-												do
-												{
-													read(ClientFd[counti],Integer,4);
-													int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
-													if(Zahl==0xFFFFFFFF) break;
-													read(ClientFd[counti], &Char,1);
-													(*mine)[counti].recieveBITBild(Char,Zahl);
-												} while(true);
-												(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL,true);
-												break;
-												*/
 									case 103: 	(*mine)[counti].recieveMessage("");
 					                    		read(ClientFd[counti],&MLength,4);
 					                    		int RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
@@ -203,18 +175,6 @@ void Server::ServerPrivateThread(int counti)
 				    	}
 				    	command = 253;
 			     		write(ClientFd[counti],&command,1);
-/*
-					if((*mine)[counti].getMessageChanged())
-					{
-						command = 202;
-		      			write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
-		      			for(int i = 0; i< (*mine)[counti].getMessageLength();i++)
-		      			{
-									char a = (*mine)[counti].getMessage()[i];
-									write(ClientFd[counti], &a, 1);
-		      			}
-					}
-*/
 						if((*mine)[counti].getMessageChanged())
 		      	{
 		      		command = 202;
@@ -250,4 +210,49 @@ int Server::CharInt(char *ptr)
 Server::~Server()
 {
 	close(sockfd);
+}
+
+
+int Server::recie(int fd,void *buf, size_t length)
+{
+    int ret = recv(fd, buf, length, MSG_DONTWAIT);
+    if (ret < length) {//detect an error
+      perror(NULL);//print error message
+      //call reconection routine
+    }
+    return ret;
+}
+
+int Server::reconnect()
+{
+  protocolReboot = true;
+  retryCount++;
+
+  //basicly completly reconfigures socket
+  //
+  //actualy testing if this is realy needet
+  //
+
+/*
+  sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
+  if (sockfd<0) {
+    std::cout << "error opening socket" << '\n';
+  }
+
+  bzero((char *) &serv_addr, sizeof(serv_addr));//making endpoint socket identifaier ready
+  serv_addr.sin_family = AF_INET;//ist im internet
+  //inet_pton(AF_INET, "192.168.2.50", &(serv_addr.sin_addr));
+  inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
+  serv_addr.sin_port = htons(portno);
+*/
+  if(retryCount < 1000000000)
+  {
+    if (accept(sockfd, (struct sockaddr *) &ClientAddresses[count], &SocketLengths[count]) < 0)
+    {
+          std::cout<<"ERROR connecting Netzwerk client"<<"\n";
+          reconnect();
+          return -1;
+    }
+  }
+  return 0;
 }

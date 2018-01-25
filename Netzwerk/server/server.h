@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-//#define SERVER_STANDALONE //constructer manuel ändern
+#define SERVER_STANDALONE //constructer manuel ändern
 
 #include <unistd.h>     //System interaction, probably
 #include <sys/types.h>  //introduces more data types (probabl derived ones which make things easier)
@@ -14,6 +14,7 @@
 #include "../User/User.h"
 //#include <sys/time.h>//macht zeit
 #include <sys/select.h>
+#include "csignal"
 #ifdef SERVER_STANDALONE
 #include "../../headquaterGUI/headquater.h"
 #endif
@@ -34,9 +35,13 @@ private:
 	std::vector<struct sockaddr_in> ClientAddresses;
 	std::vector<int> ClientFd;
 
+  bool protocolReboot = false;
+  int retryCount = 0;
+
 	//threads
 	std::thread *ServerMain;
 	std::vector<std::thread> clientThreads;
+
 
 	std::vector<user> *mine;
 
@@ -44,16 +49,17 @@ private:
   headquater *HQ;
   #endif
 public:
-	Server(std::vector<user> *point/*, headquater *abc*/);
+	Server(std::vector<user> *point, headquater *abc);
 	~Server();
 
 	void ServerMainThread();//{return 1;}
 	void ServerPrivateThread(int counti);
 
-	void dataExchange();
-
 	void IntChar(int Inte, char *ptr);
 	int CharInt(char *ptr);
+
+  int recie(int fd,void *buf, size_t length);//recieve with connection loss detection
+  int reconnect();
 };
 
 #endif
