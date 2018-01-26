@@ -1,16 +1,33 @@
 #Lepton related things
+
 raspberrypi_libs/**
+
 **/SDK/**
 
+
+
 #Qt related things
+
 **/*.pro.user
+
 **/*.pro.user.*
+
 **/*.cpp.save
+
 **/gen_mocs/**
+
 **/gen_objs/**
+
 build-*/**
+
 headquaterGUI/headquaterGUI
+
 headquaterGUI/Makefile
+
 personalGUI/personalGUI
+
 personalGUI/Makefile
 
+
+#Network related things
+**/main.NetworkCompile
