@@ -25,7 +25,7 @@ Client::Client(user *point , HeadGUI *PointerHeadGUI)
 
   bzero((char *) &serv_addr, sizeof(serv_addr));//making endpoint socket identifaier ready
   serv_addr.sin_family = AF_INET;//ist im internet
-  inet_pton(AF_INET, "192.168.2.50", &(serv_addr.sin_addr));
+  inet_pton(AF_INET, "192.168.178.73", &(serv_addr.sin_addr));
   //inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
   serv_addr.sin_port = htons(portno);
 
@@ -35,8 +35,12 @@ Client::Client(user *point , HeadGUI *PointerHeadGUI)
         return;
   }
 
-  mine->setID(1);
-  mine->setBools(NEW_CONFIRMED_ID,true);
+  //
+  //BÖSE7
+  //
+
+  // mine->setID(0);
+  // mine->setBools(NEW_CONFIRMED_ID,true);
 
   ClientThread = new std::thread(&Client::communicator,this);
 }

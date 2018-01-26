@@ -510,7 +510,18 @@ void HeadGUI::sortingValuesForHeadquater()
         for(int i = 0; i < 2 * PacketBytes*FrameHeight; i++)
         {
             unsigned char bitValue = *(resultPicture + i);
-            networkUser->setBITBild(bitValue, i);
+
+            //
+            //!!!BÖSE!!!
+            //
+
+            networkUser->setBITBild(5, i);
+
+            // networkUser->setBITBild(bitValue, i);
+
+            //
+            //!!!ENDE BÖSE !!!!
+            //
         }
 
         updatedPicture = false;
