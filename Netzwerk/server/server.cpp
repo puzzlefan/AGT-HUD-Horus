@@ -16,7 +16,7 @@
 
 
 using namespace std;
-Server::Server(std::vector<user> *point , headquater *abc)
+Server::Server(std::vector<user> *point /*, headquater *abc*/)
 {
 	 std::signal(SIGPIPE, SIG_IGN);//let write errors dont crash the programm
 
@@ -221,6 +221,11 @@ int Server::recie(int fd,void *buf, size_t length)
       //call reconection routine
     }
     return ret;
+}
+
+int Server::writi(int fd,void *buf, size_t length)
+{
+	send(fd, buf, length,0);
 }
 
 int Server::reconnect()

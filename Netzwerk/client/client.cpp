@@ -9,17 +9,17 @@
 #include <string>
 #include <iostream>
 #include <thread>
-#include "../User/User.h"
+//#include "../User/User.h"
 #include <sys/time.h>//macht zeit
 #include <sys/select.h>
 #include "client.h"
 
-Client::Client(user *point , HeadGUI *PointerHeadGUI)
+Client::Client(user *point /*, HeadGUI *PointerHeadGUI*/)
 {
   std::signal(SIGPIPE, SIG_IGN);//let write errors dont crash the programm
 
   mine = point;
-  GUI = PointerHeadGUI;
+  //GUI = PointerHeadGUI;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
   if (sockfd<0) {
     std::cout << "error opening socket" << '\n';
@@ -64,12 +64,12 @@ void Client::communicator()
                 }
                 break;
       case 1:   command = 001;
-                write(sockfd, &command, CommandLength);//send to sockfd command 1 with length 1
+                writi(sockfd, &command, CommandLength);//send to sockfd command 1 with length 1
                 fall = 100;
                 break;
 
       case 2:   command = 002;
-                write(sockfd, &command, CommandLength);//send to sockfd command 2 with length 1
+                writi(sockfd, &command, CommandLength);//send to sockfd command 2 with length 1
                 char Position;
                 char Bool;
                 char Char;
@@ -120,75 +120,75 @@ void Client::communicator()
                   }
                 } while(command!=003);
                 fall = 001;
-                GUI->newDataFromHeadquater();
+                //GUI->newDataFromHeadquater();
                 break;
 
       case 3:   command = 003;
-                write(sockfd, &command, CommandLength);//send to sockfd command 3 with length 1
+                writi(sockfd, &command, CommandLength);//send to sockfd command 3 with length 1
                 fall = 002;
                 break;
 
       case 100: command = 100;
-                write(sockfd, &command, CommandLength);//send to sockfd command 100 with length 1
+                writi(sockfd, &command, CommandLength);//send to sockfd command 100 with length 1
                 char charID[4];
                 IntChar(mine->getID(),charID);
-                write(sockfd, charID, 4);
+                writi(sockfd, charID, 4);
                 fall = 101;
                 break;
 
       case 101: command = 101;
-                write(sockfd, &command, CommandLength);//send to sockfd command 101 with length 1
+                writi(sockfd, &command, CommandLength);//send to sockfd command 101 with length 1
                 char chaInt[4];
                 for (char i = 0; i < mine->getIntegerCount() ; i++)
                 {
                   if (mine->getIntegersChanged(i)) {
-                    write(sockfd,&i,1);
+                    writi(sockfd,&i,1);
                     IntChar(mine->transmitInt(i), chaInt);
-                    write(sockfd, chaInt, 4);
+                    writi(sockfd, chaInt, 4);
                   }
                 }
                 command = 253;
-                write(sockfd,&command,1);
+                writi(sockfd,&command,1);
                 fall = 102;
                 break;
 
       case 102: command = 102;
-                write(sockfd, &command, CommandLength);//send to sockfd command 102 with length 1
+                writi(sockfd, &command, CommandLength);//send to sockfd command 102 with length 1
                 for (char i = 0; i < mine->getBoolCount(); i++)
                 {
                   if (mine->getBoolChanged(i)) {
-                    write(sockfd,&i,1);
+                    writi(sockfd,&i,1);
                     char asdf = mine->transmitBool(i);
-                    write(sockfd, &asdf, 1);
+                    writi(sockfd, &asdf, 1);
                   }
                 }
                 command = 253;
-                write(sockfd,&command,1);
+                writi(sockfd,&command,1);
                 fall = 103;
                 break;
 
       case 103: if(mine->getMessageChanged())
                 {
                     command = 103;
-                    write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
+                    writi(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
                     //sent itnt for length
                     char charMessageLength[4];
                     IntChar(mine->getMessageLength()+1,charMessageLength);
-                    write(sockfd, charMessageLength, 4);
+                    writi(sockfd, charMessageLength, 4);
                     //for(int i = 0; i< mine->getMessageLength();i++)
                     //{
-                    write(sockfd, mine->transmitMessage().c_str(), mine->getMessageLength()+1);
+                    writi(sockfd, mine->transmitMessage().c_str(), mine->getMessageLength()+1);
                     //}
                 }
                 fall = 104;
                 break;
 
       case 104: command = 104;//needs change
-                write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
+                writi(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
                 for(int i = 0; i< mine->getBITBildSize();i++)
                 {
                     char ToWrite = mine->transmitBITBild(i);
-                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
+                    writi(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
                 }
                 mine->setBools(UPDATE_IMAGE_SIGNAL,true);
                 fall = 003;
@@ -201,7 +201,7 @@ void Client::communicator()
 
 bool Client::readable()
 {
-  fd_set rfds,wfds;//generates buffers which hold the sockets for select to check
+  fd_set rfds;//generates buffers which hold the sockets for select to check
   struct timeval WaitingTime;
   //specifais the time select waits for data select returns in struct length of unwaitet time but since it is zero ...
   WaitingTime.tv_sec = 0;
@@ -222,8 +222,15 @@ bool Client::readable()
 }
 bool Client::writable()
 {
+  fd_set wfds;//generates buffers which hold the sockets for select to check
+
+  struct timeval WaitingTime;
+  //specifais the time select waits for data select returns in struct length of unwaitet time but since it is zero ...
+  WaitingTime.tv_sec = 0;
+  WaitingTime.tv_usec = 0;
+
   FD_ZERO(&wfds);//clear all FDs
-  FD_SET(0, &rfds);//because of reasons we add fd 0
+  FD_SET(0, &wfds);//because of reasons we add fd 0
   FD_SET(sockfd, &wfds);//adding the socket which we may want to write
   if (0<select(sockfd+1,NULL, &wfds, NULL, &WaitingTime)) //http://manpages.courier-mta.org/htmlman2/select.2.html watch for reading possebilety
   {
@@ -244,14 +251,82 @@ void Client::IntChar(int Inte, char *ptr)
   ptr[3] = Inte & 0x000000FF;
 }
 
-int Client::recie(int fd,void *buf, size_t length)
+void Client::WriteThread(int fd,const void *buf, size_t length)
 {
-    int ret = recv(fd, buf, length, MSG_WAITALL);
-    if (ret < length) {//detect an error
-      perror(NULL);//print error message
-      //call reconection routine
+  std::lock_guard<std::mutex> lock(joinable);
+  send(fd, buf, length,0);
+}
+
+void Client::ReadThread(int fd, void *buf, size_t length)
+{
+  std::lock_guard<std::mutex> lock(joinable);
+  // std::cout << "I BLOCK NIET 1" << '\n';
+  int ret = recv(fd, buf, length, MSG_WAITALL);
+  if (ret < length) {//detect an error
+    perror(NULL);//print error message
+    //call reconection routine
+  }
+  // std::cout << "I BLOCK NIET 2" << '\n';
+}
+
+int Client::recie(int fd, void *buf, size_t length)
+{
+  long milliseconds = 100000;
+  clock_t old = clock();
+
+  std::thread *worker = new std::thread(&Client::ReadThread,this,fd, buf, length);
+
+  int tolong = 0;
+
+  while (true) {
+    // std::cout << "fehlende Zeit= " << old + milliseconds - clock() <<" loop counter= "<< tolong<< '\n';
+    if(old + milliseconds < clock())
+    {
+      protocolReboot = true;
+      std::cout << "/*read error message */" << '\n';
+      //return -1;
     }
-    return ret;
+    if(joinable.try_lock())
+    {
+      joinable.unlock();
+      worker->join();
+      // std::cout << "/*BOESE*/" << '\n';
+      return 1;
+    }
+    tolong++;
+  }
+  return -1;
+    // int ret = recv(fd, buf, length, MSG_WAITALL);
+    // if (ret < length) {//detect an error
+    //   perror(NULL);//print error message
+    //   //call reconection routine
+    // }
+    // return ret;
+}
+
+int Client::writi(int fd,const void *buf, size_t length)
+{
+  long milliseconds = 1000;
+  clock_t old = clock();
+
+  std::thread *worker = new std::thread(&Client::WriteThread,this,fd, buf, length);
+
+  while (true) {
+    if(old + milliseconds < clock())
+    {
+      protocolReboot = true;
+      std::cout << "/*write error message */" << '\n';
+      //return -1;
+    }
+    if(joinable.try_lock())
+    {
+      joinable.unlock();
+      worker->join();
+      // std::cout << "/* error freee message */" << '\n';
+      return 1;
+    }
+  }
+  return -1;
 }
 
 int Client::reconnect()

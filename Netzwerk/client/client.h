@@ -15,8 +15,9 @@
 #include "../User/User.h"
 #include <sys/time.h>//macht zeit
 #include <sys/select.h>
-#include "../../personalGUI/headgui.h"
+//#include "../../personalGUI/headgui.h"
 #include "csignal"
+#include "ctime"
 
 class Client
 {
@@ -33,13 +34,19 @@ private://the ip adress of the server stands in the cpp fron the client because 
   int retryCount = 0;
 
   user *mine;
-  HeadGUI *GUI;
+  //HeadGUI *GUI;
+
+  std::mutex joinable;//mutex used to check if the actual transmission takes reasonable time
 public:
-  Client(user *point, HeadGUI *PointerHeadGUI);
+  Client(user *point/*, HeadGUI *PointerHeadGUI*/);
   ~Client();
 
   void communicator();
 
+  void WriteThread(int fd,const void *buf, size_t length);
+  void ReadThread(int fd, void *buf, size_t length);
+
+  int writi(int fd,const void *buf, size_t length);//write with connection loss detection
   int recie(int fd,void *buf, size_t length);//recieve with connection loss detection
   int reconnect();
 
