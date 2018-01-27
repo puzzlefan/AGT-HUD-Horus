@@ -18,6 +18,7 @@
 //#include "../../personalGUI/headgui.h"
 #include "csignal"
 #include "ctime"
+#Include "shared_mutex.h"
 
 class Client
 {
@@ -36,15 +37,14 @@ private://the ip adress of the server stands in the cpp fron the client because 
   user *mine;
   //HeadGUI *GUI;
 
-  std::mutex joinable;//mutex used to check if the actual transmission takes reasonable time
+  std::thread *ClockThread;
+  bool change = false;
 public:
   Client(user *point/*, HeadGUI *PointerHeadGUI*/);
   ~Client();
 
   void communicator();
-
-  void WriteThread(int fd,const void *buf, size_t length);
-  void ReadThread(int fd, void *buf, size_t length);
+  void MagicalwhiteSmoke();
 
   int writi(int fd,const void *buf, size_t length);//write with connection loss detection
   int recie(int fd,void *buf, size_t length);//recieve with connection loss detection

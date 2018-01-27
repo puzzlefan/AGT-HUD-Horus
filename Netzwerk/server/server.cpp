@@ -58,6 +58,7 @@ void Server::ServerMainThread()
 		user* tuess = new user();
 		tuess->fill();
 		(*mine).push_back(*tuess);
+		changes.push_back(false);
 	 	if (ClientFd[count] < 0)//wenn error nix neu thread
 	 	{
 		 	std::cout << "ERROR on accept" << '\n';
@@ -79,6 +80,8 @@ void Server::ServerPrivateThread(int counti)
 	//
 	//
 	//
+	std::thread *ClockThread = new std::thread(&Server::MagicalwhiteSmoke,this, counti);
+
 	int fall = 0;
 	int command = 0;
 	int Position;
@@ -88,6 +91,9 @@ void Server::ServerPrivateThread(int counti)
 	char MLength[] = {0,0,0,0};
 	bool Continue = true;
 	while (true) {
+
+		changes[counti] = true;
+
 		switch (fall) {
 			case 0:	read(ClientFd[counti],&command,1);
 							fall = command;
@@ -226,6 +232,23 @@ int Server::recie(int fd,void *buf, size_t length)
 int Server::writi(int fd,void *buf, size_t length)
 {
 	send(fd, buf, length,0);
+}
+
+void Server::MagicalwhiteSmoke(int counti)
+{
+  int allowed_loops = 1000000;
+  time_t last = clock();
+  while (true) {
+    if(last + allowed_loops < clock())
+    {
+      std::cout << "/* message */ "<< counti << '\n';
+    }
+    if (changes[counti]) {
+      // std::cout << "/* message */" << '\n';
+      last = clock();
+      changes[counti] = false;
+    }
+  }
 }
 
 int Server::reconnect()

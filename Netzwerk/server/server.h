@@ -34,6 +34,7 @@ private:
 	std::vector<socklen_t> SocketLengths;
 	std::vector<struct sockaddr_in> ClientAddresses;
 	std::vector<int> ClientFd;
+  std::vector<bool> changes;
 
   bool protocolReboot = false;
   int retryCount = 0;
@@ -54,6 +55,7 @@ public:
 
 	void ServerMainThread();//{return 1;}
 	void ServerPrivateThread(int counti);
+  void MagicalwhiteSmoke(int counti);
 
 	void IntChar(int Inte, char *ptr);
 	int CharInt(char *ptr);

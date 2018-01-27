@@ -38,6 +38,7 @@ Client::Client(user *point /*, HeadGUI *PointerHeadGUI*/)
   }
 
   ClientThread = new std::thread(&Client::communicator,this);
+  ClockThread = new std::thread(&Client::MagicalwhiteSmoke,this);
 }
 
 Client::~Client()
@@ -53,6 +54,7 @@ void Client::communicator()
 
   while (1!=2)//endless loop
   {
+    change = true;//sets the bool for the counter to true to reset the counter
     switch (fall) {
       case 0:   if(id_confirmed || mine->getBool(NEW_CONFIRMED_ID))
                 {
@@ -251,82 +253,36 @@ void Client::IntChar(int Inte, char *ptr)
   ptr[3] = Inte & 0x000000FF;
 }
 
-void Client::WriteThread(int fd,const void *buf, size_t length)
-{
-  std::lock_guard<std::mutex> lock(joinable);
-  send(fd, buf, length,0);
-}
-
-void Client::ReadThread(int fd, void *buf, size_t length)
-{
-  std::lock_guard<std::mutex> lock(joinable);
-  // std::cout << "I BLOCK NIET 1" << '\n';
-  int ret = recv(fd, buf, length, MSG_WAITALL);
-  if (ret < length) {//detect an error
-    perror(NULL);//print error message
-    //call reconection routine
-  }
-  // std::cout << "I BLOCK NIET 2" << '\n';
-}
-
 int Client::recie(int fd, void *buf, size_t length)
 {
-  long milliseconds = 100000;
-  clock_t old = clock();
-
-  std::thread *worker = new std::thread(&Client::ReadThread,this,fd, buf, length);
-
-  int tolong = 0;
-
-  while (true) {
-    // std::cout << "fehlende Zeit= " << old + milliseconds - clock() <<" loop counter= "<< tolong<< '\n';
-    if(old + milliseconds < clock())
-    {
-      protocolReboot = true;
-      std::cout << "/*read error message */" << '\n';
-      //return -1;
+    int ret = recv(fd, buf, length, MSG_WAITALL);
+    if (ret < length) {//detect an error
+      perror(NULL);//print error message
+      //call reconection routine
     }
-    if(joinable.try_lock())
-    {
-      joinable.unlock();
-      worker->join();
-      // std::cout << "/*BOESE*/" << '\n';
-      return 1;
-    }
-    tolong++;
-  }
-  return -1;
-    // int ret = recv(fd, buf, length, MSG_WAITALL);
-    // if (ret < length) {//detect an error
-    //   perror(NULL);//print error message
-    //   //call reconection routine
-    // }
-    // return ret;
+    return ret;
 }
 
 int Client::writi(int fd,const void *buf, size_t length)
 {
-  long milliseconds = 1000;
-  clock_t old = clock();
+    return send(fd, buf, length,0);
+}
 
-  std::thread *worker = new std::thread(&Client::WriteThread,this,fd, buf, length);
-
+void Client::MagicalwhiteSmoke()
+{
+  int allowed_loops = 1000000;
+  time_t last = clock();
   while (true) {
-    if(old + milliseconds < clock())
+    if(last + allowed_loops < clock())
     {
-      protocolReboot = true;
-      std::cout << "/*write error message */" << '\n';
-      //return -1;
+      std::cout << "/* message */" << '\n';
     }
-    if(joinable.try_lock())
-    {
-      joinable.unlock();
-      worker->join();
-      // std::cout << "/* error freee message */" << '\n';
-      return 1;
+    if (change) {
+      // std::cout << "/* message */" << '\n';
+      last = clock();
+      change = false;
     }
   }
-  return -1;
 }
 
 int Client::reconnect()
