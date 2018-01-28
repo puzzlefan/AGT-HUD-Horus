@@ -47,7 +47,6 @@ void MagicalwhiteSmoke();
 
 int writi(int fd,const void *buf, size_t length);  //write with connection loss detection
 int recie(int fd,void *buf, size_t length);  //recieve with connection loss detection
-int reconnect();
 
 bool readable();  //checks if something can be read over the socket
 bool writable();  //checks if something can be written over the socket

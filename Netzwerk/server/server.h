@@ -62,7 +62,6 @@ int CharInt(char *ptr);
 
 int writi(int fd,void *buf, size_t length);  //write with connection loss detection
 int recie(int fd,void *buf, size_t length);  //recieve with connection loss detection
-int reconnect();
 };
 
 #endif

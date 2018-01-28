@@ -252,37 +252,3 @@ void Server::MagicalwhiteSmoke(int counti)
 																}
 								}
 }
-
-int Server::reconnect()
-{
-								protocolReboot = true;
-								retryCount++;
-
-								//basicly completly reconfigures socket
-								//
-								//actualy testing if this is realy needet
-								//
-
-/*
-   sockfd = socket(AF_INET, SOCK_STREAM, 0);//open client socket end check if it worked
-   if (sockfd<0) {
-    std::cout << "error opening socket" << '\n';
-   }
-
-   bzero((char *) &serv_addr, sizeof(serv_addr));//making endpoint socket identifaier ready
-   serv_addr.sin_family = AF_INET;//ist im internet
-   //inet_pton(AF_INET, "192.168.2.50", &(serv_addr.sin_addr));
-   inet_pton(AF_INET, "127.0.0.1", &(serv_addr.sin_addr));//IP Adresse da wir Rasoberry Pi als Router verwenden ist diese Fix bei solange nur eine Testmaschine 127.0.0.1
-   serv_addr.sin_port = htons(portno);
- */
-								if(retryCount < 1000000000)
-								{
-																if (accept(sockfd, (struct sockaddr *) &ClientAddresses[count], &SocketLengths[count]) < 0)
-																{
-																								std::cout<<"ERROR connecting Netzwerk client"<<"\n";
-																								reconnect();
-																								return -1;
-																}
-								}
-								return 0;
-}
