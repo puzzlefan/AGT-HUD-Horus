@@ -241,12 +241,14 @@ void Server::MagicalwhiteSmoke(int counti)
 								while (true) {
 																if(last + allowed_loops < clock())
 																{
-																								std::cout << "/* message */ "<< counti << '\n';
+																								mine->at(counti).setConnectionLost(true);
+																								// std::cout << "/* message */ "<< counti << '\n';
 																}
 																if (changes[counti]) {
 																								// std::cout << "/* message */" << '\n';
 																								last = clock();
 																								changes[counti] = false;
+																								mine->at(counti).setConnectionLost(false);
 																}
 								}
 }

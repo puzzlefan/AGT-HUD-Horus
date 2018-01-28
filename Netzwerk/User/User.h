@@ -41,6 +41,12 @@ static const int BITBildSize = 39360;  //PacketWords(82 80 Pixel + 2 Header wör
 //static const int messageLength = 140;//because why not could get dynamic
 
 //
+//Error values
+//
+
+bool ConnectionLost = false;
+
+//
 //  transfer values
 //
 
@@ -77,6 +83,8 @@ std::mutex mutex_BitBild;   //mutex lock for BitBild
 
 std::mutex mutex_Message;   //mutex lock for Message
 //std::mutex mutex_Message; //mutex lock for Message changed
+
+std::mutex mutex_LostConnection; //mutex for the ConnectionLost bool, so that GUI and Network can wprk together wothout crazy stuff happening
 public:
 
 //
@@ -115,6 +123,8 @@ std::string getMessage();    //returns string with message, changed untouched
 bool getMessageChanged();   //returns if message has been changed
 int getMessageLength();     //returns legth of message
 
+bool getConnectionLost();   //returns if the programm thinks it has lost the connection
+
 //
 // setter to be used by non network components
 //
@@ -124,7 +134,8 @@ void setInteger(int Pos, int Integer);           //sets the value of an integer 
 void setBools(int Pos, bool Bools);              //sets the value of an bool at given position, changes change state to true
 void setBITBild(unsigned char Char, int Pos);    //sets the value of an char at given position, changes change state to true
 void setMessage(std::string Message);            //changes message, sets changed message true
-void setBITBildMutex(bool PowerOnOff);
+void setBITBildMutex(bool PowerOnOff);           //gives the GUI a mutex, so that the the GUI can handle the data itself
+void setConnectionLost(bool LostCon);            //set the Lost Connection value to given value
 
 //
 //  transmits used to send data from one computer to another

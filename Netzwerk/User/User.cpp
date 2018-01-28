@@ -128,6 +128,12 @@ int user::getMessageLength()
         return message.size();
 }
 
+bool user::getConnectionLost()
+{
+        std::lock_guard<std::mutex> lock(mutex_LostConnection);
+        return ConnectionLost;
+}
+
 //
 //  Setter to be used if you want to get Data into the Network
 //
@@ -176,6 +182,13 @@ void user::setBITBildMutex(bool PowerOnOff)
                 mutex_BitBild.unlock();
         }
 }
+
+void user::setConnectionLost(bool LostCon)
+{
+        std::lock_guard<std::mutex> lock(mutex_LostConnection);
+        ConnectionLost = LostCon;
+}
+
 //
 //  transmits, used to send the data to anther device
 //

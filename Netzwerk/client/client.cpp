@@ -275,16 +275,17 @@ void Client::MagicalwhiteSmoke()
         while (true) {
                 if(last + allowed_loops < clock())
                 {
-                        std::cout << "/* message */" << '\n';
+                        mine->setConnectionLost(true);
+                        // std::cout << "/* message */" << '\n';
                 }
                 if (change) {
                         // std::cout << "/* message */" << '\n';
                         last = clock();
                         change = false;
+                        mine->setConnectionLost(false);
                 }
         }
 }
-
 int Client::reconnect()
 {
         protocolReboot = true;
