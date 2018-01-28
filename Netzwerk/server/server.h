@@ -23,46 +23,46 @@ class headquater;
 class Server
 {
 private:
-  int CommandLength = 1;
+int CommandLength = 1;
 
-	int count = 0;//counts the attemps to get a connection
-	//Vars for the main thread
-	int sockfd;
-	uint16_t portno = 42000;
-	struct sockaddr_in serv_addr;
-	//Client Vector to handle multiple at the same time
-	std::vector<socklen_t> SocketLengths;
-	std::vector<struct sockaddr_in> ClientAddresses;
-	std::vector<int> ClientFd;
-  std::vector<bool> changes;
+int count = 0;  //counts the attemps to get a connection
+//Vars for the main thread
+int sockfd;
+uint16_t portno = 42000;
+struct sockaddr_in serv_addr;
+//Client Vector to handle multiple at the same time
+std::vector<socklen_t> SocketLengths;
+std::vector<struct sockaddr_in> ClientAddresses;
+std::vector<int> ClientFd;
+std::vector<bool> changes;
 
-  bool protocolReboot = false;
-  int retryCount = 0;
+bool protocolReboot = false;
+int retryCount = 0;
 
-	//threads
-	std::thread *ServerMain;
-	std::vector<std::thread> clientThreads;
+//threads
+std::thread *ServerMain;
+std::vector<std::thread> clientThreads;
 
 
-	std::vector<user> *mine;
+std::vector<user> *mine;
 
   #ifdef SERVER_STANDALONE
-  headquater *HQ;
+headquater *HQ;
   #endif
 public:
-	Server(std::vector<user> *point/*, headquater *abc*/);
-	~Server();
+Server(std::vector<user> *point /*, headquater *abc*/);
+~Server();
 
-	void ServerMainThread();//{return 1;}
-	void ServerPrivateThread(int counti);
-  void MagicalwhiteSmoke(int counti);
+void ServerMainThread();  //{return 1;}
+void ServerPrivateThread(int counti);
+void MagicalwhiteSmoke(int counti);
 
-	void IntChar(int Inte, char *ptr);
-	int CharInt(char *ptr);
+void IntChar(int Inte, char *ptr);
+int CharInt(char *ptr);
 
-  int writi(int fd,void *buf, size_t length);//write with connection loss detection
-  int recie(int fd,void *buf, size_t length);//recieve with connection loss detection
-  int reconnect();
+int writi(int fd,void *buf, size_t length);  //write with connection loss detection
+int recie(int fd,void *buf, size_t length);  //recieve with connection loss detection
+int reconnect();
 };
 
 #endif

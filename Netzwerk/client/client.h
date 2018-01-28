@@ -23,36 +23,36 @@
 class Client
 {
 private://the ip adress of the server stands in the cpp fron the client because if it stands around the other variables it wont compile
-  size_t CommandLength = 1;
+size_t CommandLength = 1;
 
-  int sockfd;
-  uint16_t portno = 42000;
-  struct sockaddr_in serv_addr;
-  std::thread *ClientThread;
+int sockfd;
+uint16_t portno = 42000;
+struct sockaddr_in serv_addr;
+std::thread *ClientThread;
 
 
-  bool protocolReboot = false;
-  int retryCount = 0;
+bool protocolReboot = false;
+int retryCount = 0;
 
-  user *mine;
-  //HeadGUI *GUI;
+user *mine;
+//HeadGUI *GUI;
 
-  std::thread *ClockThread;
-  bool change = false;
+std::thread *ClockThread;
+bool change = false;
 public:
-  Client(user *point/*, HeadGUI *PointerHeadGUI*/);
-  ~Client();
+Client(user *point /*, HeadGUI *PointerHeadGUI*/);
+~Client();
 
-  void communicator();
-  void MagicalwhiteSmoke();
+void communicator();
+void MagicalwhiteSmoke();
 
-  int writi(int fd,const void *buf, size_t length);//write with connection loss detection
-  int recie(int fd,void *buf, size_t length);//recieve with connection loss detection
-  int reconnect();
+int writi(int fd,const void *buf, size_t length);  //write with connection loss detection
+int recie(int fd,void *buf, size_t length);  //recieve with connection loss detection
+int reconnect();
 
-  bool readable();//checks if something can be read over the socket
-  bool writable();//checks if something can be written over the socket
-  void IntChar(int Inte, char *ptr);
+bool readable();  //checks if something can be read over the socket
+bool writable();  //checks if something can be written over the socket
+void IntChar(int Inte, char *ptr);
 };
 
 #endif

@@ -13,19 +13,19 @@
 
 int main(void)
 {
-	std::vector<user> v;
-	Server ItsMe(&v);
+								std::vector<user> v;
+								Server ItsMe(&v);
 
-	std::string text= "";
-	std::string last = "";
-	while(v.size()<=0);
-	while (true)
-	{
-		if(last != v[0].getMessage())
-		{
-			std::cout << v[0].getMessage() << '\n';
-			last = v[0].getMessage();
-		}
-	}
-	return 0;
+								std::string text= "";
+								std::string last = "";
+								while(v.size()<=0);
+								while (true)
+								{
+																if(last != v[0].getMessage())
+																{
+																								std::cout << v[0].getMessage() << '\n';
+																								last = v[0].getMessage();
+																}
+								}
+								return 0;
 }

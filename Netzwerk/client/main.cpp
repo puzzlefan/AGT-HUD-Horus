@@ -12,16 +12,16 @@
 #include "client.h"
 
 int main(int argc, char const *argv[]) {
-  user a;
-  Client kop(&a);
+        user a;
+        Client kop(&a);
 
-  a.setID(1);
-  a.setBools(0,1);
-  std::string text = "";
-  while (true)
-  {
-		std::cin >> text;
-    a.setMessage(text);
-  }
-  return 0;
+        a.setID(1);
+        a.setBools(0,1);
+        std::string text = "";
+        while (true)
+        {
+                std::cin >> text;
+                a.setMessage(text);
+        }
+        return 0;
 }

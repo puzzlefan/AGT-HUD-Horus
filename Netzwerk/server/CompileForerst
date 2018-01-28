@@ -1,4 +1,4 @@
 #!/bin/bash
 #compile command für server bis make file
 
-g++ main.cpp server.cpp ../User/User.cpp -o main -pthread -std=c++0x -g
+g++ main.cpp server.cpp ../User/User.cpp -o main.NetworkCompile -pthread -std=c++0x -g
