@@ -35,6 +35,7 @@ std::vector<socklen_t> SocketLengths;
 std::vector<struct sockaddr_in> ClientAddresses;
 std::vector<int> ClientFd;
 std::vector<bool> changes;
+std::vector<time_t> last;
 
 bool protocolReboot = false;
 int retryCount = 0;
@@ -42,6 +43,7 @@ int retryCount = 0;
 //threads
 std::thread *ServerMain;
 std::vector<std::thread> clientThreads;
+std::thread *ClockThread;
 
 
 std::vector<user> *mine;
