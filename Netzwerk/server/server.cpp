@@ -46,6 +46,9 @@ Server::Server(std::vector<user> *point /*, headquater *abc*/)
 								//starting the first thread, that one only handles acception of connection because it ohterwise would block the continuation of the programm
 								//
 								ServerMain = new thread(&Server::ServerMainThread,this);
+								ClockThread = new std::thread(&Server::MagicalwhiteSmoke,this);
+
+
 }
 
 void Server::ServerMainThread()
@@ -59,6 +62,7 @@ void Server::ServerMainThread()
 																tuess->fill();
 																(*mine).push_back(*tuess);
 																changes.push_back(false);
+																last.push_back(clock());
 																if (ClientFd[count] < 0)//wenn error nix neu thread
 																{
 																								std::cout << "ERROR on accept" << '\n';
@@ -234,21 +238,24 @@ int Server::writi(int fd,void *buf, size_t length)
 								send(fd, buf, length,0);
 }
 
-void Server::MagicalwhiteSmoke(int counti)
+void Server::MagicalwhiteSmoke(int counti)// a bit mäh
 {
 								int allowed_loops = 1000000;
-								time_t last = clock();
+								//time_t last = clock();
 								while (true) {
-																if(last + allowed_loops < clock())
+									for(int i = 0; i < last.size();i++)//not thread safe 
+									{
+																if(last[i] + allowed_loops < clock())
 																{
-																								mine->at(counti).setConnectionLost(true);
+																								mine->at(i).setConnectionLost(true);
 																								// std::cout << "/* message */ "<< counti << '\n';
 																}
-																if (changes[counti]) {
+																if (changes[i]) {
 																								// std::cout << "/* message */" << '\n';
 																								last = clock();
-																								changes[counti] = false;
-																								mine->at(counti).setConnectionLost(false);
+																								changes[i] = false;
+																								mine->at(i).setConnectionLost(false);
 																}
+									}
 								}
 }
