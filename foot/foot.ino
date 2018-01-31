@@ -60,11 +60,12 @@ void setup()
 {
   //enable for debug_out
   Serial.begin(9600);
-  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
+  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_THREE, VALUE_COUNT);
 }
 
 void loop()
 {
+    //Serial3.println("abc");
   TempMeasure();
   //temp_debug_out();
   ppmMeasure();
