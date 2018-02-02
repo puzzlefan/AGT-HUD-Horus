@@ -55,7 +55,7 @@ HEADERS += \
     ../I2C/DaTa/DaTa.h \
     ../I2C/I2C.h
 
-QMAKE_CXXFLAGS += -std=c++0x -pthread
+QMAKE_CXXFLAGS += -std=c++0x -pthread -g
 
 LIBS += -pthread -lwiringPi
 

@@ -1,10 +1,11 @@
 #include "I2C.h"
 #include <iostream>
 
+
 I2C::I2C(DaTa* DaTaToGo, HeadGUI* NotSoInsaneUSer)
 {
     MyLittleData = DaTaToGo;//store copy of Pointer to DaTa
-    //InsaneUser = NotSoInsaneUSer;
+    InsaneUser = NotSoInsaneUSer;
     fd = wiringPiI2CSetup(ADDR); //establishes connection to Arduino
     SinkThread = new std::thread(&I2C::ReadLoop,this);//starts the thread with acces to this class
 }
@@ -30,7 +31,7 @@ void I2C::ReadLoop()
             {
               MyLittleData->setDaTa(temp,i);//refreshes stored value
             }
-            std::cout<<MyLittleData->getRawDaTa(0)<<std::endl;
+            //std::cout<<MyLittleData->getRawDaTa(0)<<std::endl;
             usleep(20000);
         }
         if(MyLittleData->WriteOrDontWrite())//if there is new DaTa the write registers get written

@@ -15,12 +15,19 @@ Bluetooth *MasterFoot, *MasterArm;
 
 //pins
 int Lampe = 13;
+int L1 = 47;//LED leiste 1 bis 3
+int L2 = 46;
+int L3 = 45;
+
+//time
+int time = millis();
+int duration = 333;
 
 void setup() {
   //Anables Serial Communication for debugging
   Serial.begin(9600);
   //BT
-  MasterFoot = new Bluetooth(true, ERROR_PIN, STATE_FOOT, SERIAL_ONE, VALUE_COUNT_FOOT);
+  MasterFoot = new Bluetooth(true, ERROR_PIN, STATE_FOOT, SERIAL_THREE, VALUE_COUNT_FOOT);
   delay(endDelay);
   MasterArm = new Bluetooth(true, ERROR_PIN, STATE_ARM, SERIAL_TWO, VALUE_COUNT_ARM);
 
@@ -35,8 +42,13 @@ void setup() {
 
   //Pins
   pinMode(Lampe,OUTPUT);
+  pinMode(L1,OUTPUT);
+  pinMode(L2,OUTPUT);
+  pinMode(L3,OUTPUT);
   pinMode(12,OUTPUT);
 
+  pinMode(48,OUTPUT);
+  digitalWrite(48,HIGH);
 
 }
 
@@ -56,9 +68,9 @@ void loop() {
 
   Register[0] = MasterArm->getRead(0);//gets factor of button primes
   Register[1] = MasterFoot->getRead(1);//gets temp of foot multiplaid by 100 so we dont luse the digits after , directly
-  Register[2] = random(0,255);//simulates hear read out of Tempreture
+  Register[2] = analogRead(14);//random(0,255);//simulates hear read out of Tempreture
   Register[3] = MasterFoot->getRead(0);//gets ppm foot
-  Register[4] = random(0,255);//simulates hear read out of ppm
+  Register[4] = analogRead(15);//random(0,255);//simulates hear read out of ppm
   if(Register[5]==1)
   {
     digitalWrite(Lampe,HIGH);
@@ -66,6 +78,41 @@ void loop() {
   else
   {
     digitalWrite(Lampe,LOW);
+  }
+
+  Serial.print("Temp: ");
+  Serial.print(Register[1]);
+  Serial.print(" Co: ");
+  Serial.println(Register[4]);
+
+  //time Stuff
+  int newTime = millis();
+  if(newTime < time + duration)
+  {
+      digitalWrite(L1,HIGH);
+      Serial.println("1");
+  }
+  else
+  {
+      digitalWrite(L1,LOW);
+      if(newTime < (2 * duration) + time)
+      {
+          digitalWrite(L2,HIGH);
+          Serial.println("2");
+      }
+      else
+      {
+          digitalWrite(L2,LOW);
+          if(newTime < (3 * duration) + time)
+          {
+              digitalWrite(L3,HIGH);
+              Serial.println("3");
+          }
+          else{
+              digitalWrite(L3,LOW);
+              time = millis();
+          }
+      }
   }
 //  delay(endDelay);
 }
