@@ -29,7 +29,7 @@ int buttonCertify = 48;
 
 void setup()
 {
-  Serial.begin(9600); 
+  Serial.begin(9600);
   //Serial1.begin(38400);//doesent work any longer directly connected with computer
 
   pinMode(buttonUp,INPUT);
@@ -39,7 +39,11 @@ void setup()
   pinMode(buttonBack,INPUT);
   pinMode(buttonCertify,INPUT);
 
-  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
+  //Kabel
+  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_THREE, VALUE_COUNT);
+
+  //BT
+  //Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
 
 }
 

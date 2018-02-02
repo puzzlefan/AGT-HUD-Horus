@@ -27,9 +27,13 @@ void setup() {
   //Anables Serial Communication for debugging
   Serial.begin(9600);
   //BT
-  MasterFoot = new Bluetooth(true, ERROR_PIN, STATE_FOOT, SERIAL_THREE, VALUE_COUNT_FOOT);
+  //MasterFoot = new Bluetooth(true, ERROR_PIN, STATE_FOOT, SERIAL_THREE, VALUE_COUNT_FOOT);
   delay(endDelay);
-  MasterArm = new Bluetooth(true, ERROR_PIN, STATE_ARM, SERIAL_TWO, VALUE_COUNT_ARM);
+  //Kabel
+  MasterArm = new Bluetooth(true, ERROR_PIN, STATE_ARM, SERIAL_THREE, VALUE_COUNT_ARM);
+
+  //BT
+  //MasterArm = new Bluetooth(true, ERROR_PIN, STATE_ARM, SERIAL_TWO, VALUE_COUNT_ARM);
 
   //I2C
   //initialize i2c as slave
@@ -63,13 +67,13 @@ void setup() {
 */
 
 void loop() {
-  MasterFoot->update();
+  //MasterFoot->update();
   MasterArm->update();
 
   Register[0] = MasterArm->getRead(0);//gets factor of button primes
-  Register[1] = MasterFoot->getRead(1);//gets temp of foot multiplaid by 100 so we dont luse the digits after , directly
+  //Register[1] = MasterFoot->getRead(1);//gets temp of foot multiplaid by 100 so we dont luse the digits after , directly
   Register[2] = analogRead(14);//random(0,255);//simulates hear read out of Tempreture
-  Register[3] = MasterFoot->getRead(0);//gets ppm foot
+  //Register[3] = MasterFoot->getRead(0);//gets ppm foot
   Register[4] = analogRead(15);//random(0,255);//simulates hear read out of ppm
   if(Register[5]==1)
   {
@@ -80,17 +84,17 @@ void loop() {
     digitalWrite(Lampe,LOW);
   }
 
-  Serial.print("Temp: ");
-  Serial.print(Register[1]);
-  Serial.print(" Co: ");
-  Serial.println(Register[4]);
+  //Serial.print("Temp: ");
+  Serial.println(Register[0]);
+  //Serial.print(" Co: ");
+  //Serial.println(Register[4]);
 
   //time Stuff
   int newTime = millis();
   if(newTime < time + duration)
   {
       digitalWrite(L1,HIGH);
-      Serial.println("1");
+      //Serial.println("1");
   }
   else
   {
@@ -98,7 +102,7 @@ void loop() {
       if(newTime < (2 * duration) + time)
       {
           digitalWrite(L2,HIGH);
-          Serial.println("2");
+          //Serial.println("2");
       }
       else
       {
@@ -106,7 +110,7 @@ void loop() {
           if(newTime < (3 * duration) + time)
           {
               digitalWrite(L3,HIGH);
-              Serial.println("3");
+              //Serial.println("3");
           }
           else{
               digitalWrite(L3,LOW);
@@ -114,5 +118,5 @@ void loop() {
           }
       }
   }
-//  delay(endDelay);
+  delay(endDelay);
 }
