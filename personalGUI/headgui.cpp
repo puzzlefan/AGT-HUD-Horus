@@ -207,6 +207,8 @@ void HeadGUI::defauftValues()
     SendEmergency = false;
 
     //values for communication with headquater
+    IDisSet = false;
+
     recentStatus = 0;
     updatedStatus = false;
 
@@ -265,14 +267,14 @@ void HeadGUI::down()
 
 void HeadGUI::right()
 {
-    if (horizontal < NumberDiffMenues && answerPossible == true)
+    if (horizontal < NumberDiffMenues && answerPossible == true && IDisSet == true)
     {
         horizontal++;
     }
 
-    if(horizontal < NumberDiffMenues && answerPossible==false)
+    if(horizontal < NumberDiffMenues && answerPossible==false && IDisSet == true)
     {
-        horizontal = 2;
+        horizontal = 1;
     }
 
    if (vertical > NumberDiffValues[horizontal])
@@ -288,12 +290,12 @@ void HeadGUI::right()
 
 void HeadGUI::left()
 {
-    if (horizontal > 0 && answerPossible == true && newConfirmedID == true)
+    if (horizontal > 0 && answerPossible == true && IDisSet == true)
     {
         horizontal--;
     }
 
-    if(horizontal > 0 &&answerPossible == false && newConfirmedID == true)
+    if(horizontal > 0 &&answerPossible == false && IDisSet == true)
     {
         horizontal = 0;
     }
@@ -383,6 +385,7 @@ void HeadGUI::certify()
 
             ID = vertical;
             newConfirmedID = true;
+            IDisSet = true;
 
             horizontal = 0;//reset um aus certifyPersonae raus zu kommen
 
@@ -420,6 +423,7 @@ void HeadGUI::coosingStatus()
             break;
 
         case 1:
+        std::cout <<"antwort eingeben"<<std::endl;
             Messages->setText(messageAnswers[vertical]);
             Messages->setStyleSheet("QLabel{background-color : white;}");
 
@@ -456,7 +460,7 @@ void HeadGUI::sortingValuesForHeadquater()
         newConfirmedID = false;
     }
 
-    if(newConfirmedID == true)
+    if(IDisSet == true)
     {
         if(updatedStatus == true)
         {
@@ -508,38 +512,29 @@ void HeadGUI::sortingValuesForHeadquater()
 
         if(updatedPicture == true)
         {
-<<<<<<< HEAD
             networkUser->setBools(UPDATE_IMAGE_SIGNAL, true);
-=======
-            unsigned char bitValue = *(resultPicture + i);
-
-            //
-            //!!!BÖSE!!!
-            //
-
-            networkUser->setBITBild(5, i);
-
-            // networkUser->setBITBild(bitValue, i);
-
-            //
-            //!!!ENDE BÖSE !!!!
-            //
-        }
->>>>>>> 1ff6f98025f24699f219e57afbdb930b86377733
-
             for(int i = 0; i < 2 * PacketBytes*FrameHeight; i++)
             {
                 unsigned char bitValue = *(resultPicture + i);
-                networkUser->setBITBild(bitValue, i);
-            }
+                //
+                //!!!BÖSE!!!
+                //
 
+                networkUser->setBITBild(5, i);
+
+                // networkUser->setBITBild(bitValue, i);
+
+                //
+                //!!!ENDE BÖSE !!!!
+                //
+            }
             updatedPicture = false;
         }
     }
 }
 
 void HeadGUI::messageRecived(QString sendMessage)
-{
+{std::cout <<"neu Nachricht"<<std::endl;
     recivedMessage = sendMessage;
     Messages->setText(recivedMessage);
 

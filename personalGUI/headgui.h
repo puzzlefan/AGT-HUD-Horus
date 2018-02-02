@@ -158,6 +158,7 @@ private:
     //Data
     int ID;
     bool newConfirmedID;
+    bool IDisSet;
 
     int recentStatus;
     bool updatedStatus;

@@ -31,10 +31,10 @@ user::~user()
 
 void user::fill()
 {
-  setID(2);
+  //setID(2);
   for(int i = 0; i < integerCount;i++)
   {
-     setInteger(i, i+3);
+     setInteger(i, 0);
   }
   for(int i = 0; i < boolCount;i++)
   {
