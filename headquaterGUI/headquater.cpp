@@ -122,6 +122,8 @@ void headquater::sortingData(int vectorNo)
 void headquater::newConfirmedID(int ID, int vectorNo)
 {
     Persons[ID] = new Person(ID);
+    //Person *recentPerson = new Person(ID);funktioniert nur bei ID=0 da es an 1. Stelle hinzugefügt wird richtige Variable vektorNo
+    //Persons.append(recentPerson);
     Persons.at(ID)->Name = Name[ID];
     Persons.at(ID)->vectorID = vectorNo;
     Persons.at(ID)->pageSetUp();
@@ -148,7 +150,7 @@ void headquater::updatedImage(int ID, unsigned char *result)
 }
 
 void headquater::updatedStatus(int ID, int recentStatus)
-{
+{std::cout<<"update Status"<<std::endl;
     Persons.at(ID)->recentStatus = recentStatus;
     Persons.at(ID)->updateStatus();
 }
@@ -340,7 +342,7 @@ void Person::updateImage(unsigned char *data)
 }
 
 void Person::updateStatus()
-{
+{std::cout <<"Status GUI"<<std::endl;
     QString txt = Name + colon + Stati[recentStatus];
     Status->setText(txt);
 }

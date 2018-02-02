@@ -160,6 +160,7 @@ private:
     bool newConfirmedID;
     bool IDisSet;
 
+
     int recentStatus;
     bool updatedStatus;
 
