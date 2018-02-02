@@ -14,7 +14,7 @@ user::user()
   {
     ChangedInts[i]=0;
   }
-  //fill();
+  fill();
 }
 user::user(const user&)
 {
