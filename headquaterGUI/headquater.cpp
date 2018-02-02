@@ -169,10 +169,10 @@ void headquater::sendNewMessage()
 }
 
 void headquater::answerdMessage(int ID, int answer)
-{
+{std::cout <<"message da"<<std::endl;
     Persons.at(ID)->recentAnswer = answer;
     if(Persons.at(ID)->index == Tabs->currentIndex())
-    {
+    {std::cout<<"index stimmt "<<std::endl;
         Persons.at(ID)->updateMessage();
     }
 }
@@ -349,7 +349,7 @@ void Person::updateStatus()
 
 
 void Person::updateMessage()
-{
+{std::cout<<"message update"<<std::endl;
     answer->setText(Answers[recentAnswer]);
 }
 
