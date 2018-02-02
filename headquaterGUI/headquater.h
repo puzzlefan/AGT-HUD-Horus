@@ -116,7 +116,6 @@ signals:
     void updatedImageSignal(int ID, unsigned char*);
     void newDataSignal(int vectorNo);
 
-
 private slots:
     void newConfirmedID(int ID, int vectorNo);
     void updatedStatus(int ID, int recentStatus);

@@ -159,6 +159,7 @@ private:
     int ID;
     bool newConfirmedID;
 
+
     int recentStatus;
     bool updatedStatus;
 

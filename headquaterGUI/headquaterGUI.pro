@@ -11,14 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = headquaterGUI
 TEMPLATE = app
 
-RPI_LIBS = ../../raspberrypi_libs
-LEPTONSDK = leptonSDKEmb32PUB
-
-PRE_TARGETDEPS += sdk
-QMAKE_EXTRA_TARGETS += sdk sdkclean
-sdk.commands = make -C $${RPI_LIBS}/$${LEPTONSDK}
-sdkclean.commands = make -C $${RPI_LIBS}/$${LEPTONSDK} clean
-
 DEPENDPATH += .
 INCLUDEPATH += . $${RPI_LIBS}
 
@@ -52,7 +44,5 @@ HEADERS += \
 QMAKE_CXXFLAGS += -std=c++0x -pthread -g
 
 LIBS += -pthread
-
-unix:LIBS += -L$${RPI_LIBS}/$${LEPTONSDK}/Debug -lLEPTON_SDK
 
 unix:QMAKE_CLEAN += -r $(OBJECTS_DIR) $${MOC_DIR}
