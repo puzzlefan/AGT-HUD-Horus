@@ -60,15 +60,18 @@ void Client::communicator()
   while (1!=2)
   {
     switch (fall) {
-      case 0:   if(id_confirmed || mine->getBool(NEW_CONFIRMED_ID))
+      case 0:
                 {
-                  fall = 1;//activates first order
+                    if(id_confirmed || mine->getBool(NEW_CONFIRMED_ID))
+                    {
+                        fall = 1;//activates first order
+                    }
+                    else
+                    {
+                        fall = 0;
+                    }
+                    break;
                 }
-                else
-                {
-                  fall = 0;
-                }
-                break;
       case 1:   command = 001;
                 write(sockfd, &command, CommandLength);//send to sockfd command 1 with length 1
                 fall = 100;
