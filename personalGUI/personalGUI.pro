@@ -11,16 +11,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = personalGUI
 TEMPLATE = app
 
-RPI_LIBS = ../../raspberrypi_libs
-LEPTONSDK = leptonSDKEmb32PUB
+#RPI_LIBS = ../../raspberrypi_libs
+LEPTONSDK = ../../leptonSDKEmb32PUB
 
 PRE_TARGETDEPS += sdk
 QMAKE_EXTRA_TARGETS += sdk sdkclean
-sdk.commands = make -C $${RPI_LIBS}/$${LEPTONSDK}
-sdkclean.commands = make -C $${RPI_LIBS}/$${LEPTONSDK} clean
+sdk.commands = make -C $${LEPTONSDK}
+sdkclean.commands = make -C $${LEPTONSDK} clean
 
 DEPENDPATH += .
-INCLUDEPATH += . $${RPI_LIBS}
+#INCLUDEPATH += . $${RPI_LIBS}
 
 DESTDIR=.
 OBJECTS_DIR=gen_objs
@@ -59,6 +59,6 @@ QMAKE_CXXFLAGS += -std=c++0x -pthread
 
 LIBS += -pthread -lwiringPi
 
-unix:LIBS += -L$${RPI_LIBS}/$${LEPTONSDK}/Debug -lLEPTON_SDK
+unix:LIBS += -L$${LEPTONSDK}/Debug -lLEPTON_SDK
 
 unix:QMAKE_CLEAN += -r $(OBJECTS_DIR) $${MOC_DIR}

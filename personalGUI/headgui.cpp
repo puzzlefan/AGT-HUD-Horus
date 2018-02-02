@@ -40,6 +40,8 @@ HeadGUI::HeadGUI(user *recentUser, DaTa *recentData, QWidget *parent)
     timerReadingSensors = new QTimer(this);
     connect(timerReadingSensors,SIGNAL(timeout()),this,SLOT(readingSensors()));
     timerReadingSensors->start(1000);
+
+    emit certifyPersonaeSignal();
 }
 
 void HeadGUI::createBiometric()
@@ -268,14 +270,14 @@ void HeadGUI::right()
         horizontal++;
     }
 
-    if(horizontal < NumberDiffMenues &&answerPossible==false)
+    if(horizontal < NumberDiffMenues && answerPossible==false)
     {
         horizontal = 2;
     }
 
-   if (vertical>NumberDiffValues[horizontal])
+   if (vertical > NumberDiffValues[horizontal])
     {
-        vertical=NumberDiffValues[horizontal];
+        vertical = NumberDiffValues[horizontal];
     }
 
     emergencyPossible = false;
@@ -286,12 +288,12 @@ void HeadGUI::right()
 
 void HeadGUI::left()
 {
-    if (horizontal > 0 && answerPossible == true)
+    if (horizontal > 0 && answerPossible == true && newConfirmedID == true)
     {
         horizontal--;
     }
 
-    if(horizontal > 0 &&answerPossible == false)
+    if(horizontal > 0 &&answerPossible == false && newConfirmedID == true)
     {
         horizontal = 0;
     }
@@ -309,19 +311,16 @@ void HeadGUI::left()
 
 void HeadGUI::back()
 {
-    if(ID !=0)
+    if (emergencyPossible == false)
     {
-        if (emergencyPossible == false)
-        {
-            SendEmergency = false;
-            emergencyPossible = true;
-            horizontal = 0;
-            vertical = 0;
-        }
-        else
-        {
-            SendEmergency = true;
-        }
+        SendEmergency = false;
+        emergencyPossible = true;
+        horizontal = 0;
+        vertical = 0;
+    }
+    else
+    {
+        SendEmergency = true;
     }
 
     emit coosingStatusSignal();
@@ -384,6 +383,8 @@ void HeadGUI::certify()
 
             ID = vertical;
             newConfirmedID = true;
+
+            horizontal = 0;//reset um aus certifyPersonae raus zu kommen
 
             emit newValuesForHeadquater();
 
@@ -455,65 +456,68 @@ void HeadGUI::sortingValuesForHeadquater()
         newConfirmedID = false;
     }
 
-    if(updatedStatus == true)
+    if(newConfirmedID == true)
     {
-        networkUser->setBools(UPDATED_STATUS_SIGNAL, true);
-        networkUser->setInteger(RECENT_STATUS, recentStatus);
-
-        updatedStatus = false;
-    }
-
-    if(answeredMessage == true)
-    {
-        networkUser->setBools(ANSWERD_MESSAGE_SIGNAL, true);
-        networkUser->setInteger(ANSWER, recentAnswer);
-
-        answeredMessage = false;
-    }
-
-    if(updatedTempHead == true)
-    {
-        networkUser->setBools(UPDATED_TEMP_HEAD_SIGNAL, true);
-        networkUser->setInteger(RECENT_TEMP_HEAD, recentTempHead);
-
-        updatedTempHead = false;
-    }
-
-    if(updatedTempFoot == true)
-    {
-        networkUser->setBools(UPDATED_TEMP_FOOT_SIGNAL, true);
-        networkUser->setInteger(RECENT_TEMP_FOOT, recentTempFoot);
-
-        updatedTempFoot = false;
-    }
-
-    if(updatedCOHead == true)
-    {
-        networkUser->setBools(UPDATED_CO_HEAD_SIGNAL, true);
-        networkUser->setInteger(RECENT_CO_HEAD, recentCOHead);
-
-        updatedCOHead = false;
-    }
-
-    if(updatedCOFoot == true)
-    {
-        networkUser->setBools(UPDATED_CO_FOOT_SIGNAL, true);
-        networkUser->setInteger(RECENT_CO_FOOT, recentCOFoot);
-
-        updatedCOFoot = false;
-    }
-
-    if(updatedPicture == true)
-    {
-        networkUser->setBools(UPDATE_IMAGE_SIGNAL, true);
-
-        for(int i = 0; i < 2 * PacketBytes*FrameHeight; i++)
+        if(updatedStatus == true)
         {
-            unsigned char bitValue = *(resultPicture + i);
-            networkUser->setBITBild(bitValue, i);
+            networkUser->setBools(UPDATED_STATUS_SIGNAL, true);
+            networkUser->setInteger(RECENT_STATUS, recentStatus);
+
+            updatedStatus = false;
         }
 
-        updatedPicture = false;
+        if(answeredMessage == true)
+        {
+            networkUser->setBools(ANSWERD_MESSAGE_SIGNAL, true);
+            networkUser->setInteger(ANSWER, recentAnswer);
+
+            answeredMessage = false;
+        }
+
+        if(updatedTempHead == true)
+        {
+            networkUser->setBools(UPDATED_TEMP_HEAD_SIGNAL, true);
+            networkUser->setInteger(RECENT_TEMP_HEAD, recentTempHead);
+
+            updatedTempHead = false;
+        }
+
+        if(updatedTempFoot == true)
+        {
+            networkUser->setBools(UPDATED_TEMP_FOOT_SIGNAL, true);
+            networkUser->setInteger(RECENT_TEMP_FOOT, recentTempFoot);
+
+            updatedTempFoot = false;
+        }
+
+        if(updatedCOHead == true)
+        {
+            networkUser->setBools(UPDATED_CO_HEAD_SIGNAL, true);
+            networkUser->setInteger(RECENT_CO_HEAD, recentCOHead);
+
+            updatedCOHead = false;
+        }
+
+        if(updatedCOFoot == true)
+        {
+            networkUser->setBools(UPDATED_CO_FOOT_SIGNAL, true);
+            networkUser->setInteger(RECENT_CO_FOOT, recentCOFoot);
+
+            updatedCOFoot = false;
+        }
+
+        if(updatedPicture == true)
+        {
+            networkUser->setBools(UPDATE_IMAGE_SIGNAL, true);
+
+            for(int i = 0; i < 2 * PacketBytes*FrameHeight; i++)
+            {
+                unsigned char bitValue = *(resultPicture + i);
+                networkUser->setBITBild(bitValue, i);
+            }
+
+            updatedPicture = false;
+        }
     }
 }
 

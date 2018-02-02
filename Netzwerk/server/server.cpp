@@ -94,10 +94,10 @@ void Server::ServerPrivateThread(int counti)
 		//
 		//	!!! TEST
 		//
-		if((*mine)[counti].getBool(2)){
-			(*mine)[counti].setBools(2,0);
-			(*mine)[counti].setMessage("Server");
-		}
+//		if((*mine)[counti].getBool(2)){
+    //		(*mine)[counti].setBools(2,0);
+        //	(*mine)[counti].setMessage("Server");
+        //}
 		//
 		//
 		//
