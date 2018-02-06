@@ -123,7 +123,7 @@ void Server::ServerPrivateThread(int counti)
 																																						break;
 																																					}
 																																case 104:	{
-																																	 					getBild(counti)
+																																	 					getBild(counti);
 																																						break;
 																																					}
 																																case 103:	{
@@ -202,7 +202,7 @@ void Server::MagicalwhiteSmoke(int counti)// a bit mäh
 																}
 																if (changes[i]) {
 																								// std::cout << "/* message */" << '\n';
-																								last = clock();
+																								last[i] = clock();
 																								changes[i] = false;
 																								mine->at(i).setConnectionLost(false);
 																}
