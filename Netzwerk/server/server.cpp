@@ -243,7 +243,7 @@ void Server::MagicalwhiteSmoke(int counti)// a bit mäh
 								int allowed_loops = 1000000;
 								//time_t last = clock();
 								while (true) {
-									for(int i = 0; i < last.size();i++)//not thread safe 
+									for(int i = 0; i < last.size();i++)//not thread safe
 									{
 																if(last[i] + allowed_loops < clock())
 																{
@@ -259,3 +259,19 @@ void Server::MagicalwhiteSmoke(int counti)// a bit mäh
 									}
 								}
 }
+
+void Server::setIntegers()
+{
+	char command = 200; //tells client that the integers will follow
+	char chaInt[4];//holds the integers as for chars
+	write(ClientFd[counti],&command,1);//does the telling
+	for (int i = 0; i < (*mine)[counti].getIntegerCount() ; i++)//goes throw every int
+	{
+		if ((*mine)[counti].getIntegersChanged(i)) {//only sends new one when it has changed
+			write(ClientFd[counti],&i,1);//tells the Client the index of the actual int limited to 200
+			IntChar((*mine)[counti].transmitInt(i), chaInt);//transforms to 4 chars
+			write(ClientFd[counti], chaInt, 4);//sends the int as chars
+		}
+	}
+	command = 253;//sends the abortion command
+	write(ClientFd[counti],&command,1);//does the sending
