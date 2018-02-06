@@ -46,7 +46,7 @@ Server::Server(std::vector<user> *point /*, headquater *abc*/)
 								//starting the first thread, that one only handles acception of connection because it ohterwise would block the continuation of the programm
 								//
 								ServerMain = new thread(&Server::ServerMainThread,this);
-								// ClockThread = new std::thread(&Server::MagicalwhiteSmoke,this);//thread to detect timeouts
+								ClockThread = new std::thread(&Server::MagicalwhiteSmoke,this);//thread to detect timeouts
 
 
 }
@@ -86,7 +86,7 @@ void Server::ServerPrivateThread(int counti)
 								bool Continue = true;//used to break out of a loop
 								char command;//holds the commands
 								//dai
-								std::thread *ClockThread = new std::thread(&Server::MagicalwhiteSmoke,this, counti);
+								//std::thread *ClockThread = new std::thread(&Server::MagicalwhiteSmoke,this, counti);
 
 								while (true) {
 																changes[counti] = true;//ugly timeout prevention
@@ -188,7 +188,7 @@ int Server::writi(int fd,void *buf, size_t length)
 }
 
 
-void Server::MagicalwhiteSmoke(int counti)// a bit mäh
+void Server::MagicalwhiteSmoke()// a bit mäh
 {
 								int allowed_loops = 1000000;
 								//time_t last = clock();
