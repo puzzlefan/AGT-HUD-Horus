@@ -77,7 +77,7 @@ void endOfServerData(int counti);//sends stop bit
 
 void getID(int counti);
 void getIntegers(int counti);
-void getBoold(int counti);
+void getBools(int counti);
 void getBild(int counti);
 void getMessage(int counti);
 };
