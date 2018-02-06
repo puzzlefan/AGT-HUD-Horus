@@ -84,7 +84,7 @@ void Server::ServerPrivateThread(int counti)
 {
 								int fall = 0;//used for navigation
 								bool Continue = true;//used to break out of a loop
-
+								char command;//holds the commands
 								//dai
 								//std::thread *ClockThread = new std::thread(&Server::MagicalwhiteSmoke,this, counti);
 
@@ -263,6 +263,7 @@ void Server::endOfServerData(int counti)
 
 void Server::getID(int counti)
 {
+	char Integer[4];
 	read(ClientFd[counti],&Integer,4);//read the value
 	(*mine)[counti].setID(CharInt(Integer));//store the value
 }
