@@ -70,7 +70,7 @@ int writi(int fd,void *buf, size_t length);  //write with connection loss detect
 int recie(int fd,void *buf, size_t length);  //recieve with connection loss detection
 
 //network functions
-void senIntegers(int counti);//pathes ints to client
+void setIntegers(int counti);//pathes ints to client
 void setBools(int counti);//pathes bools to client
 void setMessage(int counti);//pathes the Message to client
 void endOfServerData(int counti);//sends stop bit

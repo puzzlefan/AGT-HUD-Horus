@@ -305,7 +305,7 @@ void Server::getBild(int counti)
 									(*mine)[counti].recieveBITBild(Char,i);//store one
 	}
 }
-void getMessage(int counti)
+void Server::getMessage(int counti)
 {
 	char MLength[] = {0,0,0,0};//char storage
 	(*mine)[counti].recieveMessage("");//clears message
