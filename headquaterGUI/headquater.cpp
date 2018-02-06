@@ -86,6 +86,12 @@ void headquater::sortingData(int vectorNo)
         emit updatedStatus(ID,Infos->at(vectorNo).getInt(RECENT_STATUS));
     }
 
+    if(Infos->at(vectorNo).getBool(NEW_MESSAGE)==true)
+    {
+        Infos->at(vectorNo).setBools(NEW_MESSAGE, false);
+        emit answerdMessageSignal(ID,Infos->at(vectorNo).getInt(ANSWER));
+    }
+
     if(Infos->at(vectorNo).getBool(UPDATED_TEMP_HEAD_SIGNAL) == true)
     {
         Infos->at(vectorNo).setBools(UPDATED_TEMP_HEAD_SIGNAL,false);
