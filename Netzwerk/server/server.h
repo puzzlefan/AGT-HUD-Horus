@@ -23,7 +23,6 @@ class headquater;
 class Server
 {
 private:
-int CommandLength = 1;
 
 int count = 0;  //counts the attemps to get a connection
 //Vars for the main thread
@@ -45,12 +44,17 @@ std::thread *ServerMain;
 std::vector<std::thread> clientThreads;
 std::thread *ClockThread;
 
-
+//User
 std::vector<user> *mine;
 
-  #ifdef SERVER_STANDALONE
+//  !!! !!! !!!
+//for now globle constants
+//  !!! !!! !!!
+char CommandLength = 1;
+
+#ifdef SERVER_STANDALONE
 headquater *HQ;
-  #endif
+#endif
 public:
 Server(std::vector<user> *point /*, headquater *abc*/);
 ~Server();
@@ -66,7 +70,16 @@ int writi(int fd,void *buf, size_t length);  //write with connection loss detect
 int recie(int fd,void *buf, size_t length);  //recieve with connection loss detection
 
 //network functions
-void senIntegers();
+void senIntegers(int counti);//pathes ints to client
+void setBools(int counti);//pathes bools to client
+void setMessage(int counti);//pathes the Message to client
+void endOfServerData(int counti);//sends stop bit
+
+void getID(int counti);
+void getIntegers(int counti);
+void getBoold(int counti);
+void getBild(int counti);
+void getMessage(int counti);
 };
 
 #endif
