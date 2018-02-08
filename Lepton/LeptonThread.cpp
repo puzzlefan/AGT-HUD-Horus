@@ -10,7 +10,7 @@ LeptonThread::LeptonThread()//constructer
     , result(2 * PacketBytes*FrameHeight)//size of vector
     , rawData(FrameWords) //size of Vector
     {
-        result.fill(0);//cheap data race protection on startup
+        rawData.fill(0);//cheap data race protection on startup
     }
 //ugly inhertance
 LeptonThread::~LeptonThread() { }
