@@ -8,7 +8,10 @@ LeptonThread::LeptonThread()//constructer
     : QThread()
     , segmentRAW(PacketBytes*SegmentPackets)//holds packets until it is nown to which segment they belong
     , result(2 * PacketBytes*FrameHeight)//size of vector
-    , rawData(FrameWords) { }//size of Vector
+    , rawData(FrameWords) //size of Vector
+    {
+        result.fill(0);//cheap data race protection on startup
+    }
 //ugly inhertance
 LeptonThread::~LeptonThread() { }
 
