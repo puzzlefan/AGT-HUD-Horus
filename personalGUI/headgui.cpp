@@ -109,6 +109,7 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
         {
             int baseValue = rawData[LeptonThread::FrameWidth*y + x]; // take input value in [0, 65536)
             int scaledValue = 256*(baseValue - minValue)/diff; // map value to interval [0, 256), and set the pixel to its color value above
+            if(scaledValue > 256) scaledValue = 256;
             rgbImage.setPixel(x, y, qRgb(colormap[3*scaledValue], colormap[3*scaledValue+1], colormap[3*scaledValue+2]));
         }
     }

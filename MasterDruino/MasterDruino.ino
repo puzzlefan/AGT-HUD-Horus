@@ -117,6 +117,6 @@ void loop() {
           }
       }
   }
-  Serial.println(Register[0]);
+  Serial.println(Register[3]);
   delay(endDelay);
 }
