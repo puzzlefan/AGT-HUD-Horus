@@ -622,7 +622,7 @@ void HeadGUI::updateCOFoot(int recentCO)
 {
     QString txtrecentCO = QString::number(recentCO);
     QString txtCOFoot = txtrecentCO+unitCO;
-    COHead->setText(txtCOFoot);
+    COFoot->setText(txtCOFoot);
 
     recentCOFoot = recentCO;
     updatedCOFoot =true;
