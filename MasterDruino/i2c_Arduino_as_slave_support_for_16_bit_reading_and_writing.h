@@ -59,9 +59,9 @@ void receiveData(int byteCount)
       I2Ccommand = -1;//when data was recieved nothing is send back
     }
     while(Wire.available()>0){  //reads the third value if its exists
-      Serial.println(bufferOne);
-      Serial.println(bufferTwo);
-      Serial.println(bufferThree);
+      //Serial.println(bufferOne);
+      //Serial.println(bufferTwo);
+      //Serial.println(bufferThree);
       Serial.println(Wire.read());
       Serial.println("there is something left");
     }
