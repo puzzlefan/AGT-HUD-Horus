@@ -40,10 +40,10 @@ void setup()
   pinMode(buttonCertify,INPUT);
 
   //Kabel
-  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_THREE, VALUE_COUNT);
+  //Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_THREE, VALUE_COUNT);
 
   //BT
-  //Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
+  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
 
 }
 
@@ -76,6 +76,6 @@ void loop()
   }
   Slave->setWrite(0, transmit);
   Slave->update();
-//  Serial.println(transmit);
+  Serial.println(transmit);
   delay(25);
  }

@@ -94,7 +94,7 @@ Bluetooth::Bluetooth(bool Master, int errorPin, int statePin, int port, int Valu
   #ifdef SERIAL_DEBUG
     Serial.println("Test the connection");
   #endif
-  SerialPort[Port]->begin(999999);//38400);//Do not ask why but when you try to make the integer to an variable it does not work
+  SerialPort[Port]->begin(38400);//Do not ask why but when you try to make the integer to an variable it does not work
 
   //unshared init
   if (Master)
