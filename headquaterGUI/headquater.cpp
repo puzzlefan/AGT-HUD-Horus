@@ -86,9 +86,9 @@ void headquater::sortingData(int vectorNo)
         emit updatedStatus(ID,Infos->at(vectorNo).getInt(RECENT_STATUS));
     }
 
-    if(Infos->at(vectorNo).getBool(NEW_MESSAGE)==true)//hier data race kann durch abfrage der changed bool gelöst werden wäre aber unschön
+    if(Infos->at(vectorNo).getBool(ANSWERD_MESSAGE_SIGNAL)==true)//hier data race kann durch abfrage der changed bool gelöst werden wäre aber unschön, war meiner...ups
     {
-        Infos->at(vectorNo).setBools(NEW_MESSAGE, false);
+        Infos->at(vectorNo).setBools(ANSWERD_MESSAGE_SIGNAL, false);
         emit answerdMessageSignal(ID,Infos->at(vectorNo).getInt(ANSWER));
     }
 
