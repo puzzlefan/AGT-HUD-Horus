@@ -274,7 +274,7 @@ void HeadGUI::right()
 
     if(horizontal < NumberDiffMenues && answerPossible==false && IDisSet == true)
     {
-        horizontal = 1;
+        horizontal = 2;
     }
 
    if (vertical > NumberDiffValues[horizontal])
