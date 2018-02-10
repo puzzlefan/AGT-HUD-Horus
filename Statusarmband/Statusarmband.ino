@@ -1,37 +1,51 @@
 //Bluetooth zeug
-#include "Bluetooth.h"
+	//code
+		#include "Bluetooth.h"
 
-#define STATE_PIN -1
-#define ERROR_PIN 13
-#define VALUE_COUNT 1
-//variables
+	//defines
+		#define STATE_PIN -1 //defines if the connection has to be confirmed, in this case only in the HQ
+		#define ERROR_PIN 13 //Build in LED has to be used for something fun
+		#define VALUE_COUNT 1//number of values to be exchanged
 
-int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];
+	//variables
+		int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];//providing arrays
+		Bluetooth *Slave;//pointer to BT-class
 
-Bluetooth *Slave;
-
-
-
- //Example for pinNo. later from PinNo-class
-int buttonUp = 49;
-int buttonDown = 53;
-int buttonRight = 50;
-int buttonLeft = 52;
-int buttonBack = 51;
-int buttonCertify = 48;
-
-#define FACTOR_UP 2
-#define FACTOR_DOWN 3
-#define FACTOR_RIGHT 5
-#define FACTOR_LEFT 7
-#define FACTOR_BACK 11
-#define FACTOR_CERTIFY 13
+//Pin numbering
+	bool alu = true;//when true the pin numbering for the aluminium version is used
+	int buttonUp, buttonDown, buttonRight, buttonLeft,buttonBack, buttonCertify; // declaring pin Variable names initialization happens later
+	//inapropriate use of capital letters - used to encode bools as ürime factors
+		const int FACTOR_UP       = 02;
+		const int FACTOR_DOWN     = 03;
+		const int FACTOR_RIGHT    = 05;
+		const int FACTOR_LEFT     = 07;
+		const int FACTOR_BACK     = 11;
+		const int FACTOR_CERTIFY  = 13;
 
 void setup()
 {
   Serial.begin(9600);
-  //Serial1.begin(38400);//doesent work any longer directly connected with computer
 
+  if(alu)//assigning the actual numbers
+  {
+	buttonUp		= 49;
+	buttonDown		= 53;
+	buttonRight		= 50;
+	buttonLeft		= 52;
+	buttonBack		= 51;
+	buttonCertify	= 48;
+  }
+  else
+  {
+  	buttonUp		= 53;
+	buttonDown		= 50;
+	buttonRight		= 48;
+	buttonLeft		= 51;
+	buttonBack		= 52;
+	buttonCertify	= 49;	 
+  }
+  
+  //setting up the pins
   pinMode(buttonUp,INPUT);
   pinMode(buttonDown,INPUT);
   pinMode(buttonRight,INPUT);
@@ -39,12 +53,11 @@ void setup()
   pinMode(buttonBack,INPUT);
   pinMode(buttonCertify,INPUT);
 
-  //Kabel
+  //Kabel-Debug
   //Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_THREE, VALUE_COUNT);
 
-  //BT
-  Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
-
+  //BT both versions have the same configuration
+	Slave = new Bluetooth(false, ERROR_PIN, STATE_PIN, SERIAL_ONE, VALUE_COUNT);
 }
 
 void loop()
@@ -76,6 +89,6 @@ void loop()
   }
   Slave->setWrite(0, transmit);
   Slave->update();
-  Serial.println(transmit);
-  delay(25);
+  //Serial.println(transmit);//debug out
+  delay(25);//the transmission gets f***** up when things happen to fast
  }
