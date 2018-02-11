@@ -527,9 +527,9 @@ void HeadGUI::sortingValuesForHeadquater()
                 //!!!BÖSE!!!
                 //
 
-                networkUser->setBITBild(5, i);
+                //networkUser->setBITBild(5, i);
 
-                // networkUser->setBITBild(bitValue, i);
+                networkUser->setBITBild(bitValue, i);
 
                 //
                 //!!!ENDE BÖSE !!!!
