@@ -10,7 +10,7 @@ LeptonThread::LeptonThread(std::mutex *MUTEX)//constructer
     , result(2 * PacketBytes*FrameHeight)//size of vector
     , rawData(FrameWords) //size of Vector
 {
-	abc = *MUTEX;
+	abc = MUTEX;
 }
 //ugly inhertance
 LeptonThread::~LeptonThread() { }
@@ -167,7 +167,7 @@ void LeptonThread::run() {
 		// qDebug() << resets << "resets," << errors << "errors";
 #endif
 
-		abc.lock();
+		abc->lock();
 
 		resets = 0; errors = 0;
 

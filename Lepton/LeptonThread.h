@@ -11,6 +11,8 @@
 #include <getopt.h>
 #include <fcntl.h>
 
+#include <mutex>
+
 #if HAVE_LEPTON
 #include <sys/ioctl.h>
 #include <linux/types.h>
@@ -65,7 +67,7 @@ public:
     SegmentPackets = 60,
     };
 
-	std::mutex abc;
+    std::mutex *abc;
     LeptonThread(std::mutex *MUTEX);
     ~LeptonThread();
 
