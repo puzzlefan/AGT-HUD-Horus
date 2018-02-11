@@ -335,7 +335,7 @@ void Person::updateImage(unsigned char *data)
     {
         for (int x = 0; x < FrameWidth; ++x)
         {
-            int baseValue = rawData[FrameWidth*y + x]; // take input value in [0, 65536)
+            int baseValue = rawData[FrameWidth*(FrameHeight - 1 - y) + (FrameWidth - 1 - x)]; // take input value in [0, 65536)
             int scaledValue = 256*(baseValue - minValue)/diff; // map value to interval [0, 256), and set the pixel to its color value above
             rgbImage.setPixel(x, y, qRgb(colormap[3*scaledValue], colormap[3*scaledValue+1], colormap[3*scaledValue+2]));
         }
