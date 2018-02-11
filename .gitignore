@@ -31,3 +31,6 @@ personalGUI/Makefile
 
 #Network related things
 **/main.NetworkCompile
+
+#Visual Studio related thigs
+.vs/**
