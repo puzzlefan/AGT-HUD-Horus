@@ -98,17 +98,24 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
 
    // Record the raw data and min/max values
     memcpy(&rawData[0], data, 2*LeptonThread::FrameWords);//memcpy(wohin gespeichert,woher daten, Nummer der Bytes die kopiert werden)
+
+    if(maxValue == 0) maxValue = 2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2-1;
+
     rawMin = minValue;
     rawMax = maxValue;
 
     // Map "rawData" to rgb values in "rgbImage" via the colormap
     int diff = rawMax - rawMin + 1;
+
+    std::cout<<"min "<< minValue<<" max "<<maxValue<< " diff "<<diff<<std::endl;
+
     for (int y = 0; y < LeptonThread::FrameHeight; ++y)
     {
         for (int x = 0; x < LeptonThread::FrameWidth; ++x)
         {
-            int baseValue = rawData[LeptonThread::FrameWidth*y + x]; // take input value in [0, 65536)
+            int baseValue = rawData[LeptonThread::FrameWidth*(LeptonThread::FrameHeight-1-y) + (LeptonThread::FrameWidth-1-x)]; // take input value in [0, 65536)
             int scaledValue = 256*(baseValue - rawMin)/diff; // map value to interval [0, 256), and set the pixel to its color value above
+            //std::cout<< baseValue<<" "<<scaledValue<<std::endl;
             rgbImage.setPixel(x, y, qRgb(colormap[3*scaledValue], colormap[3*scaledValue+1], colormap[3*scaledValue+2]));//segmentation fault kann mit begrenzung der Werte von 1 bis 256 verieden werden nur Frame rate leidet sehr
         }
     }
