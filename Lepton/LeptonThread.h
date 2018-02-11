@@ -65,7 +65,8 @@ public:
     SegmentPackets = 60,
     };
 
-    LeptonThread();
+	std::mutex abc;
+    LeptonThread(std::mutex *MUTEX);
     ~LeptonThread();
 
     void run();

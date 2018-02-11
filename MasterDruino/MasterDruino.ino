@@ -16,7 +16,7 @@ Bluetooth *MasterFoot, *MasterArm;
 
 #ifdef ALU
 	//pins 
-	int Lampe	= 13;//need to be adjusted
+	int Lampe	= 44;//need to be adjusted
 	int L1		= 47;//LED leiste 1 bis 3
 	int L2		= 46;
 	int L3		= 45;

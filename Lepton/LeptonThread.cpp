@@ -4,12 +4,14 @@
 #include <QString>
 #include <QTextStream>
 
-LeptonThread::LeptonThread()//constructer
+LeptonThread::LeptonThread(std::mutex *MUTEX)//constructer
     : QThread()
     , segmentRAW(PacketBytes*SegmentPackets)//holds packets until it is nown to which segment they belong
     , result(2 * PacketBytes*FrameHeight)//size of vector
     , rawData(FrameWords) //size of Vector
-    {}
+{
+	abc = *MUTEX;
+}
 //ugly inhertance
 LeptonThread::~LeptonThread() { }
 
@@ -164,6 +166,8 @@ void LeptonThread::run() {
 		sequence.clear();
 		// qDebug() << resets << "resets," << errors << "errors";
 #endif
+
+		abc.lock();
 
 		resets = 0; errors = 0;
 

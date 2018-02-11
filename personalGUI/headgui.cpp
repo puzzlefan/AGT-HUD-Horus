@@ -83,7 +83,7 @@ void HeadGUI::createIRPicture()
     filler.fill(Qt::red);
     IRPicture->setPixmap(filler);
 
-    thread = new LeptonThread();
+    thread = new LeptonThread(&abc);
     connect(thread, SIGNAL(updateImage(unsigned short *,int,int, unsigned char*)), this, SLOT(updateImage(unsigned short *, int, int, unsigned char*)));
     thread->start();
 }
@@ -98,6 +98,8 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
 
    // Record the raw data and min/max values
     memcpy(&rawData[0], data, 2*LeptonThread::FrameWords);//memcpy(wohin gespeichert,woher daten, Nummer der Bytes die kopiert werden)
+
+	abc.unlock();
 
     if(maxValue == 0) maxValue = 2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2-1;
 

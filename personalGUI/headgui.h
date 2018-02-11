@@ -29,6 +29,8 @@ public:
     void newDataFromHeadquater();
     void newDataFromArduino();
 
+	std::mutex abc;
+
 public slots:
     void updateImage(unsigned short *, int, int, unsigned char *);
 
