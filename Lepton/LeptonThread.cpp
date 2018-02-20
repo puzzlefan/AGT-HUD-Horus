@@ -167,38 +167,39 @@ void LeptonThread::run() {
 		// qDebug() << resets << "resets," << errors << "errors";
 #endif
 
-		abc->lock();
+		if (abc->try_lock())
+		{
+			resets = 0; errors = 0;
 
-		resets = 0; errors = 0;
-
-		uint16_t minValue = 65535;
-		uint16_t maxValue = 0;
-		unsigned char *in = &result[0];
-		unsigned short *out = &rawData[0];
-		for (int iPacket = 0; iPacket < FrameHeight * 2; ++iPacket) {//!
-			in += 4;//first color
-			for (int iCol = 0; iCol < PacketWidth; ++iCol) //reads every pixel of the line(one subpacket)
-			{
-				unsigned short value = in[0];//value wird farbe zugewiesen
-				value <<= 8;//8 weil Wort =8 bits, verschiebt um 8 Stellen nach vorne
-				value |= in[1];//macht darauf eine 16-bit Farbe
-				in += 2;//beginn von n�chster n�chtse Farbe
-
-				if (value > maxValue)
+			uint16_t minValue = 65535;
+			uint16_t maxValue = 0;
+			unsigned char *in = &result[0];
+			unsigned short *out = &rawData[0];
+			for (int iPacket = 0; iPacket < FrameHeight * 2; ++iPacket) {//!
+				in += 4;//first color
+				for (int iCol = 0; iCol < PacketWidth; ++iCol) //reads every pixel of the line(one subpacket)
 				{
-					maxValue = value;
-				}
+					unsigned short value = in[0];//value wird farbe zugewiesen
+					value <<= 8;//8 weil Wort =8 bits, verschiebt um 8 Stellen nach vorne
+					value |= in[1];//macht darauf eine 16-bit Farbe
+					in += 2;//beginn von n�chster n�chtse Farbe
 
-				if (value < minValue)
-				{
-					minValue = value;
-				}
+					if (value > maxValue)
+					{
+						maxValue = value;
+					}
 
-				*(out++) = value;//weist rawdata die Werte zu
+					if (value < minValue)
+					{
+						minValue = value;
+					}
+
+					*(out++) = value;//weist rawdata die Werte zu
+				}
 			}
+			emit updateImage(&rawData[0], minValue, maxValue, &result[0]);//signal for the updateImage slot of mainwindow.cpp
+			//std::cout << "hier auch nicht" << '\n';
 		}
-		emit updateImage(&rawData[0], minValue, maxValue, &result[0]);//signal for the updateImage slot of mainwindow.cpp
-		//std::cout << "hier auch nicht" << '\n';
 #if !HAVE_LEPTON
 		usleep(50000);  // Need to slow things down if no ioctl call!
 		counter = (counter + 1) % 520;
