@@ -339,7 +339,7 @@ void HeadGUI::back()
 }
 
 void HeadGUI::certify()
-{
+{std::cout << "certify2"<<std::endl;
     if (SendEmergency==false)
     {
 	
@@ -394,7 +394,7 @@ void HeadGUI::certify()
         }
 
         case 3:
-        {
+        {std::cout<<"case3"<<std::endl;
             Personae->setText(Name[vertical]);
 
             ID = vertical;
