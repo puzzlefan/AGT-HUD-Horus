@@ -106,7 +106,7 @@ private:
     int vertical;
     int horizontal;
     int NumberDiffMenues = 2;
-    int NumberDiffValues[4] = {4,2,1,5};
+    int NumberDiffValues[4] = {4,2,1,4};
 
     bool emergencyPossible;
     bool SendEmergency;

@@ -240,6 +240,7 @@ void HeadGUI::defauftValues()
 
     //other values
     lightOn = false;
+    updatedPicture = false;
 }
 
 void HeadGUI::certifyPersonae()
@@ -341,6 +342,7 @@ void HeadGUI::certify()
 {
     if (SendEmergency==false)
     {
+        sensorData->setSendData(0,1);
         switch (horizontal)
         {
         case 0:
@@ -380,7 +382,7 @@ void HeadGUI::certify()
             }
             else
             {
-                lightOn = false;
+                lightOn = true;
             }
 
             emit changingLightSignal();
@@ -411,6 +413,7 @@ void HeadGUI::certify()
 
         recentStatus = 5;
         updatedStatus = true;
+        sensorData->setSendData(1,1);
 
         emit newValuesForHeadquater();
     }
@@ -645,11 +648,13 @@ void HeadGUI::changingLight()
    {
        Light->setText(lightSwitch[1]);
        Light->setStyleSheet("QLabel{background-color : yellow;}");
+       sensorData->setSendData(1,0);
    }
    else
    {
        Light->setText(lightSwitch[0]);
        Light->setStyleSheet("QLabel{background-color : lightgrey;}");
+       sensorData->setSendData(0,0);
    }
 
 }
