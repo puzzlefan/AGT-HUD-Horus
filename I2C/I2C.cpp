@@ -38,7 +38,7 @@ void I2C::ReadLoop()
         {
             for (int i = 0; i < DaTa::FarewellAmount; i++)//loop to write all DaTa
             {
-                wiringPiI2CWriteReg16(fd, DaTa::DaTaAmount - 1 + i , MyLittleData->getWriteDaTa(i));//actual write command
+                wiringPiI2CWriteReg16(fd, DaTa::DaTaAmount + i , MyLittleData->getWriteDaTa(i));//actual write command
             }
         }
     }
