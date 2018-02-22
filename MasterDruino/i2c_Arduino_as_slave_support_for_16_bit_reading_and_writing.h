@@ -1,7 +1,7 @@
 #include <Wire.h>
 // I2C stuff
 #define SLAVE_ADDRESS 0x42//Adress
-#define DATA_COUNT 6//Register count
+#define DATA_COUNT 7//Register count
 
 //recifed command, defines which register gets returned
 int I2Ccommand = 0;

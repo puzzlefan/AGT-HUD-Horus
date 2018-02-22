@@ -20,7 +20,7 @@ Bluetooth *MasterFoot, *MasterArm;
 	int L1		= 47;//LED leiste 1 bis 3
 	int L2		= 46;
 	int L3		= 45;
-	//wandler müssten funktionieren
+	//wandler mï¿½ssten funktionieren
 #endif
 #ifndef ALU
 	int Lampe	= 13;
@@ -29,7 +29,7 @@ Bluetooth *MasterFoot, *MasterArm;
 #ifdef ALU
 	//time-for blinking
 	unsigned long time = millis();
-	int duration = 333;
+	int duration = 200;
 #endif
 
 void setup() {
@@ -112,35 +112,35 @@ void loop() {
   }
 
   #ifdef ALU
-	//time Stuff
-	unsigned long newTime = millis();
-	if(newTime < time + duration)
-	{
-		digitalWrite(L1,HIGH);
-		//Serial.println("1");
-	}
-	else
-	{
-		digitalWrite(L1,LOW);
-		if(newTime < (2 * duration) + time)
-		{
-			digitalWrite(L2,HIGH);
-			//Serial.println("2");
-		}
-		else
-		{
-			digitalWrite(L2,LOW);
-			if(newTime < (3 * duration) + time)
-			{
-				digitalWrite(L3,HIGH);
-				//Serial.println("3");
-			}
-			else{
-				digitalWrite(L3,LOW);
+	//time Stuff  
+  if(Register[6]==1)
+  {
+	  unsigned long newTime = millis();
+    Serial.println(newTime < time + duration);
+	  if(newTime < time + duration)
+	  {
+		  digitalWrite(L1,HIGH);
+		  digitalWrite(L2,HIGH);
+      digitalWrite(L3,HIGH);
+	  }
+	  else
+	  {
+		  digitalWrite(L1,LOW);
+      digitalWrite(L2,LOW);
+      digitalWrite(L3,LOW);
+		  if(newTime < time + 2 * duration)
+      {
 				time = millis();
-			}
-		}
-	}
+		  }
+	  }
+  }
+  else
+  {
+    digitalWrite(L1,LOW);
+    digitalWrite(L2,LOW);
+    digitalWrite(L3,LOW);
+    time = millis();
+  }
   #endif
   delay(endDelay);//prevents errors that occur when running to fast
 }
