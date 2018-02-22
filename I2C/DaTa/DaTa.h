@@ -30,7 +30,7 @@ class DaTa
 {
 public:
     static const int DaTaAmount = 5; //amount of values which get read from the I2C BUS
-    static const int FarewellAmount = 1;//amount of stuff to send
+    static const int FarewellAmount = 2;//amount of stuff to send
     static const int ButtonAmount = 6;//amount of buttons
 
     DaTa();//Constructer
@@ -58,7 +58,7 @@ private:
 
     void boolise();//function to calc prim product back to bool
 
-    std::mutex DaTaa;//mutex for secure multithreading 
+    std::mutex DaTaa;//mutex for secure multithreading
 };
 
 
