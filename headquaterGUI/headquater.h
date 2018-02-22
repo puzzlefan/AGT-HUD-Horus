@@ -92,7 +92,7 @@ public:
     QLabel *Status;
 
     QString colon = ": ";
-    QString Stati[5]= {"Status1","Status2","Status3","Status4","emergency"};
+    QString Stati[5]= {"Status1","Status2","Status3","Status4","Emergency"};
     QString Answers[3] = {" ","angenommen","nicht verfügbar"};
 };
 

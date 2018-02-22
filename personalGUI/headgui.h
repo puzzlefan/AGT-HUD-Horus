@@ -106,7 +106,7 @@ private:
     int vertical;
     int horizontal;
     int NumberDiffMenues = 2;
-    int NumberDiffValues[4] = {4,2,1,4};
+    int NumberDiffValues[4] = {3,2,1,4};
 
     bool emergencyPossible;
     bool SendEmergency;
@@ -115,7 +115,7 @@ private:
 
     QString recivedMessage;
     QString messageAnswers[3] = {" ","angenommen","nicht verfügbar"};
-    QString Stati[5]={"Status1","Status2","Status3","Status4","emergency"};
+    QString Stati[5]={"Status1","Status2","Status3","Status4","Emergency"};
 
 
     //biometric data

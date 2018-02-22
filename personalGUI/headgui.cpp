@@ -342,7 +342,10 @@ void HeadGUI::certify()
 {
     if (SendEmergency==false)
     {
-        sensorData->setSendData(0,1);
+	
+       		sensorData->setSendData(0,1);
+
+
         switch (horizontal)
         {
         case 0:
@@ -352,8 +355,8 @@ void HeadGUI::certify()
 
             recentStatus = vertical;
             updatedStatus = true;
-
-            emit newValuesForHeadquater();
+		
+           emit newValuesForHeadquater();
 
             break;
         }
