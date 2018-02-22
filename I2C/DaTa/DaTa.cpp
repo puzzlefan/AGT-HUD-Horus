@@ -96,7 +96,7 @@ void DaTa::setSendData(int val, int pos)
     std::lock_guard<std::mutex> lock(DaTaa);
     if(val != Farewell[pos])
     {
-        RawDaTa[4+pos] = val;
+        Farewell[pos] = val;
         SomeoneToSayGodbyTo = true;
     }
 }
