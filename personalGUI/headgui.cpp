@@ -118,6 +118,7 @@ void HeadGUI::createConnections()
     connect(this,SIGNAL(updateTempFootSignal(int)),this,SLOT(updateTempFoot(int)));
     connect(this,SIGNAL(updateCOHeadSignal(int)),this,SLOT(updateCOHead(int)));
     connect(this,SIGNAL(updateCOFootSignal(int)),this,SLOT(updateCOFoot(int)));
+    connect(this,SIGNAL(updateMotionControlSignal(int)),this,SLOT(updateMotionControl(int)));
 
     connect(this,SIGNAL(changingLightSignal()),this,SLOT(changingLight()));
     connect(this,SIGNAL(messageRecivedSignal(QString)),this,SLOT(messageRecived(QString)));
@@ -181,6 +182,8 @@ void HeadGUI::readingSensors()
 
     emit updateCOHeadSignal(sensorData->getRawDaTa(CO_TOP));
     emit updateCOFootSignal(sensorData->getRawDaTa(CO_FLOP));
+
+    //emit updateMotionControlSignal();!
 }
 
 void HeadGUI::defauftValues()
@@ -221,6 +224,8 @@ void HeadGUI::defauftValues()
     lightOn = false;
     updatedPicture = false;
     IRPictureMaxSize = false;
+    timeNoMotion = 0;
+    oldPosition = 0;
 }
 
 void HeadGUI::certifyPersonae()
@@ -389,6 +394,7 @@ void HeadGUI::certify()
         }
 
         case 3:
+        {
             if(vertical == 0)
             {
                 IRPictureMaxSize = false;
@@ -401,6 +407,7 @@ void HeadGUI::certify()
             emit changeScreenModeSignal();
 
             break;
+        }
 
         case 4:
         {
@@ -468,6 +475,11 @@ void HeadGUI::coosingStatus()
             break;
 
         case 3:
+            IRPictureFullScreen->setText(PictureFullScreen[vertical]);
+
+            break;
+
+        case 4:
             Personae->setText(Name[vertical]);
 
             break;
@@ -709,6 +721,30 @@ void HeadGUI::updateCOFoot(int recentCO)
     updatedCOFoot =true;
 
     emit newValuesForHeadquater();
+}
+
+void HeadGUI::updateMotionControl(int recentMotion)
+{
+    if(recentMotion == oldPosition)
+    {
+        timeNoMotion++;
+    }
+    else
+    {
+        timeNoMotion = 0;
+        oldPosition = recentMotion;
+    }
+
+    if(timeNoMotion == 120)//only needs to be done once
+    {
+        SendEmergency = true;
+        emit coosingStatusSignal();
+    }
+
+    if(timeNoMotion == 160)
+    {
+        emit certifySignal();
+    }
 }
 
 void HeadGUI::changingLight()
