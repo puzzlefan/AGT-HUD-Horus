@@ -9,6 +9,8 @@
 #include <QResizeEvent>
 #include <QTimer>
 #include <QPixmap>
+#include <QStackedWidget>
+#include <QWidget>
 
 #include <../Lepton/LeptonThread.h>
 #include <../Netzwerk/User/User.h>
@@ -54,6 +56,7 @@ signals:
 
     void changingLightSignal();
     void coosingStatusSignal();
+    void changeScreenModeSignal();
 
     void newDataFromHeadquaterSignal();
     void newDataFromArduinoSignal();
@@ -79,6 +82,7 @@ private slots:
 
     void messageRecived(QString sendMessage);
     void changingLight();
+    void changeScreenMode();
 
     void sortingValuesForHeadquater();
     void sortingNewDataFromHeadquater();
@@ -105,8 +109,8 @@ private:
 
     int vertical;
     int horizontal;
-    int NumberDiffMenues = 2;
-    int NumberDiffValues[4] = {3,2,1,4};
+    int NumberDiffMenues = 3;
+    int NumberDiffValues[5] = {3,2,1,1,4};
 
     bool emergencyPossible;
     bool SendEmergency;
@@ -134,6 +138,16 @@ private:
     QString unitTemp =" °C";
     QString unitCO = " ppm";
 
+    //for ImageFull Screen
+    void createImageOverlay();
+
+    QGridLayout *ComplexLayout;
+    QWidget *NormalScreen;
+    QStackedWidget *Overlay;
+    QLabel *IRPictureFullScreen;
+    QLabel *IRPictureFullScreenOverlay;
+
+    QString PictureFullScreen[2] = {"Normal","Vollbild"};
 
     //for Camera
     void createIRPicture();
@@ -180,6 +194,7 @@ private:
     bool updatedCOFoot;
 
     bool lightOn;
+    bool IRPictureMaxSize;
 
     unsigned char *resultPicture;
     bool updatedPicture;
