@@ -44,6 +44,9 @@ class LeptonThread : public QThread {
 
     int fd;
     struct spi_ioc_transfer _tr;//Bussystem source of the packets
+
+	//bool Array der für jedes Segment angibt 
+	bool SegmentUpdated[4];
 #endif
 
 #if DEBUG_LEPTON
