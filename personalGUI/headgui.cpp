@@ -118,7 +118,7 @@ void HeadGUI::createConnections()
     connect(this,SIGNAL(updateTempFootSignal(int)),this,SLOT(updateTempFoot(int)));
     connect(this,SIGNAL(updateCOHeadSignal(int)),this,SLOT(updateCOHead(int)));
     connect(this,SIGNAL(updateCOFootSignal(int)),this,SLOT(updateCOFoot(int)));
-    connect(this,SIGNAL(updateMotionControlSignal(int)),this,SLOT(updateMotionControl(int)));
+    connect(this,SIGNAL(updateMotionControlSignal(bool)),this,SLOT(updateMotionControl(bool)));
 
     connect(this,SIGNAL(changingLightSignal()),this,SLOT(changingLight()));
     connect(this,SIGNAL(messageRecivedSignal(QString)),this,SLOT(messageRecived(QString)));
@@ -225,7 +225,6 @@ void HeadGUI::defauftValues()
     updatedPicture = false;
     IRPictureMaxSize = false;
     timeNoMotion = 0;
-    oldPosition = 0;
 }
 
 void HeadGUI::certifyPersonae()
@@ -723,16 +722,15 @@ void HeadGUI::updateCOFoot(int recentCO)
     emit newValuesForHeadquater();
 }
 
-void HeadGUI::updateMotionControl(int recentMotion)
+void HeadGUI::updateMotionControl(bool recentMotion)
 {
-    if(recentMotion == oldPosition)
+    if(recentMotion == true)
     {
         timeNoMotion++;
     }
     else
     {
         timeNoMotion = 0;
-        oldPosition = recentMotion;
     }
 
     if(timeNoMotion == 120)//only needs to be done once

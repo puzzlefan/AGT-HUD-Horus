@@ -53,7 +53,7 @@ signals:
     void updateTempFootSignal(int recentTemp);
     void updateCOHeadSignal(int recentCO);
     void updateCOFootSignal(int recentCO);
-    void updateMotionControlSignal(int recentMotion);
+    void updateMotionControlSignal(bool recentMotion);
 
     void changingLightSignal();
     void coosingStatusSignal();
@@ -80,7 +80,7 @@ private slots:
     void updateTempFoot(int recentTemp);
     void updateCOHead(int recentCOHead);
     void updateCOFoot(int recentCOFoot);
-    void updateMotionControl(int recentMotion);
+    void updateMotionControl(bool recentMotion);
 
     void messageRecived(QString sendMessage);
     void changingLight();
@@ -114,7 +114,6 @@ private:
     int NumberDiffMenues = 3;
     int NumberDiffValues[5] = {3,2,1,1,4};
     int timeNoMotion;
-    int oldPosition;
 
     bool emergencyPossible;
     bool SendEmergency;
