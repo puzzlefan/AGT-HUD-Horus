@@ -109,7 +109,7 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
     // Map "rawData" to rgb values in "rgbImage" via the colormap
     int diff = rawMax - rawMin + 1;
 
-    std::cout<<"min "<< minValue<<" max "<<maxValue<< " diff "<<diff<<std::endl;
+    //std::cout<<"min "<< minValue<<" max "<<maxValue<< " diff "<<diff<<std::endl;
 
     for (int y = 0; y < LeptonThread::FrameHeight; ++y)
     {

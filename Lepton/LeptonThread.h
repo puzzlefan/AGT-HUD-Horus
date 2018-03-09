@@ -44,10 +44,14 @@ class LeptonThread : public QThread {
 
     int fd;
     struct spi_ioc_transfer _tr;//Bussystem source of the packets
+	
+#endif
 
 	//bool Array der für jedes Segment angibt 
 	bool SegmentUpdated[4];
-#endif
+
+	int packetf = 0;
+	int neuBildf = 0;
 
 #if DEBUG_LEPTON
     std::list< std::pair<int, int> > sequence; // ...of packet #'s received from Lepton, for troubleshooting
@@ -75,6 +79,8 @@ public:
     ~LeptonThread();
 
     void run();
+
+	void frequenzie();
 
 signals:
     void updateImage(unsigned short *, int, int, unsigned char*);

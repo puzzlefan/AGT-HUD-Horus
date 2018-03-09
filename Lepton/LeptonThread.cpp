@@ -4,6 +4,27 @@
 #include <QString>
 #include <QTextStream>
 
+#include <ctime.h>
+#include <thread>
+
+void LeptonThread::frequenzie()
+{
+	std::timne_t anf = std::time(nullptr);
+	std::timne_t ende = std::time(nullptr);
+	while (true)
+	{
+		ende = std::time(nullptr);
+		if (ende>anf)
+		{
+			std::cout << "Packet Frequenz: " << packetf << " neuBild Frequenz: " << neuBildf << std::endl;
+			packetf = 0;
+			neuBildf = 0;
+			anf = std::time(nullptr);
+		}
+
+	}
+}
+
 //sollten wir telemetry enablen setzt kamera shutdown bit ab 80°C
 //flat - field correction (shutter) einstellen
 //ioctl?
@@ -86,6 +107,9 @@ void LeptonThread::run() {
 
     int resets = 0; // Number of times we've reset the 0...59 loop for packets
     int errors = 0; // Number of error-packets received
+
+	std::thread *timer = new thread(frequenzie);
+
 	while (true)
 	{
 		while (!SegmentUpdated[0] && !SegmentUpdated[1] && !SegmentUpdated[2] && !SegmentUpdated[3])
@@ -154,6 +178,12 @@ void LeptonThread::run() {
 				continue;
 			}
 
+			//
+			//
+			//	!!!	Needs Testing	!!!
+			//
+			//
+
 			if (iSegment != 0)//bringing the segment to the place it belongs to
 			{
 				for (int i = 0; i < PacketBytes * SegmentPackets; i++)
@@ -162,7 +192,9 @@ void LeptonThread::run() {
 				}
 				SegmentUpdated[iSegment - 1] = true;
 			}
+			packetf++;
 		}
+		neuBildf++;
 		//alle Segmente wieder zurück setzen
 		for (int i = 0; i < 4; i++)
 		{
