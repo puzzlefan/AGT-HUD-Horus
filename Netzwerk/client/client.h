@@ -22,7 +22,7 @@ class Client
 {
 private://the ip adress of the server stands in the cpp fron the client because if it stands around the other variables it wont compile
   
-  const char InternetProtocol4[16] = "192.168.178.042";
+  const char InternetProtocol4[16] = "192.168.178.24";//"192.168.178.042";
 
   size_t CommandLength = 1;
 

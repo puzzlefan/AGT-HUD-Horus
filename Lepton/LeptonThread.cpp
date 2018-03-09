@@ -4,13 +4,13 @@
 #include <QString>
 #include <QTextStream>
 
-#include <ctime.h>
+#include <ctime>
 #include <thread>
 
 void LeptonThread::frequenzie()
 {
-	std::timne_t anf = std::time(nullptr);
-	std::timne_t ende = std::time(nullptr);
+	std::time_t anf = std::time(nullptr);
+	std::time_t ende = std::time(nullptr);
 	while (true)
 	{
 		ende = std::time(nullptr);
@@ -108,7 +108,7 @@ void LeptonThread::run() {
     int resets = 0; // Number of times we've reset the 0...59 loop for packets
     int errors = 0; // Number of error-packets received
 
-	std::thread *timer = new thread(frequenzie);
+	std::thread *timer = new std::thread(&LeptonThread::frequenzie,this);
 
 	while (true)
 	{
