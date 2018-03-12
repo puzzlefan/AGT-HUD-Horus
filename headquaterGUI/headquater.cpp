@@ -119,9 +119,9 @@ void headquater::sortingData(int vectorNo)
     if(Infos->at(vectorNo).getBool(UPDATE_IMAGE_SIGNAL)==true)
     {
         Infos->at(vectorNo).setBools(UPDATE_IMAGE_SIGNAL,false);
-        Infos->at(vectorNo).setBITBildMutex(true);
+        Infos->at(vectorNo).getBITBildMutex().lock();
         emit updatedImageSignal(ID,Infos->at(vectorNo).getBITBild());
-        Infos->at(vectorNo).setBITBildMutex(false);
+        Infos->at(vectorNo).getBITBildMutex().unlock();
     }
 }
 
