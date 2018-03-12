@@ -1,18 +1,34 @@
+//ALU oder Plastik, das ist hier die Frage
+	#define ALU
+
 //Bluetooth zeug
 	//code
 		#include "Bluetooth.h"
+		#include "MPU6050.h"
 
 	//defines
 		#define STATE_PIN -1 //defines if the connection has to be confirmed, in this case only in the HQ
 		#define ERROR_PIN 13 //Build in LED has to be used for something fun
-		#define VALUE_COUNT 1//number of values to be exchanged
+		#ifdev ALU
+			#define VALUE_COUNT 2//number of values to be exchanged
+		#endif
+		#ifndev
+			#define VALUE_COUNT 1//number of values to be exchanged
+		#endif
 
 	//variables
 		int ToRead[VALUE_COUNT], ToWrite[VALUE_COUNT];//providing arrays
 		Bluetooth *Slave;//pointer to BT-class
 
 //Pin numbering
-	bool alu = true;//when true the pin numbering for the aluminium version is used
+	#ifdev ALU
+		bool alu = true;//when true the pin numbering for the aluminium version is used
+	#endif
+	#ifndev ALU
+		bool alu = false;//when true the pin numbering for the aluminium version is used
+	#endif
+
+
 	int buttonUp, buttonDown, buttonRight, buttonLeft,buttonBack, buttonCertify; // declaring pin Variable names initialization happens later
 	//inapropriate use of capital letters - used to encode bools as ürime factors
 		const int FACTOR_UP       = 02;
@@ -25,6 +41,10 @@
 void setup()
 {
   Serial.begin(9600);
+
+  #ifdev ALU
+	MPU6050_setup();
+  #endif
 
   if(alu)//assigning the actual numbers
   {
@@ -88,6 +108,7 @@ void loop()
       transmit *= FACTOR_CERTIFY;
   }
   Slave->setWrite(0, transmit);
+  Slave->setWrite(1, MPU6050_loop_very_activ());
   Slave->update();
   //Serial.println(transmit);//debug out
   delay(25);//the transmission gets f***** up when things happen to fast

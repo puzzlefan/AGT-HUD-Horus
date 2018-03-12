@@ -10,7 +10,13 @@
 #define STATE_ARM   -1//Indication pin Arm Bluetooth has a connection
 
 #define VALUE_COUNT_FOOT  2//amount of values from foot modul
-#define VALUE_COUNT_ARM   1//amount of values from arm modul
+
+#ifdef ALU
+	#define VALUE_COUNT_ARM   2//amount of values from arm modul
+#endif
+#ifndev ALU
+	#define VALUE_COUNT_ARM   1//amount of values from arm modul
+#endif
 
 Bluetooth *MasterFoot, *MasterArm;
 
@@ -100,20 +106,21 @@ void loop() {
 	Register[2] = analogRead(14)*0.48828125;//random(0,255);//simulates hear read out of Tempreture
 	Register[3] = MasterFoot->getRead(0);//gets ppm foot
 	Register[4] = analogRead(15);//random(0,255);//simulates hear read out of ppm
+	Register[5] = MasterArm->getRead(1);//gets the alive bit
   #endif
 
-  if(Register[5]==1)
+  if(Register[6]==1)
   {
     digitalWrite(Lampe,HIGH);
   }
   else
   {
     digitalWrite(Lampe,LOW);
-  }
+  }  
 
   #ifdef ALU
 	//time Stuff  
-  if(Register[6]==1)
+  if(Register[7]==1)
   {
 	  unsigned long newTime = millis();
     Serial.println(newTime < time + duration);
