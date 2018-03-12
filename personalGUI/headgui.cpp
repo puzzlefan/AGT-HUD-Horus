@@ -528,7 +528,7 @@ void HeadGUI::sortingValuesForHeadquater()
         if(updatedPicture == true)
         {
             networkUser->setBools(UPDATE_IMAGE_SIGNAL, true);
-			networkUser->getBITBildMutex().lock();
+			networkUser->getBITBildMutex(true);
             for(int i = 0; i < 2 * PacketBytes*FrameHeight; i++)
             {
                 //unsigned char bitValue = *(resultPicture + i);
@@ -547,7 +547,7 @@ void HeadGUI::sortingValuesForHeadquater()
                 //!!!ENDE BÖSE !!!!
                 //
             }
-			networkUser->getBITBildMutex().unlock();
+			networkUser->setBITBildMutex(false);
             updatedPicture = false;
         }
     }

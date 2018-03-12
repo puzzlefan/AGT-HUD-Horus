@@ -105,10 +105,6 @@ int user::getBITBildSize()
 {
   return BITBildSize;
 }
-std::mutex user::getBITBildMutex()
-{
-	return mutex_BitBild;
-}
 
 std::string user::getMessage()
 {
@@ -163,7 +159,17 @@ void user::setMessage(std::string Message)
   message = Message;
   MessageChanged = true;
 }
-
+void user::setBITBildMutex(bool PowerOnOff)
+{
+    if(PowerOnOff)
+    {
+        mutex_BitBild.lock();
+    }
+    else
+    {
+        mutex_BitBild.unlock();
+    }
+}
 //
 //  transmits, used to send the data to anther device
 //

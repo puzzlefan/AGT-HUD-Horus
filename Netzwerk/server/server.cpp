@@ -141,9 +141,9 @@ void Server::ServerPrivateThread(int counti)
 												break;
 									case 104:	
 									{
-										(*mine)[counti].getBITBildMutex().lock();
+										(*mine)[counti].setBITBildMutex(true);
 										read(ClientFd[counti], (*mine)[counti].getBITBild(), (*mine)[counti].getBITBildSize());//&bILD,BITBildSize);
-										(*mine)[counti].getBITBildMutex().unlock();
+										(*mine)[counti].setBITBildMutex(false);
 										//for (int i = 0; i < (*mine)[counti].getBITBildSize(); i++)
 										//{
 										//	read(ClientFd[counti], &Char, 1);//&bILD,BITBildSize);

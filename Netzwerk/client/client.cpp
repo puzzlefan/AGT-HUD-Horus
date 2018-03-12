@@ -198,7 +198,7 @@ void Client::communicator()
 					{
 						command = 104;//needs change
 						write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
-						mine->getBITBildMutex().lock();
+						mine->setBITBildMutex(true);
 						write(sockfd, mine->getBITBild(), mine->getBITBildSize());//send to socket
 						//for (int i = 0; i < mine->getBITBildSize(); i++)
 						//{
@@ -206,7 +206,7 @@ void Client::communicator()
 						//	write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
 						//}
 						//mine->setBools(UPDATE_IMAGE_SIGNAL, true);
-						mine->getBITBildMutex().unlock();
+						mine->setBITBildMutex(false);
 					}
 					fall = 003;
 					break;
