@@ -193,37 +193,24 @@ void Client::communicator()
                 fall = 104;
                 break;
 
-      case 104: command = 104;//needs change
-                write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
-                for(int i = 0; i< mine->getBITBildSize();i++)
-                {
-                    char ToWrite = mine->transmitBITBild(i);
-                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
-                }
-                mine->setBools(UPDATE_IMAGE_SIGNAL,true);
-                fall = 003;
-                break;
-                //OLD
-                /*
-                command = 104;//needs change
-                char nUMMBER[4];
-                write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
-                for(int i = 0; i< mine->getBITBildSize();i++)
-                {
-                  if(mine->getBITBildChanged(i))
-                  {
-                    IntChar(i,nUMMBER);
-                    write(sockfd, &nUMMBER, 4);
-                    char ToWrite = mine->transmitBITBild(i);
-                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
-                  }
-                }
-                char STOP[4];
-                IntChar(0xFFFFFFFF,STOP);
-                write(sockfd,STOP,4);
-                fall = 003;
-                break;
-                */
+	  case 104: {
+					if (mine->getBool(UPDATE_IMAGE_SIGNAL))
+					{
+						command = 104;//needs change
+						write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
+						mine->setBITBildMutex(true);
+						write(sockfd, mine->getBITBild(), mine->getBITBildSize());//send to socket
+						//for (int i = 0; i < mine->getBITBildSize(); i++)
+						//{
+						//	char ToWrite = mine->transmitBITBild(i);
+						//	write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
+						//}
+						//mine->setBools(UPDATE_IMAGE_SIGNAL, true);
+						mine->setBITBildMutex(false);
+					}
+					fall = 003;
+					break;
+				}
 
       default:  //std::cout << "something wemt horrebly wrong" << '\n';
                 break;

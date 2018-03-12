@@ -528,21 +528,26 @@ void HeadGUI::sortingValuesForHeadquater()
         if(updatedPicture == true)
         {
             networkUser->setBools(UPDATE_IMAGE_SIGNAL, true);
+			networkUser->setBITBildMutex(true);
             for(int i = 0; i < 2 * PacketBytes*FrameHeight; i++)
             {
-                unsigned char bitValue = *(resultPicture + i);
+                //unsigned char bitValue = *(resultPicture + i);
                 //
                 //!!!BÖSE!!!
                 //
 
                 //networkUser->setBITBild(5, i);
 
-                networkUser->setBITBild(bitValue, i);
+                //networkUser->setBITBild(bitValue, i);
+				
+				*(networkUser->getBITBild() + i) = *(resultPicture + i);
+				
 
                 //
                 //!!!ENDE BÖSE !!!!
                 //
             }
+			networkUser->setBITBildMutex(false);
             updatedPicture = false;
         }
     }

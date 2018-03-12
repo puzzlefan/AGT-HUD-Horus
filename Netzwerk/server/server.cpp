@@ -139,25 +139,32 @@ void Server::ServerPrivateThread(int counti)
 													(*mine)[counti].recieveBool(Bool,Position);
 												} while(true);
 												break;
-									case 104:	for(int i = 0;i < (*mine)[counti].getBITBildSize(); i++)
-												{
-													read(ClientFd[counti], &Char,1);//&bILD,BITBildSize);
-													(*mine)[counti].recieveBITBild(Char,i);
-												}
-												break;
-												//OLD
-												/*
-												do
-												{
-													read(ClientFd[counti],Integer,4);
-													int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
-													if(Zahl==0xFFFFFFFF) break;
-													read(ClientFd[counti], &Char,1);
-													(*mine)[counti].recieveBITBild(Char,Zahl);
-												} while(true);
-												(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL,true);
-												break;
-												*/
+									case 104:	
+									{
+										(*mine)[counti].setBITBildMutex(true);
+										read(ClientFd[counti], (*mine)[counti].getBITBild(), (*mine)[counti].getBITBildSize());//&bILD,BITBildSize);
+										(*mine)[counti].setBITBildMutex(false);
+										//for (int i = 0; i < (*mine)[counti].getBITBildSize(); i++)
+										//{
+										//	read(ClientFd[counti], &Char, 1);//&bILD,BITBildSize);
+										//	(*mine)[counti].recieveBITBild(Char, i);
+										//}
+										(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL, true);
+										break;
+										//OLD
+										/*
+										do
+										{
+											read(ClientFd[counti],Integer,4);
+											int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
+											if(Zahl==0xFFFFFFFF) break;
+											read(ClientFd[counti], &Char,1);
+											(*mine)[counti].recieveBITBild(Char,Zahl);
+										} while(true);
+										(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL,true);
+										break;
+										*/
+									}
 									case 103: 	(*mine)[counti].recieveMessage("");
 					                    		read(ClientFd[counti],&MLength,4);
 					                    		int RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
