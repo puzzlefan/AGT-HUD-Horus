@@ -110,6 +110,7 @@ public:
   unsigned char* getBITBild();  //returns char at given position, changed untouched
   bool getBITBildChanged(int pos);    //returns BitBildChanged state at given position
   int getBITBildSize();               //returns length of vector
+  std::mutex getBITBildMutex();
 
   std::string getMessage();  //returns string with message, changed untouched
   bool getMessageChanged(); //returns if message has been changed
@@ -124,7 +125,7 @@ public:
   void setBools(int Pos, bool Bools);            //sets the value of an bool at given position, changes change state to true
   void setBITBild(unsigned char Char, int Pos);  //sets the value of an char at given position, changes change state to true
   void setMessage(std::string Message);          //changes message, sets changed message true
-  void setBITBildMutex(bool PowerOnOff);
+  
 
   //
   //  transmits used to send data from one computer to another
