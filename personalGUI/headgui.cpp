@@ -27,6 +27,9 @@ HeadGUI::HeadGUI(user *recentUser, DaTa *recentData, QWidget *parent)
     Overlay = new QStackedWidget;
 
     mainWidget->resize(2*ImageWidth,2*ImageHeight);//432;240?!
+    NormalScreen->resize(2*ImageWidth,2*ImageHeight);
+    Overlay->showFullScreen();
+    Overlay->showMaximized();
 
     defauftValues();
     createConnections();
@@ -55,15 +58,15 @@ HeadGUI::HeadGUI(user *recentUser, DaTa *recentData, QWidget *parent)
 void HeadGUI::createBiometric()
 {
     Personae = new QLabel;
-    layout->addWidget(Personae,0,2,1,2, Qt::AlignCenter);
+    layout->addWidget(Personae,0,2,1,3, Qt::AlignCenter);
 
     Light = new QLabel;
-    layout->addWidget(Light,0,4,1,1, Qt::AlignCenter);
+    layout->addWidget(Light,1,4,1,1, Qt::AlignCenter);
     Light->setText(lightSwitch[0]);
     Light->setStyleSheet("QLabel{background-color : lightgrey;}");
 
     IRPictureFullScreen = new QLabel;
-    layout->addWidget(IRPictureFullScreen,1,4,1,1, Qt::AlignCenter);
+    layout->addWidget(IRPictureFullScreen,2,4,1,1, Qt::AlignCenter);
     IRPictureFullScreen->setText(PictureFullScreen[0]);
 
     TempHead = new QLabel;
@@ -144,7 +147,8 @@ void HeadGUI::createImageOverlay()
 {
     Overlay->addWidget(NormalScreen);//!
 
-    IRPictureFullScreenOverlay = new QLabel();//!!!
+    IRPictureFullScreenOverlay = new QLabel;//!!!
+    IRPictureFullScreenOverlay->showMaximized();
     Overlay->addWidget(IRPictureFullScreenOverlay);
 
     ComplexLayout->addWidget(Overlay);
@@ -666,6 +670,7 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
     }
     else
     {
+        pixmap.resize(2*ImageWidth,2*ImageHeight, Qt::KeepAspectRatio);
         IRPictureFullScreenOverlay->setPixmap(pixmap);//!
     }
 
