@@ -229,7 +229,7 @@ void Client::communicator()
 			  command = 104;//needs change
 			  write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
 			  mine->setBITBildMutex(true);
-			  write(sockfd, mine->getBITBild(), mine->getBITBildSize());//send to socket
+			  write(sockfd, mine->getBITBildArray(), mine->getBITBildSize());//send to socket
 			  //for (int i = 0; i < mine->getBITBildSize(); i++)
 			  //{
 			  //	char ToWrite = mine->transmitBITBild(i);

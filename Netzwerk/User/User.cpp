@@ -31,7 +31,6 @@ user::~user()
 
 void user::fill()
 {
-  //setID(2);
   for(int i = 0; i < integerCount;i++)
   {
      setInteger(i, 0);
@@ -40,9 +39,10 @@ void user::fill()
   {
     setBools(i,0);//i%2;
   }
-  message = "abc";
-  for(int i = 0; i<= 19200 * 2;i++){
-    (*BITBild)[i]=252;
+  message = "";
+  for (int i = 0; i < BITBildSize; i++)
+  {
+	  BITBild[i] = 0;
   }
 }
 
@@ -91,21 +91,6 @@ int user::getBoolCount()
   return boolCount;
 }
 
-unsigned char* user::getBITBild()
-{
-  //kein Mutex wird von Hand gesetzt um prozess zu vereinfachen
-  return &(*BITBild)[0];
-}
-bool user::getBITBildChanged(int pos)
-{
-  std::lock_guard<std::mutex> lock(mutex_BitBild);
-  return (*BITBildChanged)[pos];
-}
-int user::getBITBildSize()
-{
-  return BITBildSize;
-}
-
 std::string user::getMessage()
 {
   std::lock_guard<std::mutex> lock(mutex_Message);
@@ -144,32 +129,13 @@ void user::setBools(int Pos, bool Bools)
   bools[Pos]=Bools;
   ChangedBools[Pos]=true;
 }
-void user::setBITBild(unsigned char Char, int Pos)
-{
-  //std::lock_guard<std::mutex> lock(mutex_BitBild); Mutex umgeh funktion angewendt
-  if((*BITBild)[Pos]!=Char)
-  {
-      (*BITBild)[Pos]=Char;
-      (*BITBildChanged)[Pos]=true;
-  }
-}
 void user::setMessage(std::string Message)
 {
   std::lock_guard<std::mutex> lock(mutex_Message);
   message = Message;
   MessageChanged = true;
 }
-void user::setBITBildMutex(bool PowerOnOff)
-{
-    if(PowerOnOff)
-    {
-        mutex_BitBild.lock();
-    }
-    else
-    {
-        mutex_BitBild.unlock();
-    }
-}
+
 //
 //  transmits, used to send the data to anther device
 //
@@ -191,12 +157,6 @@ bool user::transmitBool(int pos)
   std::lock_guard<std::mutex> lock(mutex_Bools);
   ChangedBools[pos] = false;
   return bools[pos];
-}
-unsigned char user::transmitBITBild(int pos)
-{
-  std::lock_guard<std::mutex> lock(mutex_BitBild);
-  (*BITBildChanged)[pos]=false;
-  return (*BITBild)[pos];
 }
 std::string user::transmitMessage()
 {
@@ -226,15 +186,34 @@ void user::recieveBool(bool Booli, int pos)
   //ChangedBools[pos]=false;
   bools[pos]=Booli;
 }
-void user::recieveBITBild(unsigned char Chari, int pos)
-{
-  std::lock_guard<std::mutex> lock(mutex_BitBild);
-  //(*BITBildChanged)[pos]=false;
-  (*BITBild)[pos]=Chari;
-}
 void user::recieveMessage(std::string Message)
 {
   std::lock_guard<std::mutex> lock(mutex_Message);
   message.clear();
   message.append(Message);
+}
+
+//
+//	BIT bild is not transfered with normal function structure to improve performance by large enough amounts to justify  
+//
+
+unsigned char* user::getBITBildArray()//returns startingpoint of the picture array 
+{
+	//kein Mutex wird von Hand gesetzt um prozess zu beschleunigen
+	return &(BITBild[0]);
+}
+void user::setBITBildMutex(bool PowerOnOff)//aktivieren oder deaktiviren des Mutex(wenn funktioniert wenn von aderen threads aufgerufen)
+{
+	if (PowerOnOff)
+	{
+		mutex_BitBild.lock();
+	}
+	else
+	{
+		mutex_BitBild.unlock();
+	}
+}
+int user::getBITBildSize()//returns the length of the Bit Bildarray
+{
+	return BITBildSize;
 }

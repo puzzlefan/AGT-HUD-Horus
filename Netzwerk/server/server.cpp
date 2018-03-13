@@ -163,7 +163,7 @@ void Server::ServerPrivateThread(int counti)
 					case 104:
 					{
 						(*mine)[counti].setBITBildMutex(true);
-						recv(ClientFd[counti], (*mine)[counti].getBITBild(), (*mine)[counti].getBITBildSize(),MSG_WAITALL);//&bILD,BITBildSize);
+						recv(ClientFd[counti], (*mine)[counti].getBITBildArray(), (*mine)[counti].getBITBildSize(),MSG_WAITALL);//&bILD,BITBildSize);
 						(*mine)[counti].setBITBildMutex(false);
 						//for (int i = 0; i < (*mine)[counti].getBITBildSize(); i++)
 						//{

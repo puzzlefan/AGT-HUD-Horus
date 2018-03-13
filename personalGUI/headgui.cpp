@@ -540,7 +540,7 @@ void HeadGUI::sortingValuesForHeadquater()
 
                 //networkUser->setBITBild(bitValue, i);
 				
-				*(networkUser->getBITBild() + i) = *(resultPicture + i);
+				*(networkUser->getBITBildArray() + i) = *(resultPicture + i);
 				
 
                 //
