@@ -36,13 +36,6 @@ Client::Client(user *point , HeadGUI *PointerHeadGUI)
         return;
   }
 
-  //
-  //BÖSE7
-  //
-
-  // mine->setID(0);
-  // mine->setBools(NEW_CONFIRMED_ID,true);
-
   ClientThread = new std::thread(&Client::communicator,this);
 }
 
@@ -55,9 +48,7 @@ void Client::communicator()
 {
   bool id_confirmed = false;
   char command = 0;
-  //bool ReadWrite[] = {false, false};//for later use
   int fall = 0;
-  //rwteble(ReadWrite);//for later use
   while (1!=2)
   {
     switch (fall) {
@@ -138,12 +129,9 @@ void Client::communicator()
 				  read(sockfd, &MLength, 4);
 				  RecivingLength = (MLength[0] << 24) + (MLength[1] << 16) + (MLength[2] << 8) + MLength[3];
 				  char MessagE[RecivingLength];
-				  //for (int i = 0; i < mine->getMessageLength(); i++)
-				  //{
 				  read(sockfd, &MessagE, RecivingLength);
 				  std::string mESSAGe(MessagE, RecivingLength);
 				  mine->recieveMessage(mESSAGe);
-				  //}
 				  break;
 			  }
 			  }
@@ -214,10 +202,7 @@ void Client::communicator()
 			  char charMessageLength[4];
 			  IntChar(mine->getMessageLength() + 1, charMessageLength);
 			  write(sockfd, charMessageLength, 4);
-			  //for(int i = 0; i< mine->getMessageLength();i++)
-			  //{
 			  write(sockfd, mine->transmitMessage().c_str(), mine->getMessageLength() + 1);
-			  //}
 		  }
 		  fall = 104;
 		  break;
@@ -230,12 +215,6 @@ void Client::communicator()
 			  write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
 			  mine->setBITBildMutex(true);
 			  write(sockfd, mine->getBITBildArray(), mine->getBITBildSize());//send to socket
-			  //for (int i = 0; i < mine->getBITBildSize(); i++)
-			  //{
-			  //	char ToWrite = mine->transmitBITBild(i);
-			  //	write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
-			  //}
-			  //mine->setBools(UPDATE_IMAGE_SIGNAL, true);
 			  mine->setBITBildMutex(false);
 		  }
 		  fall = 003;
@@ -250,7 +229,7 @@ void Client::communicator()
   }
 }
 
-void Client::rwteble(bool *ari)
+void Client::rwteble(bool *ari) // for future use (stabilization)
 {
   fd_set rfds,wfds;//generates buffers which hold the sockets for select to check
   struct timeval WaitingTime;

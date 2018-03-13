@@ -106,10 +106,6 @@ public:
   bool getBoolChanged(int Pos);  //returns changedBools state at given position
   int getBoolCount();            //returns length of array
 
-  unsigned char* getBITBildArray();  //returns char at given position, changed untouched
-  bool getBITBildChanged(int pos);    //returns BitBildChanged state at given position
-  int getBITBildSize();               //returns length of vector
-
   std::string getMessage();  //returns string with message, changed untouched
   bool getMessageChanged(); //returns if message has been changed
   int getMessageLength();   //returns legth of message
@@ -121,9 +117,8 @@ public:
   void setID(int DI);                            //changes ID, set changed to true
   void setInteger(int Pos, int Integer);         //sets the value of an integer at given position, changes change state to true
   void setBools(int Pos, bool Bools);            //sets the value of an bool at given position, changes change state to true
-  void setBITBild(unsigned char Char, int Pos);  //sets the value of an char at given position, changes change state to true
   void setMessage(std::string Message);          //changes message, sets changed message true
-  void setBITBildMutex(bool PowerOnOff);
+  
 
   //
   //  transmits used to send data from one computer to another
@@ -132,7 +127,6 @@ public:
   int transmitID();                       //returns ID removes changed state
   int transmitInt(int pos);               //returns int removes changed stage
   bool transmitBool(int pos);             //returns bool removes changed stage
-  unsigned char transmitBITBild(int pos); //returns char removes changed stage
   std::string transmitMessage();          //returns message string
 
   //
@@ -142,7 +136,13 @@ public:
   void recieveID(int identification);                  //grabs new ID leaves changed state untouched
   void recieveInt(int Inti, int pos);                 //grabs integer for given position, leaves changed untouched
   void recieveBool(bool Booli, int pos);              //grabs bool for given position, leaves changed untouched
-  void recieveBITBild(unsigned char Chari, int pos);  //grabs char for given position, leaves changed untouched
   void recieveMessage(std::string Message);                   //grabs message, leaves changed untouched
+
+  //
+  // Bildübertragung
+  //
+  void setBITBildMutex(bool PowerOnOff);	//returns array handle
+  unsigned char* getBITBildArray();			//returns char at given position, changed untouched
+  int getBITBildSize();						//returns length of vector
 };
 #endif

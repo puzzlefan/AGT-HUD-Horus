@@ -67,40 +67,21 @@ void Server::ServerMainThread()
 	 	}
 		else{
 			clientThreads.push_back(std::thread(&Server::ServerPrivateThread,this,count));//wenn nix error neu Client thread
-		}//pass by value?
+		}
 		count++;
 	}
 }
 
 void Server::ServerPrivateThread(int counti)
 {
-
-	//
-	// !!!TEST!!!
-	//
-	(*mine)[counti].setBools(2,0);
-	//
-	//
-	//
 	int fall = 0;
 	int command = 0;
 	int Position;
-	//unsigned char bILD[BITBildSize];
 	char Bool, Char;
 	char Integer[4];
 	char MLength[] = {0,0,0,0};
 	bool Continue = true;
 	while (true) {
-		//
-		//	!!! TEST
-		//
-//		if((*mine)[counti].getBool(2)){
-    //		(*mine)[counti].setBools(2,0);
-        //	(*mine)[counti].setMessage("Server");
-        //}
-		//
-		//
-		//
 		switch (fall) 
 		{
 			case 0:
@@ -165,26 +146,8 @@ void Server::ServerPrivateThread(int counti)
 						(*mine)[counti].setBITBildMutex(true);
 						recv(ClientFd[counti], (*mine)[counti].getBITBildArray(), (*mine)[counti].getBITBildSize(),MSG_WAITALL);//&bILD,BITBildSize);
 						(*mine)[counti].setBITBildMutex(false);
-						//for (int i = 0; i < (*mine)[counti].getBITBildSize(); i++)
-						//{
-						//	read(ClientFd[counti], &Char, 1);//&bILD,BITBildSize);
-						//	(*mine)[counti].recieveBITBild(Char, i);
-						//}
 						(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL, true);
 						break;
-						//OLD
-						/*
-						do
-						{
-							read(ClientFd[counti],Integer,4);
-							int Zahl = (Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3];
-							if(Zahl==0xFFFFFFFF) break;
-							read(ClientFd[counti], &Char,1);
-							(*mine)[counti].recieveBITBild(Char,Zahl);
-						} while(true);
-						(*mine)[counti].setBools(UPDATE_IMAGE_SIGNAL,true);
-						break;
-						*/
 					}
 					case 103:
 					{
@@ -235,18 +198,6 @@ void Server::ServerPrivateThread(int counti)
 				}
 				command = 253;
 				write(ClientFd[counti], &command, 1);
-				/*
-									if((*mine)[counti].getMessageChanged())
-									{
-										command = 202;
-										write(ClientFd[counti], &command, CommandLength);//send to sockfd command 103 with length 1
-										for(int i = 0; i< (*mine)[counti].getMessageLength();i++)
-										{
-													char a = (*mine)[counti].getMessage()[i];
-													write(ClientFd[counti], &a, 1);
-										}
-									}
-				*/
 				if ((*mine)[counti].getMessageChanged())
 				{
 					command = 202;
