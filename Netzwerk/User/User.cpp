@@ -5,15 +5,6 @@
 
 user::user()
 {
-  BITBild = new std::vector<unsigned char>(BITBildSize);//potentially dangerous at first call
-  BITBildChanged = new std::vector<bool>(BITBildSize);
-  for (int i = 0; i < boolCount; i++) {
-    ChangedBools[i]=0;
-  }
-  for(int i = 0; i < integerCount;i++)
-  {
-    ChangedInts[i]=0;
-  }
   fill();
 }
 user::user(const user&)
