@@ -347,7 +347,7 @@ void HeadGUI::certify()
 {
     if (SendEmergency==false)
     {
-       sensorData->setSendData(0,1);
+       sensorData->setSendData(0,PARTY);
 
         switch (horizontal)
         {
@@ -435,7 +435,7 @@ void HeadGUI::certify()
 
         recentStatus = 5;
         updatedStatus = true;
-        sensorData->setSendData(1,1);
+        sensorData->setSendData(1,PARTY);
 
         emit newValuesForHeadquater();
     }
@@ -756,13 +756,13 @@ void HeadGUI::changingLight()
    {
        Light->setText(lightSwitch[1]);
        Light->setStyleSheet("QLabel{background-color : yellow;}");
-       sensorData->setSendData(1,0);
+       sensorData->setSendData(1,LAMPE);
    }
    else
    {
        Light->setText(lightSwitch[0]);
        Light->setStyleSheet("QLabel{background-color : lightgrey;}");
-       sensorData->setSendData(0,0);
+       sensorData->setSendData(0,LAMPE);
    }
 
 }
