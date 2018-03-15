@@ -36,13 +36,6 @@ Client::Client(user *point , HeadGUI *PointerHeadGUI)
         return;
   }
 
-  //
-  //BÖSE7
-  //
-
-  // mine->setID(0);
-  // mine->setBools(NEW_CONFIRMED_ID,true);
-
   ClientThread = new std::thread(&Client::communicator,this);
 }
 
@@ -55,183 +48,188 @@ void Client::communicator()
 {
   bool id_confirmed = false;
   char command = 0;
-  //bool ReadWrite[] = {false, false};//for later use
   int fall = 0;
-  //rwteble(ReadWrite);//for later use
   while (1!=2)
   {
     switch (fall) {
       case 0:
-                {
-                    if(id_confirmed || mine->getBool(NEW_CONFIRMED_ID))
-                    {
-                        fall = 1;//activates first order
-                    }
-                    else
-                    {
-                        fall = 0;
-                    }
-                    break;
-                }
-      case 1:   command = 001;
-                write(sockfd, &command, CommandLength);//send to sockfd command 1 with length 1
-                fall = 100;
-                break;
-
-      case 2:   command = 002;
-                write(sockfd, &command, CommandLength);//send to sockfd command 2 with length 1
-                char Position;
-                char Bool;
-                char Char;
-                char Integer[4];
-                int RecivingLength;
-                do
-                {
-                    read(sockfd, &command, CommandLength);
-                    switch (command) {
-                    default : //std::cout << "something went horrible wrong through out reading" << '\n';
-                                break;
-                    case 3:     break;
-                    case 200:   do
-                                {
-                                    read(sockfd, &Position, 1);
-                                    if(Position == 253)
-                                    {
-                                        break;
-                                    }
-                                    read(sockfd, &Integer, 4);
-                                    mine->recieveInt((Integer[0] << 24)+(Integer[1] << 16)+(Integer[2] << 8)+Integer[3],Position);
-                                } while(true);
-                                break;
-                    case 201:   do
-                                {
-                                    read(sockfd, &Position, 1);
-                                    if(Position == 253)
-                                    {
-                                        break;
-                                    }
-                                    read(sockfd, &Bool, 1);
-                                    mine->recieveBool(Bool,Position);
-                                } while(true);
-                                break;
-                    case 202:   mine->recieveMessage("");
-                                char MLength[4] = {0,0,0,0};
-                                read(sockfd,&MLength,4);
-                                RecivingLength = (MLength[0] << 24)+(MLength[1] << 16)+(MLength[2] << 8)+MLength[3];
-                                char MessagE [RecivingLength];
-                                //for (int i = 0; i < mine->getMessageLength(); i++)
-                                //{
-                                read(sockfd,&MessagE,RecivingLength);
-                                std::string mESSAGe(MessagE,RecivingLength);
-                                mine->recieveMessage(mESSAGe);
-                                //}
-                                break;
-
-                  }
-                } while(command!=003);
-                fall = 001;
-                GUI->newDataFromHeadquater();
-                break;
-
-      case 3:   command = 003;
-                write(sockfd, &command, CommandLength);//send to sockfd command 3 with length 1
-                fall = 002;
-                break;
-
-      case 100: command = 100;
-                write(sockfd, &command, CommandLength);//send to sockfd command 100 with length 1
-                char charID[4];
-                IntChar(mine->getID(),charID);
-                write(sockfd, charID, 4);
-                fall = 101;
-                break;
-
-      case 101: command = 101;
-                write(sockfd, &command, CommandLength);//send to sockfd command 101 with length 1
-                char chaInt[4];
-                for (char i = 0; i < mine->getIntegerCount() ; i++)
-                {
-                  if (mine->getIntegersChanged(i)) {
-                    write(sockfd,&i,1);
-                    IntChar(mine->transmitInt(i), chaInt);
-                    write(sockfd, chaInt, 4);
-                  }
-                }
-                command = 253;
-                write(sockfd,&command,1);
-                fall = 102;
-                break;
-
-      case 102: command = 102;
-                write(sockfd, &command, CommandLength);//send to sockfd command 102 with length 1
-                for (char i = 0; i < mine->getBoolCount(); i++)
-                {
-                  if (mine->getBoolChanged(i)) {
-                    write(sockfd,&i,1);
-                    char asdf = mine->transmitBool(i);
-                    write(sockfd, &asdf, 1);
-                  }
-                }
-                command = 253;
-                write(sockfd,&command,1);
-                fall = 103;
-                break;
-
-      case 103: if(mine->getMessageChanged())
-                {
-                    command = 103;
-                    write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
-                    //sent itnt for length
-                    char charMessageLength[4];
-                    IntChar(mine->getMessageLength()+1,charMessageLength);
-                    write(sockfd, charMessageLength, 4);
-                    //for(int i = 0; i< mine->getMessageLength();i++)
-                    //{
-                    write(sockfd, mine->transmitMessage().c_str(), mine->getMessageLength()+1);
-                    //}
-                }
-                fall = 104;
-                break;
-
-      case 104: command = 104;//needs change
-                write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
-                for(int i = 0; i< mine->getBITBildSize();i++)
-                {
-                    char ToWrite = mine->transmitBITBild(i);
-                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
-                }
-                mine->setBools(UPDATE_IMAGE_SIGNAL,true);
-                fall = 003;
-                break;
-                //OLD
-                /*
-                command = 104;//needs change
-                char nUMMBER[4];
-                write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
-                for(int i = 0; i< mine->getBITBildSize();i++)
-                {
-                  if(mine->getBITBildChanged(i))
-                  {
-                    IntChar(i,nUMMBER);
-                    write(sockfd, &nUMMBER, 4);
-                    char ToWrite = mine->transmitBITBild(i);
-                    write(sockfd, &ToWrite, 1);//send to sockfd command 104 with length 1
-                  }
-                }
-                char STOP[4];
-                IntChar(0xFFFFFFFF,STOP);
-                write(sockfd,STOP,4);
-                fall = 003;
-                break;
-                */
-
-      default:  //std::cout << "something wemt horrebly wrong" << '\n';
-                break;
+	  {
+		  if (id_confirmed || mine->getBool(NEW_CONFIRMED_ID))
+		  {
+			  fall = 1;//activates first order
+		  }
+		  else
+		  {
+			  fall = 0;
+		  }
+		  break;
+	  }
+      case 1:
+	  {
+		  command = 001;
+		  write(sockfd, &command, CommandLength);//send to sockfd command 1 with length 1
+		  fall = 100;
+		  break;
+	  }
+      case 2:
+	  {
+		  command = 002;
+		  write(sockfd, &command, CommandLength);//send to sockfd command 2 with length 1
+		  char Position;
+		  char Bool;
+		  char Char;
+		  char Integer[4];
+		  int RecivingLength;
+		  do
+		  {
+			  read(sockfd, &command, CommandLength);
+			  switch (command)
+			  {
+			  default:
+			  {
+				  std::cout << "something went horrible wrong through out reading" << '\n';
+				  break;
+			  }
+			  case 3:
+			  {
+				  break;
+			  }
+			  case 200:
+			  {
+				  do
+				  {
+					  read(sockfd, &Position, 1);
+					  if (Position == 253)
+					  {
+						  break;
+					  }
+					  read(sockfd, &Integer, 4);
+					  mine->recieveInt((Integer[0] << 24) + (Integer[1] << 16) + (Integer[2] << 8) + Integer[3], Position);
+				  } while (true);
+				  break;
+			  }
+			  case 201:
+			  {
+				  do
+				  {
+					  read(sockfd, &Position, 1);
+					  if (Position == 253)
+					  {
+						  break;
+					  }
+					  read(sockfd, &Bool, 1);
+					  mine->recieveBool(Bool, Position);
+				  } while (true);
+				  break;
+			  }
+			  case 202:
+			  {
+				  mine->recieveMessage("");
+				  char MLength[4] = { 0,0,0,0 };
+				  read(sockfd, &MLength, 4);
+				  RecivingLength = (MLength[0] << 24) + (MLength[1] << 16) + (MLength[2] << 8) + MLength[3];
+				  char MessagE[RecivingLength];
+				  read(sockfd, &MessagE, RecivingLength);
+				  std::string mESSAGe(MessagE, RecivingLength);
+				  mine->recieveMessage(mESSAGe);
+				  break;
+			  }
+			  }
+		  } while (command != 003);
+		  fall = 001;
+		  GUI->newDataFromHeadquater();
+		  break;
+	  }
+      case 3:
+	  {
+		  command = 003;
+		  write(sockfd, &command, CommandLength);//send to sockfd command 3 with length 1
+		  fall = 002;
+		  break;
+	  }
+      case 100:
+	  {
+		  command = 100;
+		  write(sockfd, &command, CommandLength);//send to sockfd command 100 with length 1
+		  char charID[4];
+		  IntChar(mine->getID(), charID);
+		  write(sockfd, charID, 4);
+		  fall = 101;
+		  break;
+	  }
+      case 101:
+	  {
+		  command = 101;
+		  write(sockfd, &command, CommandLength);//send to sockfd command 101 with length 1
+		  char chaInt[4];
+		  for (char i = 0; i < mine->getIntegerCount(); i++)
+		  {
+			  if (mine->getIntegersChanged(i)) {
+				  write(sockfd, &i, 1);
+				  IntChar(mine->transmitInt(i), chaInt);
+				  write(sockfd, chaInt, 4);
+			  }
+		  }
+		  command = 253;
+		  write(sockfd, &command, 1);
+		  fall = 102;
+		  break;
+	  }
+      case 102:
+	  {
+		  command = 102;
+		  write(sockfd, &command, CommandLength);//send to sockfd command 102 with length 1
+		  for (char i = 0; i < mine->getBoolCount(); i++)
+		  {
+			  if (mine->getBoolChanged(i)) {
+				  write(sockfd, &i, 1);
+				  char asdf = mine->transmitBool(i);
+				  write(sockfd, &asdf, 1);
+			  }
+		  }
+		  command = 253;
+		  write(sockfd, &command, 1);
+		  fall = 103;
+		  break;
+	  }
+      case 103: 
+	  {
+		  if (mine->getMessageChanged())
+		  {
+			  command = 103;
+			  write(sockfd, &command, CommandLength);//send to sockfd command 103 with length 1
+			  //sent itnt for length
+			  char charMessageLength[4];
+			  IntChar(mine->getMessageLength() + 1, charMessageLength);
+			  write(sockfd, charMessageLength, 4);
+			  write(sockfd, mine->transmitMessage().c_str(), mine->getMessageLength() + 1);
+		  }
+		  fall = 104;
+		  break;
+	  }
+	  case 104: 
+	  {
+		  if (mine->getBool(UPDATE_IMAGE_SIGNAL))
+		  {
+			  command = 104;//needs change
+			  write(sockfd, &command, CommandLength);//send to sockfd command 104 with length 1
+			  mine->setBITBildMutex(true);
+			  write(sockfd, mine->getBITBildArray(), mine->getBITBildSize());//send to socket
+			  mine->setBITBildMutex(false);
+		  }
+		  fall = 003;
+		  break;
+	  }
+      default:  
+	  {
+		  std::cout << "something wemt horrebly wrong" << '\n';
+		  break;
+	  }
     }
   }
 }
 
-void Client::rwteble(bool *ari)
+void Client::rwteble(bool *ari) // for future use (stabilization)
 {
   fd_set rfds,wfds;//generates buffers which hold the sockets for select to check
   struct timeval WaitingTime;

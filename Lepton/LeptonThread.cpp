@@ -4,6 +4,38 @@
 #include <QString>
 #include <QTextStream>
 
+#include <ctime>
+#include <thread>
+
+void LeptonThread::frequenzie()
+{
+	std::time_t anf = std::time(nullptr);
+	std::time_t ende = std::time(nullptr);
+	while (true)
+	{
+		ende = std::time(nullptr);
+		if (ende>anf)
+		{
+			std::cout << "Packet Frequenz: " << packetf << " neuBild Frequenz: " << neuBildf << std::endl;
+			packetf = 0;
+			neuBildf = 0;
+			anf = std::time(nullptr);
+		}
+
+	}
+}
+
+//sollten wir telemetry enablen setzt kamera shutdown bit ab 80°C
+//flat - field correction (shutter) einstellen
+//ioctl?
+//
+//possible improvments
+//
+/*
+	- can try to set a delay in the SPI transfer to reduce I2C load 
+		- needs to be checked against the data sheet of the camera
+*/
+
 LeptonThread::LeptonThread(std::mutex *MUTEX)//constructer
     : QThread()
     , segmentRAW(PacketBytes*SegmentPackets)//holds packets until it is nown to which segment they belong
@@ -75,78 +107,98 @@ void LeptonThread::run() {
 
     int resets = 0; // Number of times we've reset the 0...59 loop for packets
     int errors = 0; // Number of error-packets received
+
+	std::thread *timer = new std::thread(&LeptonThread::frequenzie,this);
+
 	while (true)
 	{
-		int iPacket;
-		int iSegment = 0;
-		for (iPacket = 0; iPacket < 2 * SegmentHeight; )
+		while (!SegmentUpdated[0] && !SegmentUpdated[1] && !SegmentUpdated[2] && !SegmentUpdated[3])
 		{
-			unsigned char *packet = &segmentRAW[iPacket*PacketBytes];// + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
-
-			if (getPacket(iPacket, packet) < 1)
+			int iPacket;
+			int iSegment = 0;
+			for (iPacket = 0; iPacket < 2 * SegmentHeight; )
 			{
-				qDebug() << "Error transferring SPI packet";
-				return;
-			}
+				unsigned char *packet = &segmentRAW[iPacket*PacketBytes];// + (iSegment-1)*PacketBytes*SegmentHeight*2];//changed
 
-			int packetNumber;
-			if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verknüpfung ->packet has to have an value %
-			{
-				packetNumber = -1;
-			}
-			else
-			{
-				packetNumber = packet[1];
-			}
-#if DEBUG_LEPTON
-			if (sequence.empty() || sequence.back().first != packetNumber)
-				sequence.push_back(std::make_pair(packetNumber, 1));
-			else
-				++sequence.back().second;
-#endif
-			if (packetNumber == 20) // readout of the segment number, because of historical reasons this has to happen in two lines
-			{//who is able to read has advanteges! 20 menas 20 and not 19!
-				iSegment = packet[0];
-				iSegment >>= 4;
-			}
-
-
-			if (packetNumber == -1)
-			{
-				usleep(1000);
-				if (++errors > 300)
+				if (getPacket(iPacket, packet) < 1)
 				{
+					qDebug() << "Error transferring SPI packet";
+					return;
+				}
+
+				int packetNumber;
+				if ((packet[0] & 0xf) == 0xf)// & Bitweise und Verknüpfung ->packet has to have an value %
+				{
+					packetNumber = -1;
+				}
+				else
+				{
+					packetNumber = packet[1];
+				}
+#if DEBUG_LEPTON
+				if (sequence.empty() || sequence.back().first != packetNumber)
+					sequence.push_back(std::make_pair(packetNumber, 1));
+				else
+					++sequence.back().second;
+#endif
+				if (packetNumber == 20) // readout of the segment number, because of historical reasons this has to happen in two lines
+				{//who is able to read has advanteges! 20 menas 20 and not 19!
+					iSegment = packet[0];
+					iSegment >>= 4;
+				}
+
+
+				if (packetNumber == -1)
+				{
+					usleep(1000);
+					if (++errors > 300)
+					{
+						break;
+					}
+					continue;
+				}
+
+				if (packetNumber != iPacket)
+				{
+					usleep(1000);
 					break;
+				}
+
+				++iPacket;
+			}
+
+			if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt
+			{
+				if (++resets >= 750) //timeout solange 750 nicht erreicht wird wird diese Schleife wiederholt
+				{
+					qDebug() << "Packet reset counter hit 750";
+					resets = 0;
+					usleep(750000);
 				}
 				continue;
 			}
 
-			if (packetNumber != iPacket)
-			{
-				usleep(1000);
-				break;
-			}
+			//
+			//
+			//	!!!	Needs Testing	!!!
+			//
+			//
 
-			++iPacket;
+			if (iSegment != 0)//bringing the segment to the place it belongs to
+			{
+				for (int i = 0; i < PacketBytes * SegmentPackets; i++)
+				{
+					result[(iSegment - 1)*PacketBytes*SegmentHeight * 2 + i] = segmentRAW[i];
+				}
+				SegmentUpdated[iSegment - 1] = true;
+			}
+			packetf++;
 		}
-
-		if (iPacket < 2 * SegmentHeight)//wird aktiviert wenn man aus der for-schleife raus springt
+		neuBildf++;
+		//alle Segmente wieder zurück setzen
+		for (int i = 0; i < 4; i++)
 		{
-			if (++resets >= 750) //timeout solange 750 nicht erreicht wird wird diese Schleife wiederholt
-			{
-				qDebug() << "Packet reset counter hit 750";
-				resets = 0;
-				usleep(750000);
-			}
-			continue;
-		}
-
-		if (iSegment != 0)//bringing the segment to the place it belongs to
-		{
-			for (int i = 0; i < PacketBytes * SegmentPackets; i++)
-			{
-				result[(iSegment - 1)*PacketBytes*SegmentHeight * 2 + i] = segmentRAW[i];
-			}
+			SegmentUpdated[i] = false;
 		}
 
 #if DEBUG_LEPTON
