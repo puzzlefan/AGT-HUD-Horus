@@ -28,7 +28,6 @@ HeadGUI::HeadGUI(user *recentUser, DaTa *recentData, QWidget *parent)
 
     mainWidget->resize(2*ImageWidth,2*ImageHeight);//432;240?!
     NormalScreen->resize(2*ImageWidth,2*ImageHeight);
-    Overlay->showFullScreen();
     Overlay->showMaximized();
 
     defauftValues();
