@@ -9,6 +9,11 @@
 #define TEMPRETURE_BELOW    2
 #define CO_TOP              3
 #define CO_FLOP             4
+#define EMERGENCY			5
+
+//Defines to make writing of Data to int Array more understandavle (Nochmal testen um Verwechselung auszuschlieﬂen)
+#define LAMPE 0
+#define PARTY 1
 
 //Defines to make reading from knobs array easier
 #define KNOB_UP         0
@@ -29,7 +34,7 @@
 class DaTa
 {
 public:
-    static const int DaTaAmount = 5; //amount of values which get read from the I2C BUS
+    static const int DaTaAmount = 6; //amount of values which get read from the I2C BUS
     static const int FarewellAmount = 2;//amount of stuff to send
     static const int ButtonAmount = 6;//amount of buttons
 
