@@ -738,13 +738,13 @@ void HeadGUI::updateMotionControl(bool recentMotion)
         timeNoMotion = 0;
     }
 
-    if(timeNoMotion == 120)//only needs to be done once
+    if(timeNoMotion == 30)//only needs to be done once
     {
         SendEmergency = true;
         emit coosingStatusSignal();
     }
 
-    if(timeNoMotion == 160)
+    if(timeNoMotion == 15)
     {
         emit certifySignal();
     }
