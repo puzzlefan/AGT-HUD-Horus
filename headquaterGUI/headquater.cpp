@@ -120,7 +120,7 @@ void headquater::sortingData(int vectorNo)
     {
         Infos->at(vectorNo).setBools(UPDATE_IMAGE_SIGNAL,false);
         Infos->at(vectorNo).setBITBildMutex(true);
-        emit updatedImageSignal(ID,Infos->at(vectorNo).getBITBild());
+        emit updatedImageSignal(ID,Infos->at(vectorNo).getBITBildArray());
         Infos->at(vectorNo).setBITBildMutex(false);
     }
 }
