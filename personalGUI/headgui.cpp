@@ -653,15 +653,14 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
     }
 
     // Update the on-screen image
-    QPixmap pixmap = QPixmap::fromImage(rgbImage).scaled(ImageWidth, ImageHeight, Qt::KeepAspectRatio);
-
     if(IRPictureMaxSize == false)
     {
+		QPixmap pixmap = QPixmap::fromImage(rgbImage).scaled(ImageWidth, ImageHeight, Qt::KeepAspectRatio);
         IRPicture->setPixmap(pixmap);
     }
     else
     {
-        pixmap.scaled(2*ImageWidth,2*ImageHeight, Qt::KeepAspectRatio);
+		QPixmap pixmap = QPixmap::fromImage(rgbImage).scaled(2*ImageWidth, 2*ImageHeight, Qt::KeepAspectRatio);
         IRPictureFullScreenOverlay->setPixmap(pixmap);//!
     }
 
