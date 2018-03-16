@@ -97,7 +97,7 @@ void LeptonThread::run() {
 
 	while (true)
 	{
-		while (!SegmentUpdated[0] && !SegmentUpdated[1] && !SegmentUpdated[2] && !SegmentUpdated[3])
+		while (!SegmentUpdated[0] || !SegmentUpdated[1] || !SegmentUpdated[2] || !SegmentUpdated[3])
 		{
 			int iPacket;
 			int iSegment = 0;
