@@ -44,6 +44,7 @@ void setup()
 
   #ifdef ALU
 	MPU6050_setup();
+  pinMode(13,OUTPUT);
   #endif
 
   if(alu)//assigning the actual numbers
@@ -109,8 +110,12 @@ void loop()
   }
   
   Slave->setWrite(0, transmit);
+  #ifdef ALU
   Slave->setWrite(1, MPU6050_loop_very_activ());
+  digitalWrite(13,MPU6050_loop_very_activ());
+  #endif
   Slave->update();
+  
   //Serial.println(transmit);//debug out
   delay(25);//the transmission gets f***** up when things happen to fast
  }
