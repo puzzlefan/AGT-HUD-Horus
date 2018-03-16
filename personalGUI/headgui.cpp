@@ -187,7 +187,7 @@ void HeadGUI::readingSensors()
     emit updateCOHeadSignal(sensorData->getRawDaTa(CO_TOP));
     emit updateCOFootSignal(sensorData->getRawDaTa(CO_FLOP));
 
-    //emit updateMotionControlSignal();!
+    emit updateMotionControlSignal(sensorData->getRawData(EMERGENCY));
 }
 
 void HeadGUI::defauftValues()
@@ -660,7 +660,7 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
     }
     else
     {
-		QPixmap pixmap = QPixmap::fromImage(rgbImage).scaled(2*ImageWidth, 2*ImageHeight, Qt::KeepAspectRatio);
+		QPixmap pixmap = QPixmap::fromImage(rgbImage).scaled(1.4*ImageWidth, 1.4*ImageHeight, Qt::KeepAspectRatio);
         IRPictureFullScreenOverlay->setPixmap(pixmap);//!
     }
 
@@ -731,12 +731,12 @@ void HeadGUI::updateMotionControl(bool recentMotion)
     if(timeNoMotion == 30)//only needs to be done once
     {
         SendEmergency = true;
-        emit coosingStatusSignal();
+		emit certifySignal();
     }
 
     if(timeNoMotion == 15)
     {
-        emit certifySignal();
+		emit coosingStatusSignal();
     }
 }
 
