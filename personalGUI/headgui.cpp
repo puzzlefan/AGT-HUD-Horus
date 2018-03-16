@@ -187,7 +187,7 @@ void HeadGUI::readingSensors()
     emit updateCOHeadSignal(sensorData->getRawDaTa(CO_TOP));
     emit updateCOFootSignal(sensorData->getRawDaTa(CO_FLOP));
 
-    emit updateMotionControlSignal(sensorData->getRawData(EMERGENCY));
+    emit updateMotionControlSignal(sensorData->getRawDaTa(EMERGENCY));
 }
 
 void HeadGUI::defauftValues()
