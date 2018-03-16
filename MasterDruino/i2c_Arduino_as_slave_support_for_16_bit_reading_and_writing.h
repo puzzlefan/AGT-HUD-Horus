@@ -1,7 +1,7 @@
 #include <Wire.h>
 // I2C stuff
 #define SLAVE_ADDRESS 0x42//Adress
-#define DATA_COUNT 7//Register count
+#define DATA_COUNT 8//Register count
 
 //recifed command, defines which register gets returned
 int I2Ccommand = 0;
@@ -45,25 +45,30 @@ void receiveData(int byteCount)
     Serial.println(bufferThree);
     Serial.println();
     */
-
-    if(bufferTwo == -1){
-      I2Ccommand = bufferOne;//when there are only 8 bits it was a read command
-    }
-    else{
-      if(bufferThree == -1){
-        Register[bufferOne]=bufferTwo;//if there is only one byte sendet onee gets saved
+    if(!(Wire.available()>0))
+    {
+      if(bufferTwo == -1){
+        I2Ccommand = bufferOne;//when there are only 8 bits it was a read command
       }
       else{
-       Register[bufferOne]= (bufferThree << 8) + bufferTwo;//TwoToOne(bufferTwo,bufferThree, bufferOne);//when there are two bytes of Data they get combined before saving
+        if(bufferThree == -1){
+          Register[bufferOne]=bufferTwo;//if there is only one byte sendet onee gets saved
+        }
+        else{
+        Register[bufferOne]= (bufferThree << 8) + bufferTwo;//TwoToOne(bufferTwo,bufferThree, bufferOne);//when there are two bytes of Data they get combined before saving
+        }
+        I2Ccommand = -1;//when data was recieved nothing is send back
       }
-      I2Ccommand = -1;//when data was recieved nothing is send back
     }
-    while(Wire.available()>0){  //reads the third value if its exists
-      //Serial.println(bufferOne);
-      //Serial.println(bufferTwo);
-      //Serial.println(bufferThree);
-      Serial.println(Wire.read());
-      Serial.println("there is something left");
+    else
+    {
+      while(Wire.available()>0){  //reads the third value if its exists
+        //Serial.println(bufferOne);
+        //Serial.println(bufferTwo);
+        //Serial.println(bufferThree);
+        Serial.println(Wire.read());
+        Serial.println("there is something left");
+      }
     }
 }
 

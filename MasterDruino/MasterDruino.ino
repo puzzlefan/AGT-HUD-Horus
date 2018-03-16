@@ -14,7 +14,7 @@
 #ifdef ALU
 	#define VALUE_COUNT_ARM   2//amount of values from arm modul
 #endif
-#ifndev ALU
+#ifndef ALU
 	#define VALUE_COUNT_ARM   1//amount of values from arm modul
 #endif
 
@@ -123,7 +123,6 @@ void loop() {
   if(Register[7]==1)
   {
 	  unsigned long newTime = millis();
-    Serial.println(newTime < time + duration);
 	  if(newTime < time + duration)
 	  {
 		  digitalWrite(L1,HIGH);
