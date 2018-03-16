@@ -705,7 +705,7 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
     }
     else
     {
-        pixmap.resize(2*ImageWidth,2*ImageHeight, Qt::KeepAspectRatio);
+        pixmap.scaled(2*ImageWidth,2*ImageHeight, Qt::KeepAspectRatio);
         IRPictureFullScreenOverlay->setPixmap(pixmap);//!
     }
 
