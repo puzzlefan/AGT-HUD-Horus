@@ -3,6 +3,7 @@
 
 #define HAVE_LEPTON true
 #define DEBUG_LEPTON false
+#define FREQUENZY false
 
 #include <stdint.h>
 #include <unistd.h>
@@ -78,9 +79,8 @@ public:
     LeptonThread(std::mutex *MUTEX);
     ~LeptonThread();
 
-    void run();
-
-	void frequenzie();
+    void run();//loop
+	void frequenzie();//seperate thread that counts the pictures per second and prints that
 
 signals:
     void updateImage(unsigned short *, int, int, unsigned char*);
