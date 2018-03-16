@@ -945,7 +945,7 @@ bool MPU6050_loop_very_activ()
 		if (TIME + 5000 < millis())
 		{
 			TIME = millis();
-			Serial.println(count);
+			//Serial.println(count);
 			if (count > 0)
 			{
 				lastReturn = true;

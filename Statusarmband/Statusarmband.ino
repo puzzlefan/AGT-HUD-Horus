@@ -9,10 +9,10 @@
 	//defines
 		#define STATE_PIN -1 //defines if the connection has to be confirmed, in this case only in the HQ
 		#define ERROR_PIN 13 //Build in LED has to be used for something fun
-		#ifdev ALU
+		#ifdef ALU
 			#define VALUE_COUNT 2//number of values to be exchanged
 		#endif
-		#ifndev
+		#ifndef ALU
 			#define VALUE_COUNT 1//number of values to be exchanged
 		#endif
 
@@ -21,10 +21,10 @@
 		Bluetooth *Slave;//pointer to BT-class
 
 //Pin numbering
-	#ifdev ALU
+	#ifdef ALU
 		bool alu = true;//when true the pin numbering for the aluminium version is used
 	#endif
-	#ifndev ALU
+	#ifndef ALU
 		bool alu = false;//when true the pin numbering for the aluminium version is used
 	#endif
 
@@ -42,7 +42,7 @@ void setup()
 {
   Serial.begin(9600);
 
-  #ifdev ALU
+  #ifdef ALU
 	MPU6050_setup();
   #endif
 
@@ -107,6 +107,7 @@ void loop()
   {
       transmit *= FACTOR_CERTIFY;
   }
+  
   Slave->setWrite(0, transmit);
   Slave->setWrite(1, MPU6050_loop_very_activ());
   Slave->update();
