@@ -9,7 +9,7 @@ double ppm = 0; //parts per million of gas
 double Temp = 0;//sourrounding Temp
 
 //Constants
-const double ppmConstant = 1;
+const double ppmConstant = 0.1;
 const double TemperaturConstant = 0.48828125;
 
 //Pins
@@ -41,7 +41,7 @@ void ppm_debug_out(){
 //
 void TempMeasure(){
   Temp = analogRead(temp_Pin);
-  Temp = Temp * TemperaturConstant *100; //the 100 comes from the fact that i2c dooes not know about digits after this but i still want to transfer it
+  Temp = Temp * TemperaturConstant; //scaling the value
   Slave->setWrite(1,Temp);
 }
 

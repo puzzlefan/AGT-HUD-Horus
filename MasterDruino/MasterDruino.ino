@@ -103,9 +103,9 @@ void loop() {
   Register[0] = MasterArm->getRead(0);//gets factor of button primes
   #ifdef ALU
 	Register[1] = MasterFoot->getRead(1);//gets temp of foot multiplaid by 100 so we dont luse the digits after , directly
-	Register[2] = analogRead(14)*0.48828125;//random(0,255);//simulates hear read out of Tempreture
+	Register[2] = analogRead(14)*0.48828125;//tempreture reading + scaling
 	Register[3] = MasterFoot->getRead(0);//gets ppm foot
-	Register[4] = analogRead(15);//random(0,255);//simulates hear read out of ppm
+	Register[4] = analogRead(15)*0.1;
 	Register[5] = MasterArm->getRead(1);//gets the alive bit
   #endif
 
