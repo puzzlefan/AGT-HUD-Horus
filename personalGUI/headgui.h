@@ -112,7 +112,7 @@ private:
     int vertical;
     int horizontal;
     int NumberDiffMenues = 3;
-    int NumberDiffValues[5] = {3,2,1,1,4};
+    int NumberDiffValues[5] = {3,2,1,3,4};
     int timeNoMotion;
 
     bool emergencyPossible;
@@ -150,7 +150,7 @@ private:
     QLabel *IRPictureFullScreen;
     QLabel *IRPictureFullScreenOverlay;
 
-    QString PictureFullScreen[2] = {"Normal","Vollbild"};
+    QString PictureFullScreen[] = {"Normal","Vollbild","Outline","Voll Outl"};
 
     //for Camera
     void createIRPicture();
@@ -198,6 +198,7 @@ private:
 
     bool lightOn;
     bool IRPictureMaxSize;
+	bool outline = false;
 
     unsigned char *resultPicture;
     bool updatedPicture;

@@ -397,17 +397,47 @@ void HeadGUI::certify()
 
         case 3:
         {
-            if(vertical == 0)
-            {
-                IRPictureMaxSize = false;
-            }
-            else
-            {
-                IRPictureMaxSize =true;
-            }
+			switch (vertical)
+			{
+				case 0:
+				{
+					IRPictureMaxSize = false;
+					outline = false;
+					break;
+				}
+				case 1:
+				{
+					IRPictureMaxSize = true;
+					outline = false;
+					break;
+				}
+				case 2:
+				{
+					IRPictureMaxSize = false;
+					outline = true;
+					break;
+				}
+				case 3:
+				{
+					IRPictureMaxSize = true;
+					outline = true;
+					break;
+				}
+				default:
+				{
+					IRPictureMaxSize = false;
+					outline = false;
+					break;
+				}
+			}
 
             emit changeScreenModeSignal();
+			/*
+				short version, but no testing so no risk
 
+				IRPictureMaxSize = (vertical % 2 == 0);
+				outline = vertical > 1;
+			*/
             break;
         }
 
@@ -634,22 +664,42 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
 
     rawMin = minValue;
     rawMax = maxValue;
+	if (!outline)
+	{
+		// Map "rawData" to rgb values in "rgbImage" via the colormap
+		int diff = rawMax - rawMin + 1;
 
-    // Map "rawData" to rgb values in "rgbImage" via the colormap
-    int diff = rawMax - rawMin + 1;
+		//std::cout<<"min "<< minValue<<" max "<<maxValue<< " diff "<<diff<<std::endl;
 
-    //std::cout<<"min "<< minValue<<" max "<<maxValue<< " diff "<<diff<<std::endl;
-
-    for (int y = 0; y < LeptonThread::FrameHeight; ++y)
-    {
-        for (int x = 0; x < LeptonThread::FrameWidth; ++x)
-        {
-            int baseValue = rawData[LeptonThread::FrameWidth*(LeptonThread::FrameHeight-1-y) + (LeptonThread::FrameWidth-1-x)]; // take input value in [0, 65536)
-            int scaledValue = 256*(baseValue - rawMin)/diff; // map value to interval [0, 256), and set the pixel to its color value above
-            //std::cout<< baseValue<<" "<<scaledValue<<std::endl;
-            rgbImage.setPixel(x, y, qRgb(colormap[3*scaledValue], colormap[3*scaledValue+1], colormap[3*scaledValue+2]));//segmentation fault kann mit begrenzung der Werte von 1 bis 256 verieden werden nur Frame rate leidet sehr
-        }
-    }
+		for (int y = 0; y < LeptonThread::FrameHeight; ++y)
+		{
+			for (int x = 0; x < LeptonThread::FrameWidth; ++x)
+			{
+				int baseValue = rawData[LeptonThread::FrameWidth*(LeptonThread::FrameHeight - 1 - y) + (LeptonThread::FrameWidth - 1 - x)]; // take input value in [0, 65536)
+				int scaledValue = 256 * (baseValue - rawMin) / diff; // map value to interval [0, 256), and set the pixel to its color value above
+				//std::cout<< baseValue<<" "<<scaledValue<<std::endl;
+				rgbImage.setPixel(x, y, qRgb(colormap[3 * scaledValue], colormap[3 * scaledValue + 1], colormap[3 * scaledValue + 2]));//segmentation fault kann mit begrenzung der Werte von 1 bis 256 verieden werden nur Frame rate leidet sehr
+			}
+		}
+	}
+	else
+	{
+		for (int y = 0; y < LeptonThread::FrameHeight; ++y)
+		{
+			for (int x = 0; x < LeptonThread::FrameWidth; ++x)
+			{
+				int baseValue = rawData[LeptonThread::FrameWidth*(LeptonThread::FrameHeight - 1 - y) + (LeptonThread::FrameWidth - 1 - x)]; // take input value in [0, 65536)
+				int comparrator = baseValue;//initialise value which will be the refference
+				if ((x + 1) < LeptonThread::FrameWidth)
+				{
+					comparrator = rawData[LeptonThread::FrameWidth*(LeptonThread::FrameHeight - 1 - y) + (LeptonThread::FrameWidth - x)]; //value to determine how big the difference is
+				}
+				int scaledValue = 256.0 * comparrator/baseValue; // map value to interval [0, 256), and set the pixel to its color value above
+				if (scaledValue > 256) scaledValue = 256;//cut off to high peeks
+				rgbImage.setPixel(x, y, qRgb(scaledValue,scaledValue,scaledValue));//segmentation fault kann mit begrenzung der Werte von 1 bis 256 verieden werden nur Frame rate leidet sehr
+			}
+		}
+	}
 
     // Update the on-screen image
     if(IRPictureMaxSize == false)
