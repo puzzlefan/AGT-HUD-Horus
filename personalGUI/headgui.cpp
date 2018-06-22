@@ -357,7 +357,7 @@ void HeadGUI::certify()
 
             recentStatus = vertical;
             updatedStatus = true;
-		
+
            emit newValuesForHeadquater();
 
             break;
@@ -684,6 +684,7 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
 	}
 	else
 	{
+        double diff = rawMax/rawMin;
 		for (int y = 0; y < LeptonThread::FrameHeight; ++y)
 		{
 			for (int x = 0; x < LeptonThread::FrameWidth; ++x)
@@ -694,8 +695,8 @@ void HeadGUI::updateImage(unsigned short *data, int minValue, int maxValue, unsi
 				{
 					comparrator = rawData[LeptonThread::FrameWidth*(LeptonThread::FrameHeight - 1 - y) + (LeptonThread::FrameWidth - x)]; //value to determine how big the difference is
 				}
-				int scaledValue = 256.0 * comparrator/baseValue; // map value to interval [0, 256), and set the pixel to its color value above
-				if (scaledValue > 256) scaledValue = 256;//cut off to high peeks
+				int scaledValue = 256.0 * (comparrator/baseValue)/diff; // map value to interval [0, 256), and set the pixel to its color value above
+				//if (scaledValue > 256) scaledValue = 256;//cut off to high peeks
 				rgbImage.setPixel(x, y, qRgb(scaledValue,scaledValue,scaledValue));//segmentation fault kann mit begrenzung der Werte von 1 bis 256 verieden werden nur Frame rate leidet sehr
 			}
 		}
